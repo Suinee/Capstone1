@@ -1,0 +1,703 @@
+:root {
+  --blue: #4772ff;
+  --dark-blue: #2452b8;
+  --navy: #10182c;
+  --text: #222b3c;
+  --sub-text: #697182;
+  --bg-gray: #f6f8fc;
+}
+
+/* =========================
+   전체
+========================= */
+
+.app {
+  min-height: 100vh;
+  background: #ffffff;
+  color: var(--text);
+}
+
+.container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.navbar {
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #eef0f5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-inner {
+  width: min(1180px, calc(100% - 48px));
+  height: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: #2d59b3;
+  font-size: 23px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+.nav-menu a {
+  color: #555e6f;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.nav-menu a:hover {
+  color: var(--blue);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  padding: 110px 0 100px;
+}
+
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-text h1 {
+  margin: 0;
+  font-size: clamp(34px, 3vw, 50px);
+  line-height: 1.28;
+  letter-spacing: -2px;
+  font-weight: 850;
+  color: #2e3441;
+}
+
+.hero-text p {
+  margin: 34px 0 0;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #737b8a;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 38px;
+}
+
+.hero-buttons a {
+  height: 48px;
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: 0.2s;
+}
+
+.primary-btn {
+  background: var(--blue);
+  color: white;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(71, 114, 255, 0.28);
+}
+
+.secondary-btn {
+  background: #6887ff;
+  color: white;
+}
+
+.secondary-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   HERO UI MOCKUP
+========================= */
+
+.hero-visual {
+  width: 500px;
+  height: 390px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.main-panel,
+.back-panel {
+  background: white;
+  border: 1px solid #dfe5f3;
+  box-shadow: 0 12px 30px rgba(34, 54, 92, 0.09);
+}
+
+.main-panel {
+  position: absolute;
+  width: 355px;
+  min-height: 350px;
+  left: 30px;
+  bottom: 3px;
+  z-index: 4;
+
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.back-panel {
+  position: absolute;
+  width: 285px;
+  height: 300px;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.panel-one {
+  right: 10px;
+  top: 25px;
+  transform: rotate(-1deg);
+}
+
+.panel-two {
+  right: 45px;
+  top: 5px;
+}
+
+.panel-title {
+  font-size: 14px;
+  color: #526ea4;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.warning {
+  float: right;
+  color: #ff6d76;
+  background: #fff0f1;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
+.fake-line {
+  width: 100%;
+  height: 10px;
+  border-radius: 10px;
+  background: #eff2f7;
+  margin-top: 25px;
+}
+
+.fake-line.short {
+  width: 65%;
+}
+
+.fake-button {
+  width: 130px;
+  height: 42px;
+  margin-top: 32px;
+  border-radius: 8px;
+  background: #5480ff;
+}
+
+.fake-browser-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #565e70;
+  font-size: 12px;
+}
+
+.main-panel h4 {
+  margin: 20px 0 15px;
+  font-size: 13px;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.food-card,
+.help-card {
+  min-height: 75px;
+  border: 1px solid #edf0f6;
+  border-radius: 8px;
+  padding: 8px;
+  background: white;
+}
+
+.food-card span {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.food-card small {
+  display: block;
+  font-size: 7px;
+}
+
+.food-card b {
+  display: block;
+  margin-top: 4px;
+  font-size: 7px;
+  color: #4f5664;
+}
+
+.help-card {
+  grid-column: span 2;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #f2f6ff;
+}
+
+.help-card span {
+  font-size: 23px;
+}
+
+.help-card p {
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.ai-bubble {
+  grid-column: span 2;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: #f4f0ff;
+}
+
+.ai-bubble span {
+  font-size: 24px;
+}
+
+.ai-bubble small,
+.ai-bubble b {
+  display: block;
+  font-size: 8px;
+}
+
+.order-bar {
+  margin-top: 12px;
+  border-top: 1px solid #edf0f5;
+  padding-top: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-bar span {
+  font-size: 10px;
+  color: #777;
+}
+
+.order-bar button {
+  border: 0;
+  border-radius: 7px;
+
+  padding: 10px 20px;
+
+  background: var(--blue);
+  color: white;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* =========================
+   공통 섹션
+========================= */
+
+.service-section,
+.result-section {
+  background: var(--bg-gray);
+}
+
+.service-section,
+.works-section,
+.result-section {
+  padding: 80px 0 90px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #2e59ad;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.section-heading p {
+  margin: 32px 0 0;
+  color: #747d8c;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================
+   SERVICE
+========================= */
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 55px;
+
+  margin-top: 55px;
+}
+
+.service-card {
+  overflow: hidden;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+
+  box-shadow: 0 5px 9px rgba(35, 48, 70, 0.1);
+  transition: 0.25s;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 13px 25px rgba(35, 48, 70, 0.13);
+}
+
+.service-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+}
+
+.service-card-content {
+  padding: 20px 22px 22px;
+}
+
+.service-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.service-card p {
+  margin: 10px 0 20px;
+  font-size: 12px;
+  color: #505866;
+}
+
+.service-card button {
+  width: 100%;
+  padding: 0;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+
+  background: transparent;
+  border: none;
+
+  color: #313a4c;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* =========================
+   HOW IT WORKS
+========================= */
+
+.step-grid {
+  margin-top: 60px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 100px;
+}
+
+.step-card {
+  min-height: 270px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 28px 20px;
+
+  border: 1px solid #dadde5;
+  border-radius: 20px;
+
+  background: white;
+
+  box-shadow: 0 8px 8px rgba(27, 36, 52, 0.13);
+}
+
+.step-number {
+  font-size: 25px;
+  color: #1f2631;
+}
+
+.step-icon {
+  width: 78px;
+  height: 78px;
+
+  margin: 15px 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #5a7cff;
+  color: white;
+
+  font-size: 35px;
+}
+
+.step-card h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.step-card p {
+  margin: 13px 0 0;
+  text-align: center;
+
+  line-height: 1.45;
+  font-size: 12px;
+  color: #383e49;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.stats-grid {
+  margin-top: 40px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+}
+
+.stat-card {
+  height: 105px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border: 1px solid #d9dde5;
+  border-radius: 18px;
+
+  box-shadow: 0 5px 5px rgba(36, 45, 62, 0.1);
+}
+
+.stat-card strong {
+  color: #2b56aa;
+  font-size: 27px;
+}
+
+.stat-card span {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.chart-grid {
+  margin-top: 45px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+}
+
+.chart-box {
+  text-align: center;
+}
+
+.chart-box svg {
+  width: 100%;
+  height: 220px;
+
+  background: white;
+
+  border: 1px solid #d7dce6;
+  border-radius: 18px;
+
+  box-shadow: 0 5px 5px rgba(36, 45, 62, 0.08);
+}
+
+.chart-box polyline {
+  fill: none;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.blue-line {
+  stroke: #8298ff;
+}
+
+.red-line {
+  stroke: #ff8188;
+}
+
+.chart-box strong {
+  display: block;
+  margin-top: 13px;
+  font-size: 15px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+  padding: 45px 0;
+  background: var(--navy);
+  color: white;
+}
+
+.footer-inner h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.footer-inner strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.footer-inner p {
+  margin: 5px 0 25px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.footer-inner span {
+  font-size: 11px;
+  color: #e4e8f2;
+}
+
+/* =========================
+   반응형
+========================= */
+
+@media (max-width: 950px) {
+  .hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-visual {
+    margin: auto;
+    max-width: 100%;
+  }
+
+  .service-grid {
+    gap: 20px;
+  }
+
+  .step-grid {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    height: 60px;
+  }
+
+  .container,
+  .nav-inner {
+    width: calc(100% - 38px);
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav-menu {
+    gap: 20px;
+  }
+
+  .nav-menu a {
+    font-size: 10px;
+  }
+
+  .hero {
+    padding: 65px 0;
+  }
+
+  .hero-text h1 {
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+
+  .hero-text p {
+    font-size: 13px;
+  }
+
+  .hero-visual {
+    transform: scale(0.8);
+    transform-origin: left top;
+    width: 100%;
+    margin-bottom: -65px;
+  }
+
+  .service-grid,
+  .step-grid,
+  .stats-grid,
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-grid,
+  .step-grid {
+    gap: 30px;
+  }
+
+  .stats-grid {
+    gap: 15px;
+  }
+}
