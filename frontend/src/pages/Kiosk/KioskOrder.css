@@ -1,0 +1,314 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+
+  background-color: #eeeeee;
+}
+
+/* ==========================
+   전체 키오스크 화면
+========================== */
+
+.kiosk-page {
+  width: 1080px;
+  height: 1920px;
+
+  margin: 0 auto;
+
+  background-color: #ffffff;
+
+  overflow: hidden;
+}
+
+/* ==========================
+   상단
+========================== */
+
+.header {
+  display: flex;
+  align-items: center;
+
+  padding-top: 125px;
+  padding-left: 105px;
+
+  gap: 55px;
+}
+
+.logo {
+  font-size: 42px;
+  font-weight: 800;
+
+  color: #214b9b;
+}
+
+.menu-name {
+  font-size: 38px;
+  font-weight: 700;
+
+  color: #181818;
+}
+
+/* ==========================
+   메인 콘텐츠
+========================== */
+
+.content {
+  width: 100%;
+
+  padding: 125px 150px 0;
+}
+
+.title {
+  font-size: 44px;
+  font-weight: 750;
+
+  color: #111111;
+
+  margin-bottom: 70px;
+
+  letter-spacing: -1.5px;
+}
+
+/* ==========================
+   선택 카드 영역
+========================== */
+
+.option-container {
+  display: flex;
+
+  gap: 55px;
+
+  width: 100%;
+
+  margin-bottom: 65px;
+}
+
+/* 카드 */
+
+.option-card {
+  width: 340px;
+  height: 390px;
+
+  background-color: #ffffff;
+
+  border: 2px solid #8ba6ff;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  font-family: inherit;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 카드 이미지 */
+
+.image-box {
+  width: 220px;
+  height: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 15px;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+/* 카드 텍스트 */
+
+.option-name {
+  font-size: 27px;
+  font-weight: 700;
+
+  color: #151515;
+
+  margin-bottom: 15px;
+
+  transition: color 0.25s ease;
+}
+
+.option-price {
+  font-size: 25px;
+  font-weight: 700;
+
+  color: #1f4fa3;
+
+  transition: color 0.25s ease;
+}
+
+/* ==========================
+   선택 카드 hover
+========================== */
+
+.option-card:hover {
+  background-color: #5d83ff;
+  border-color: #5d83ff;
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 12px 30px rgba(93, 131, 255, 0.22);
+}
+
+.option-card:hover .option-name,
+.option-card:hover .option-price {
+  color: #ffffff;
+}
+
+/* ==========================
+   취소 버튼
+========================== */
+
+.cancel-button {
+  width: 100%;
+  height: 90px;
+
+  background-color: #ffffff;
+
+  border: 2px solid #7e9cff;
+  border-radius: 28px;
+
+  color: #5d83ff;
+
+  font-size: 40px;
+  font-weight: 700;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 취소 버튼 hover */
+
+.cancel-button:hover {
+  background-color: #5d83ff;
+
+  color: #ffffff;
+
+  border-color: #5d83ff;
+
+  box-shadow: 0 10px 25px rgba(93, 131, 255, 0.22);
+}
+
+/* 클릭했을 때 */
+
+.option-card:active,
+.cancel-button:active {
+  transform: scale(0.98);
+}
+
+/* ==========================
+   품절 메뉴
+========================== */
+
+.option-card.sold-out {
+  position: relative;
+
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  background-color: #f3f3f3;
+  border-color: #c8c8c8;
+}
+
+.option-card.sold-out:hover {
+  background-color: #f3f3f3;
+  border-color: #c8c8c8;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+.option-card.sold-out:hover .option-name {
+  color: #151515;
+}
+
+.option-card.sold-out:hover .option-price {
+  color: #999999;
+}
+
+/* 이미지 영역 안의 품절 표시 */
+
+.image-box {
+  position: relative;
+}
+
+.sold-out-badge {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 110px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(30, 30, 30, 0.85);
+
+  color: #ffffff;
+
+  font-size: 26px;
+  font-weight: 700;
+
+  border-radius: 10px;
+}
+
+.sold-out-text {
+  color: #999999;
+}
+
+/* ==========================
+   로딩 / 오류
+========================== */
+
+.status-message {
+  font-size: 26px;
+  font-weight: 600;
+
+  margin-bottom: 50px;
+
+  color: #555555;
+}
+
+.error-message {
+  color: #d64040;
+}
