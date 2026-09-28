@@ -13,7 +13,7 @@ function KioskOrder() {
 
   // DB 메뉴 불러오기
   useEffect(() => {
-    fetch("http://localhost:8080/api/menus")
+    fetch("http://localhost:8080/api/menus/category/BURGER")
       .then((response) => {
         if (!response.ok) {
           throw new Error("메뉴 데이터를 불러오지 못했습니다.");
@@ -37,13 +37,14 @@ function KioskOrder() {
     setSelectedMenu(menu);
 
     if (menu.menuType === "SET") {
-      setSelectedSet(null);
-      setSelectedProduct(null);
+      // 세트 → 사이드 선택
+      setSelectedSide(null);
+      setSelectedDrink(null);
       setFrame(2);
-      return;
+    } else if (menu.menuType === "SINGLE") {
+      // 단품 → 바로 주문 확인
+      setFrame(4);
     }
-
-    console.log("단품 선택:", menu);
   };
 
   // 취소

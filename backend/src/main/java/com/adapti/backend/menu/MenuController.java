@@ -16,10 +16,19 @@ public class MenuController {
         this.menuRepository = menuRepository;
     }
 
-    // 메뉴 조회
+    // 전체 활성 메뉴 조회
     @GetMapping
     public List<Menu> getMenus() {
         return menuRepository.findByIsActiveTrue();
+    }
+
+    // 카테고리별 메뉴 조회
+    @GetMapping("/category/{category}")
+    public List<Menu> getMenusByCategory(
+            @PathVariable String category) {
+
+        return menuRepository
+                .findByCategoryAndIsActiveTrue(category);
     }
 
     // 메뉴 추가

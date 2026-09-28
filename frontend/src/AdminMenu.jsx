@@ -9,6 +9,8 @@ export default function AdminMenu() {
     price: "",
     imageUrl: "",
     stockQuantity: "",
+    category: "BURGER",
+    menuType: "SINGLE",
   });
 
   // 메뉴 조회
@@ -50,6 +52,12 @@ export default function AdminMenu() {
       price: Number(form.price),
       imageUrl: form.imageUrl,
       stockQuantity: Number(form.stockQuantity),
+
+      category: form.category,
+
+      menuType: form.category === "BURGER" ? form.menuType : null,
+
+      isActive: true,
     };
 
     try {
@@ -72,6 +80,8 @@ export default function AdminMenu() {
         price: "",
         imageUrl: "",
         stockQuantity: "",
+        category: "BURGER",
+        menuType: "SINGLE",
       });
 
       // 추가 후 목록 다시 불러오기
@@ -119,6 +129,19 @@ export default function AdminMenu() {
           onChange={handleChange}
           required
         />
+
+        <select name="category" value={form.category} onChange={handleChange}>
+          <option value="BURGER">버거</option>
+          <option value="SIDE">사이드</option>
+          <option value="DRINK">음료</option>
+        </select>
+
+        {form.category === "BURGER" && (
+          <select name="menuType" value={form.menuType} onChange={handleChange}>
+            <option value="SINGLE">단품</option>
+            <option value="SET">세트</option>
+          </select>
+        )}
 
         <button type="submit">메뉴 추가</button>
       </form>

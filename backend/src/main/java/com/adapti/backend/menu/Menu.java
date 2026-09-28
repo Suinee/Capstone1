@@ -34,4 +34,22 @@ public class Menu {
 
     @Column(name = "menu_type")
     private String menuType;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "calories")
+    private Integer calories;
+
+    @Column(name = "carbohydrate")
+    private Double carbohydrate;
+
+    @Column(name = "protein")
+    private Double protein;
+
+    @Column(name = "fat")
+    private Double fat;
+
+    @Column(name = "sodium")
+    private Integer sodium;
 }

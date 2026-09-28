@@ -1,13 +1,15 @@
-import "./pages/MainPage/Home.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import KioskOrder from "./pages/Kiosk/KioskOrder";
-import "./App.css";
+import AdminMenu from "./AdminMenu";
 
 function App() {
   return (
-    <>
-      <KioskOrder />
-      {/* <Home /> */}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<KioskOrder />} />
+        <Route path="/admin" element={<AdminMenu />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
