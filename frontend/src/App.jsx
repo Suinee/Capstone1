@@ -1,4 +1,4 @@
-import Home from "./pages/MainPage/Home";
+import "./pages/MainPage/Home.css";
 import KioskOrder from "./pages/Kiosk/KioskOrder";
 import "./App.css";
 

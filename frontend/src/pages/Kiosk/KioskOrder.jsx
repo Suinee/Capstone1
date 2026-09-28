@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import "./KioskOrder.css";
+import KioskOptions from "./KioskOptions";
 
 function KioskOrder() {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [frame, setFrame] = useState(1);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedSet, setSelectedSet] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // DB 메뉴 불러오기
   useEffect(() => {
@@ -29,13 +34,59 @@ function KioskOrder() {
 
   // 메뉴 선택
   const handleSelect = (menu) => {
-    console.log("선택한 메뉴:", menu);
+    setSelectedMenu(menu);
+
+    if (menu.menuType === "SET") {
+      setSelectedSet(null);
+      setSelectedProduct(null);
+      setFrame(2);
+      return;
+    }
+
+    console.log("단품 선택:", menu);
   };
 
   // 취소
   const handleCancel = () => {
-    console.log("취소하기");
+    setSelectedMenu(null);
+    setSelectedSet(null);
+    setSelectedProduct(null);
+    setFrame(1);
   };
+
+  if (frame !== 1) {
+    return (
+      <KioskOptions
+        frame={frame}
+        selectedMenu={selectedMenu}
+        selectedSet={selectedSet}
+        selectedProduct={selectedProduct}
+        onSelect={(option) => {
+          if (frame === 2) {
+            setSelectedSet(option);
+            setSelectedProduct(null);
+          } else {
+            setSelectedProduct(option);
+          }
+        }}
+        onCancel={handleCancel}
+        onHome={() => setFrame(1)}
+        onNext={() => {
+          if (frame === 2 && selectedSet) {
+            setFrame(3);
+          }
+
+          if (frame === 3 && selectedProduct) {
+            console.log("선택한 주문:", {
+              menu: selectedMenu,
+              set: selectedSet,
+              product: selectedProduct,
+            });
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <div className="kiosk-page">

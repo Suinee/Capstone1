@@ -2,10 +2,12 @@ package com.adapti.backend.menu;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "menu")
 public class Menu {
@@ -29,4 +31,7 @@ public class Menu {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @Column(name = "menu_type")
+    private String menuType;
 }
