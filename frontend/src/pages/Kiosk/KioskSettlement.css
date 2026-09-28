@@ -1,0 +1,275 @@
+:root {
+  --primary: #5d83ff;
+  --white: #ffffff;
+  --light-gray: #d9d9d9;
+  --black: #111111;
+  --dark-blue: #1b45a1;
+}
+
+.kiosk-settlement-page {
+  width: 1080px;
+  height: 1920px;
+  margin: 0 auto;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+  color: var(--black);
+}
+
+.kiosk-settlement-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  padding: 72px 78px 0 78px;
+  display: flex;
+  align-items: center;
+}
+
+.kiosk-brand {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: var(--dark-blue);
+}
+
+.kiosk-settlement-content {
+  position: absolute;
+  left: 0;
+  top: 128px;
+  width: 100%;
+  height: 1520px;
+  padding: 0 64px;
+}
+
+.kiosk-settlement-title {
+  width: 100%;
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.kiosk-settlement-title span:first-child {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -1.1px;
+}
+
+.kiosk-settlement-title span:last-child {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -1.1px;
+}
+
+.kiosk-payment-methods {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  margin-top: 58px;
+}
+
+.payment-method-card {
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--primary);
+  border-radius: 18px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  color: var(--primary);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.payment-method-card span {
+  font-size: 22px;
+  color: var(--black);
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+
+.payment-method-icon {
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-method-icon svg {
+  width: 72px;
+  height: 72px;
+  color: var(--primary);
+}
+
+.settlement-back-button {
+  width: 430px;
+  height: 82px;
+  display: block;
+  margin: 152px auto 0 auto;
+  border: 2px solid var(--primary);
+  border-radius: 22px;
+  background: var(--white);
+  color: var(--primary);
+  font-size: 28px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.kiosk-common-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 170px;
+  padding: 0 64px 52px 64px;
+  display: flex;
+  align-items: end;
+  gap: 18px;
+}
+
+.common-button {
+  flex: 1;
+  height: 90px;
+  border-radius: 18px;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: var(--white);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.primary-btn {
+  background: var(--primary);
+  border: 2px solid var(--primary);
+  color: var(--white);
+}
+
+@media (max-width: 1080px) {
+  .kiosk-settlement-page {
+    transform: scale(calc(100vw / 1080));
+    transform-origin: top left;
+  }
+}
+
+/* 1080 x 1920 kiosk canvas coordinates */
+.kiosk-settlement-header {
+  height: auto;
+  padding: 147px 100px 0;
+}
+
+.kiosk-settlement-content {
+  top: 0;
+  height: 100%;
+  padding: 0;
+}
+
+.kiosk-settlement-title {
+  position: absolute;
+  top: 298px;
+  left: 0;
+  margin: 0;
+  gap: 4px;
+}
+
+.kiosk-settlement-title span:first-child,
+.kiosk-settlement-title span:last-child {
+  font-size: 36px;
+}
+
+.kiosk-payment-methods {
+  position: absolute;
+  left: 92px;
+  top: 492px;
+  width: 896px;
+  margin: 0;
+  justify-content: flex-start;
+  gap: 66px;
+}
+
+.payment-method-card {
+  flex: 0 0 262px;
+  width: 262px;
+  height: 287px;
+  border-radius: 0;
+  gap: 18px;
+}
+
+.payment-method-card span {
+  font-size: 24px;
+}
+
+.payment-method-icon {
+  width: 128px;
+  height: 128px;
+}
+
+.payment-method-icon img {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+}
+
+.payment-method-icon svg {
+  display: none;
+}
+
+.settlement-back-button {
+  position: absolute;
+  left: 238px;
+  top: 1557px;
+  width: 604px;
+  height: 63px;
+  margin: 0;
+  border-radius: 32px;
+  font-size: 22px;
+}
+
+.kiosk-common-footer {
+  bottom: 98px;
+  height: 63px;
+  padding: 0;
+  gap: 24px;
+}
+
+.common-button {
+  flex: 0 0 236px;
+  width: 236px;
+  height: 63px;
+  border-radius: 32px;
+  font-size: 22px;
+}
+
+.kiosk-common-footer .common-button:first-child {
+  margin-left: 558px;
+}
+
+.kiosk-settlement-page,
+.kiosk-settlement-page * {
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+  letter-spacing: 4px;
+}
+
+.kiosk-settlement-page .kiosk-brand {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0;
+}

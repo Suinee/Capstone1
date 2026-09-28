@@ -1,0 +1,423 @@
+:root {
+  --primary: #5d83ff;
+  --white: #ffffff;
+  --light-gray: #d9d9d9;
+  --black: #111111;
+  --dark-blue: #1b45a1;
+}
+
+.kiosk-payment-page {
+  width: 1080px;
+  height: 1920px;
+  margin: 0 auto;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+  color: var(--black);
+}
+
+.kiosk-payment-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  padding: 72px 78px 0 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kiosk-brand {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: var(--dark-blue);
+}
+
+.kiosk-nutrition-button {
+  min-width: 137px;
+  height: 54px;
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.kiosk-payment-content {
+  position: absolute;
+  left: 0;
+  top: 126px;
+  width: 100%;
+  height: 1515px;
+  padding: 0 64px 0 64px;
+}
+
+.kiosk-product-header {
+  width: 100%;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.kiosk-product-name {
+  font-size: 39px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--black);
+  letter-spacing: -1.4px;
+}
+
+.kiosk-product-meta {
+  margin-top: 8px;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--black);
+  letter-spacing: -1.2px;
+}
+
+.kiosk-product-visual {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.burger-art {
+  width: 560px;
+  height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.burger-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.kiosk-ingredient-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.ingredient-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ingredient-name {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: #5D83FF;
+  letter-spacing: -0.8px;
+}
+
+.ingredient-actions {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ingredient-button,
+.tertiary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  min-width: 120px;
+  padding: 0 14px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--primary);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.kiosk-quantity-selector {
+  width: 100%;
+  max-width: 560px;
+  margin: 52px auto 0 auto;
+  height: 88px;
+  display: flex;
+  align-items: stretch;
+  border: 2px solid var(--light-gray);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+
+.qty-control {
+  width: 118px;
+  border: none;
+  background: var(--light-gray);
+  color: var(--black);
+  font-size: 42px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.qty-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  color: var(--black);
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.kiosk-action-row {
+  width: 100%;
+  max-width: 560px;
+  margin: 34px auto 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.primary-action {
+  flex: 1;
+  height: 90px;
+  border-radius: 16px;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: var(--white);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.primary-btn {
+  background: var(--primary);
+  border: 2px solid var(--primary);
+  color: var(--white);
+}
+
+.kiosk-common-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 170px;
+  padding: 0 64px 52px 64px;
+  display: flex;
+  align-items: end;
+  gap: 18px;
+}
+
+.common-button {
+  flex: 1;
+  height: 90px;
+  border-radius: 18px;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 1080px) {
+  .kiosk-payment-page {
+    transform: scale(calc(100vw / 1080));
+    transform-origin: top left;
+  }
+}
+
+/* 1080 x 1920 kiosk canvas coordinates */
+.kiosk-payment-header {
+  height: auto;
+  padding: 143px 100px 0;
+  align-items: flex-start;
+}
+
+.kiosk-brand {
+  font-size: 42px;
+}
+
+.kiosk-nutrition-button {
+  position: absolute;
+  left: 792px;
+  top: 129px;
+  width: 236px;
+  height: 63px;
+  border-radius: 0;
+}
+
+.kiosk-payment-content {
+  top: 0;
+  height: 100%;
+  padding: 0;
+}
+
+.kiosk-product-header {
+  position: absolute;
+  top: 304px;
+  left: 145px;
+  width: calc(100% - 145px);
+  margin: 0;
+  text-align: left;
+}
+
+.kiosk-product-name,
+.kiosk-product-meta {
+  font-size: 60px;
+  letter-spacing: 4px;
+}
+
+.kiosk-product-meta {
+  margin-top: 4px;
+}
+
+.kiosk-product-visual {
+  position: absolute;
+  left: 265px;
+  top: 510px;
+  width: 550px;
+  height: 359px;
+  margin: 0;
+}
+
+.kiosk-product-visual img {
+  width: 550px;
+  height: 359px;
+  object-fit: contain;
+  display: block;
+}
+
+.kiosk-ingredient-list {
+  position: absolute;
+  left: 145px;
+  top: 982px;
+  width: 790px;
+  margin: 0;
+  padding: 0;
+  gap: 41px;
+}
+
+.ingredient-item {
+  flex: 0 0 236px;
+  gap: 0;
+}
+
+.ingredient-name {
+  height: 30px;
+  font-size: 22px;
+}
+
+.ingredient-actions {
+  width: 236px;
+  margin-top: 66px;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ingredient-button,
+.tertiary-btn {
+  width: 236px;
+  min-width: 236px;
+  height: 63px;
+  padding: 0;
+  border-radius: 0;
+  font-size: 22px;
+}
+
+.kiosk-quantity-selector {
+  position: absolute;
+  left: 145px;
+  top: 1415px;
+  width: 790px;
+  max-width: none;
+  height: 92px;
+  margin: 0;
+  border-radius: 0;
+}
+
+.qty-control {
+  width: 104px;
+  font-size: 28px;
+}
+
+.qty-display {
+  font-size: 38px;
+}
+
+.kiosk-action-row {
+  position: absolute;
+  left: 145px;
+  top: 1540px;
+  width: 790px;
+  max-width: none;
+  margin: 0;
+  gap: 24px;
+}
+
+.primary-action {
+  flex: 0 0 236px;
+  height: 63px;
+  border-radius: 32px;
+  font-size: 22px;
+}
+
+.kiosk-action-row .primary-btn {
+  flex-basis: 530px;
+}
+
+.kiosk-common-footer {
+  bottom: 98px;
+  height: 63px;
+  padding: 0;
+  gap: 24px;
+}
+
+.common-button {
+  flex: 0 0 236px;
+  width: 236px;
+  height: 63px;
+  border-radius: 32px;
+  font-size: 22px;
+}
+
+.kiosk-common-footer .common-button:first-child {
+  margin-left: 558px;
+}
+
+.kiosk-payment-page,
+.kiosk-payment-page * {
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+  letter-spacing: 4px;
+}
+
+.kiosk-payment-page .kiosk-brand {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
