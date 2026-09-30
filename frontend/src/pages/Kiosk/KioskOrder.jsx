@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import "./KioskOrder.css";
-import KioskOptions from "./KioskOptions";
 
-function KioskOrder() {
+function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [frame, setFrame] = useState(1);
-  const [selectedMenu, setSelectedMenu] = useState(null);
-  const [selectedSet, setSelectedSet] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // DB 메뉴 불러오기
+  // TYPE = 단품/세트 선택
+  // SET_SIZE = 미디움/라지 세트 선택
+  const [step, setStep] = useState("TYPE");
+
   useEffect(() => {
     fetch("http://localhost:8080/api/menus/category/BURGER")
       .then((response) => {
@@ -32,118 +30,180 @@ function KioskOrder() {
       });
   }, []);
 
-  // 메뉴 선택
-  const handleSelect = (menu) => {
-    setSelectedMenu(menu);
+  // 선택한 버거와 같은 그룹만 가져오기
+  // 선택한 버거와 같은 그룹만 가져오기
+  const filteredMenus = menus.filter(
+    (menu) => menu.menuGroup === selectedBaseMenu?.menuGroup,
+  );
 
-    if (menu.menuType === "SET") {
-      // 세트 → 사이드 선택
-      setSelectedSide(null);
-      setSelectedDrink(null);
-      setFrame(2);
-    } else if (menu.menuType === "SINGLE") {
-      // 단품 → 바로 주문 확인
-      setFrame(4);
-    }
-  };
+  // 단품
+  const singleMenu = filteredMenus.find((menu) => menu.menuType === "SINGLE");
 
-  // 취소
-  const handleCancel = () => {
-    setSelectedMenu(null);
-    setSelectedSet(null);
-    setSelectedProduct(null);
-    setFrame(1);
-  };
+  // 세트 종류들
+  const setMenuOptions = filteredMenus.filter(
+    (menu) => menu.menuType === "SET",
+  );
 
-  if (frame !== 1) {
+  // 첫 번째 화면에서 세트를 대표해서 보여줄 메뉴
+  const setRepresentative =
+    setMenuOptions.find((menu) => menu.stockQuantity > 0) ?? setMenuOptions[0];
+
+  const allSetsSoldOut =
+    setMenuOptions.length > 0 &&
+    setMenuOptions.every((menu) => menu.stockQuantity === 0);
+
+  const availableSetPrices = setMenuOptions
+    .filter((menu) => menu.stockQuantity > 0)
+    .map((menu) => menu.price);
+
+  const minSetPrice =
+    availableSetPrices.length > 0
+      ? Math.min(...availableSetPrices)
+      : (setRepresentative?.price ?? 0);
+
+  if (loading) {
     return (
-      <KioskOptions
-        frame={frame}
-        selectedMenu={selectedMenu}
-        selectedSet={selectedSet}
-        selectedProduct={selectedProduct}
-        onSelect={(option) => {
-          if (frame === 2) {
-            setSelectedSet(option);
-            setSelectedProduct(null);
-          } else {
-            setSelectedProduct(option);
-          }
-        }}
-        onCancel={handleCancel}
-        onHome={() => setFrame(1)}
-        onNext={() => {
-          if (frame === 2 && selectedSet) {
-            setFrame(3);
-          }
-
-          if (frame === 3 && selectedProduct) {
-            console.log("선택한 주문:", {
-              menu: selectedMenu,
-              set: selectedSet,
-              product: selectedProduct,
-            });
-          }
-        }}
-      />
+      <div className="kiosk-page">
+        <p className="status-message">메뉴를 불러오는 중입니다...</p>
+      </div>
     );
   }
 
+  if (error) {
+    return (
+      <div className="kiosk-page">
+        <p className="status-message error-message">{error}</p>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------
+  // 1단계 : 단품 / 세트 선택
+  // ------------------------------------------------
+
+  if (step === "TYPE") {
+    return (
+      <div className="kiosk-page">
+        <header className="header">
+          <span className="logo">ADPATI</span>
+
+          <span className="menu-name">
+            {selectedBaseMenu?.name
+              ?.replace(" 단품", "")
+              .replace(" 미디움세트", "")
+              .replace(" 라지세트", "")}
+          </span>
+        </header>
+
+        <main className="content">
+          <h1 className="title">세트로 주문하시겠습니까?</h1>
+
+          <div className="option-container">
+            {/* 단품 */}
+            {singleMenu && (
+              <button
+                className={`option-card ${
+                  singleMenu.stockQuantity === 0 ? "sold-out" : ""
+                }`}
+                disabled={singleMenu.stockQuantity === 0}
+                onClick={() => onSelect(singleMenu)}
+              >
+                <div className="image-box">
+                  <img src={singleMenu.imageUrl} alt={singleMenu.name} />
+
+                  {singleMenu.stockQuantity === 0 && (
+                    <div className="sold-out-badge">품절</div>
+                  )}
+                </div>
+
+                <span className="option-name">단품 선택</span>
+
+                <span className="option-price">
+                  {singleMenu.stockQuantity === 0
+                    ? "품절"
+                    : `₩${singleMenu.price.toLocaleString("ko-KR")}`}
+                </span>
+              </button>
+            )}
+
+            {/* 세트 */}
+            {setRepresentative && (
+              <button
+                className={`option-card ${allSetsSoldOut ? "sold-out" : ""}`}
+                disabled={allSetsSoldOut}
+                onClick={() => setStep("SET_SIZE")}
+              >
+                <div className="image-box">
+                  <img src={setRepresentative.imageUrl} alt="불고기버거 세트" />
+
+                  {allSetsSoldOut && <div className="sold-out-badge">품절</div>}
+                </div>
+
+                <span className="option-name">세트 선택</span>
+
+                <span className="option-price">
+                  {allSetsSoldOut
+                    ? "품절"
+                    : `₩${minSetPrice.toLocaleString("ko-KR")}~`}
+                </span>
+              </button>
+            )}
+          </div>
+
+          <button className="cancel-button" onClick={onCancel}>
+            취소하기
+          </button>
+        </main>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------
+  // 2단계 : 미디움 / 라지 세트 선택
+  // ------------------------------------------------
+
   return (
     <div className="kiosk-page">
-      {/* 상단 */}
       <header className="header">
         <span className="logo">ADPATI</span>
-        <span className="menu-name">불고기버거</span>
+
+        <span className="menu-name">불고기버거 세트</span>
       </header>
 
-      {/* 메인 */}
       <main className="content">
-        <h1 className="title">세트로 주문하시겠습니까?</h1>
+        <h1 className="title">주문 확인하기</h1>
 
-        {/* 로딩 중 */}
-        {loading && (
-          <p className="status-message">메뉴를 불러오는 중입니다...</p>
-        )}
+        <p className="status-message">세트 크기를 선택해주세요</p>
 
-        {/* 오류 */}
-        {error && <p className="status-message error-message">{error}</p>}
+        <div className="option-container">
+          {setMenuOptions.map((menu) => {
+            const soldOut = menu.stockQuantity === 0;
 
-        {/* 메뉴 카드 */}
-        {!loading && !error && (
-          <div className="option-container">
-            {menus.map((menu) => {
-              const soldOut = menu.stockQuantity === 0;
+            return (
+              <button
+                key={menu.menuId}
+                className={`option-card ${soldOut ? "sold-out" : ""}`}
+                disabled={soldOut}
+                onClick={() => onSelect(menu)}
+              >
+                <div className="image-box">
+                  <img src={menu.imageUrl} alt={menu.name} />
 
-              return (
-                <button
-                  key={menu.menuId}
-                  className={`option-card ${soldOut ? "sold-out" : ""}`}
-                  onClick={() => handleSelect(menu)}
-                  disabled={soldOut}
-                >
-                  <div className="image-box">
-                    <img src={menu.imageUrl} alt={menu.name} />
+                  {soldOut && <div className="sold-out-badge">품절</div>}
+                </div>
 
-                    {soldOut && <div className="sold-out-badge">품절</div>}
-                  </div>
+                <span className="option-name">{menu.name}</span>
 
-                  <span className="option-name">{menu.name}</span>
+                <span className="option-price">
+                  {soldOut ? "품절" : `₩${menu.price.toLocaleString("ko-KR")}`}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-                  <span
-                    className={`option-price ${soldOut ? "sold-out-text" : ""}`}
-                  >
-                    {soldOut ? "품절" : `₩${menu.price.toLocaleString()}`}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* 취소 */}
-        <button className="cancel-button" onClick={handleCancel}>
-          취소하기
+        <button className="cancel-button" onClick={() => setStep("TYPE")}>
+          이전으로
         </button>
       </main>
     </div>

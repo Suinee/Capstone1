@@ -15,7 +15,7 @@ const paymentMethods = [
   },
 ];
 
-function KioskSettlement() {
+function KioskSettlement({ onBack, onHome }) {
   return (
     <div className="kiosk-settlement-page">
       <header className="kiosk-settlement-header">
@@ -30,7 +30,11 @@ function KioskSettlement() {
 
         <div className="kiosk-payment-methods">
           {paymentMethods.map((method) => (
-            <button type="button" className="payment-method-card" key={method.name}>
+            <button
+              type="button"
+              className="payment-method-card"
+              key={method.name}
+            >
               <div className="payment-method-icon">
                 <img src={method.image} alt="" />
               </div>
@@ -39,13 +43,21 @@ function KioskSettlement() {
           ))}
         </div>
 
-        <button type="button" className="settlement-back-button">
+        <button
+          type="button"
+          className="settlement-back-button"
+          onClick={onBack}
+        >
           이전단계
         </button>
       </main>
 
       <footer className="kiosk-common-footer">
-        <button type="button" className="common-button secondary-btn">
+        <button
+          type="button"
+          className="common-button secondary-btn"
+          onClick={onHome}
+        >
           처음으로
         </button>
         <button type="button" className="common-button primary-btn">

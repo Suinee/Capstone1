@@ -89,3 +89,176 @@
 .menu-item p {
   margin: 5px 0;
 }
+
+/* 메뉴 카드 */
+.menu-item {
+  position: relative;
+}
+
+/* 오른쪽 위 i 버튼 */
+.menu-edit-button {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  width: 34px;
+  height: 34px;
+
+  border: 2px solid #222;
+  border-radius: 50%;
+
+  background: white;
+  color: #222;
+
+  font-size: 20px;
+  font-weight: 800;
+  font-family: serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.menu-edit-button:hover {
+  border-color: #5d83ff;
+  color: #5d83ff;
+}
+
+/* 수정창 배경 */
+.edit-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+/* 수정창 */
+.edit-modal {
+  width: 460px;
+  max-height: 85vh;
+  overflow-y: auto;
+
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 28px;
+  box-sizing: border-box;
+}
+
+/* 수정창 상단 */
+.edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 24px;
+}
+
+.edit-modal-header h2 {
+  margin: 0 0 5px;
+}
+
+.edit-modal-header p {
+  margin: 0;
+  color: #666;
+}
+
+/* 닫기 */
+.edit-close-button {
+  border: none;
+  background: none;
+
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* 입력창 */
+.edit-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edit-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  font-weight: 700;
+}
+
+.edit-modal input {
+  height: 44px;
+
+  padding: 0 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.edit-modal input:focus {
+  outline: none;
+  border-color: #5d83ff;
+}
+
+/* 영양정보 영역 */
+.nutrition-edit-section {
+  margin-top: 10px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #ddd;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nutrition-edit-section h3 {
+  margin: 0 0 5px;
+}
+
+/* 하단 버튼 */
+.edit-modal-buttons {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 16px;
+}
+
+.edit-modal-buttons button {
+  flex: 1;
+
+  height: 46px;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.edit-cancel-button {
+  background: white;
+  border: 1px solid #ccc;
+}
+
+.edit-save-button {
+  background: #5d83ff;
+  border: 1px solid #5d83ff;
+  color: white;
+}

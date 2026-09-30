@@ -52,4 +52,7 @@ public class Menu {
 
     @Column(name = "sodium")
     private Integer sodium;
+
+    @Column(name = "menu_group")
+    private String menuGroup;
 }

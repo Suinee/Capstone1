@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 function App() {
+  const navigate = useNavigate();
   const services = [
     {
       title: "금융서비스",
@@ -226,7 +228,14 @@ function App() {
                     <h3>{service.title}</h3>
                     <p>{service.description}</p>
 
-                    <button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (service.title === "키오스크") {
+                          navigate("/kiosk");
+                        }
+                      }}
+                    >
                       {service.button}
                       <span>›</span>
                     </button>

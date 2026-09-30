@@ -1,13 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import KioskOrder from "./pages/Kiosk/KioskOrder";
+
+import Home from "./pages/MainPage/Home";
+import KioskFlow from "./pages/Kiosk/KioskFlow";
 import AdminMenu from "./AdminMenu";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<KioskOrder />} />
-        <Route path="/admin" element={<AdminMenu />} />
+        <Route path="/" element={<Home />} />
+
+        <Route path="/kiosk" element={<KioskFlow />} />
+
+        <Route path="/admin/menu" element={<AdminMenu />} />
       </Routes>
     </BrowserRouter>
   );
