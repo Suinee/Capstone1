@@ -1,0 +1,250 @@
+.mir-detail-main {
+  padding: 40px 0 100px;
+}
+
+.mir-detail-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.mir-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 13px;
+  color: #697182;
+  margin-bottom: 18px;
+}
+
+.mir-breadcrumb a {
+  color: #697182;
+  text-decoration: none;
+}
+
+.mir-detail-title {
+  margin: 0 0 32px;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #10182c;
+}
+
+.mir-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 48px;
+  align-items: start;
+}
+
+.mir-detail-section {
+  padding: 28px 0;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.mir-detail-section h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-detail-section h3 {
+  margin: 20px 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.mir-sub-heading {
+  margin: 16px 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.mir-overview-list {
+  margin: 0;
+}
+
+.mir-overview-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+
+  padding: 12px 0;
+  border-bottom: 1px solid #f2f3f7;
+
+  font-size: 14px;
+}
+
+.mir-overview-row dt {
+  font-weight: 700;
+  color: #10182c;
+}
+
+.mir-overview-row dd {
+  margin: 0;
+  color: #44495a;
+  line-height: 1.6;
+}
+
+.mir-bullet-list,
+.mir-link-list {
+  margin: 0;
+  padding-left: 18px;
+
+  font-size: 14px;
+  line-height: 1.75;
+  color: #44495a;
+}
+
+.mir-bullet-list li,
+.mir-link-list li {
+  margin-bottom: 8px;
+}
+
+.mir-bullet-list-note {
+  font-size: 13px;
+  color: #697182;
+}
+
+.mir-procedure-list {
+  display: flex;
+  gap: 16px;
+
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.mir-procedure-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 18px;
+  border: 1px solid #dce1ea;
+  border-radius: 12px;
+}
+
+.mir-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+
+  background: #4772ff;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mir-procedure-list strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.mir-step-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+
+  background: #eef3ff;
+  color: #2452b8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mir-note {
+  font-size: 13px;
+  color: #697182;
+  background: #f6f8fc;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.mir-detail-sidebar {
+  position: sticky;
+  top: 96px;
+}
+
+.mir-sidebar-box {
+  padding: 22px;
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  background: white;
+}
+
+.mir-sidebar-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-sidebar-nav {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mir-sidebar-nav a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  font-size: 13px;
+  color: #555e6f;
+  text-decoration: none;
+}
+
+.mir-sidebar-nav li.active a {
+  background: #eef3ff;
+  color: #2452b8;
+  font-weight: 700;
+}
+
+.mir-report-button {
+  width: 100%;
+  height: 46px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #4772ff;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.mir-report-button:hover {
+  background: #2452b8;
+}
+
+@media (max-width: 900px) {
+  .mir-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mir-detail-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .mir-procedure-list {
+    flex-direction: column;
+  }
+}

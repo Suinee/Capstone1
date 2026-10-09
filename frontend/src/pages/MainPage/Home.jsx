@@ -234,6 +234,10 @@ function App() {
                         if (service.title === "키오스크") {
                           navigate("/kiosk");
                         }
+
+                        if (service.title === "공공서비스") {
+                          navigate("/public-service");
+                        }
                       }}
                     >
                       {service.button}

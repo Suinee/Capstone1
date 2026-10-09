@@ -1,0 +1,249 @@
+.ps-apply-main {
+  padding: 40px 0 100px;
+}
+
+.ps-apply-container {
+  width: min(760px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ps-apply-title {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #10182c;
+}
+
+.ps-apply-guide {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #697182;
+}
+
+.ps-service-select-box {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  overflow: hidden;
+
+  margin-bottom: 24px;
+}
+
+.ps-service-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 16px 20px;
+
+  border: none;
+  border-bottom: 1px solid #eef0f5;
+  background: white;
+
+  font-size: 14px;
+  color: #44495a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ps-service-option:last-child {
+  border-bottom: none;
+}
+
+.ps-service-option.selected {
+  background: #eef3ff;
+  color: #2452b8;
+  font-weight: 700;
+}
+
+.ps-check {
+  color: #4772ff;
+  font-weight: 900;
+}
+
+.ps-before-box {
+  padding: 18px 20px;
+  margin-bottom: 28px;
+
+  border-radius: 12px;
+  background: #f6f8fc;
+}
+
+.ps-before-title {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ps-before-box ul {
+  margin: 0;
+  padding-left: 18px;
+
+  font-size: 13px;
+  line-height: 1.7;
+  color: #44495a;
+}
+
+.ps-form-box {
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+
+.ps-form-box-title {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.ps-field-group {
+  padding: 16px 0;
+  border-top: 1px solid #eef0f5;
+}
+
+.ps-form-box .ps-field-group:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.ps-field-label {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.required {
+  color: #ff6d76;
+  font-weight: 600;
+}
+
+.ps-select-row {
+  display: flex;
+  gap: 12px;
+}
+
+.ps-select-row select {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  background: white;
+}
+
+.ps-field-note {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #697182;
+}
+
+.ps-radio-row {
+  display: flex;
+  gap: 28px;
+}
+
+.ps-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  cursor: pointer;
+}
+
+.ps-radio input {
+  accent-color: #4772ff;
+  width: 16px;
+  height: 16px;
+}
+
+.ps-select-fields {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #dce1ea;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ps-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 14px;
+  color: #222b3c;
+  cursor: pointer;
+}
+
+.ps-checkbox input {
+  accent-color: #4772ff;
+  width: 16px;
+  height: 16px;
+}
+
+.ps-receive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.ps-apply-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.ps-outline-button,
+.ps-primary-button {
+  flex: 1;
+  height: 48px;
+
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ps-outline-button {
+  border: 1px solid #c7cee0;
+  background: white;
+  color: #44495a;
+}
+
+.ps-outline-button:hover {
+  background: #f6f8fc;
+}
+
+.ps-primary-button {
+  border: none;
+  background: #4772ff;
+  color: white;
+}
+
+.ps-primary-button:hover {
+  background: #2452b8;
+}
+
+@media (max-width: 600px) {
+  .ps-receive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ps-select-row {
+    flex-direction: column;
+  }
+}

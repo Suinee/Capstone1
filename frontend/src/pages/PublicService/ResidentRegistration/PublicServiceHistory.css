@@ -1,0 +1,181 @@
+.ps-history-main {
+  padding: 40px 0 100px;
+}
+
+.ps-history-container {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ps-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 13px;
+  color: #697182;
+  margin-bottom: 18px;
+}
+
+.ps-breadcrumb a {
+  color: #697182;
+  text-decoration: none;
+}
+
+.ps-history-title {
+  margin: 0 0 28px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #10182c;
+}
+
+.ps-history-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  padding: 18px;
+  margin-bottom: 24px;
+
+  border-radius: 14px;
+  background: #f6f8fc;
+}
+
+.ps-history-filter input[type="date"] {
+  height: 42px;
+  padding: 0 10px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.ps-filter-text {
+  height: 42px;
+  padding: 0 12px;
+  flex: 1;
+  min-width: 160px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.ps-filter-button {
+  height: 42px;
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #4772ff;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ps-history-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.ps-history-table thead {
+  background: #f6f8fc;
+}
+
+.ps-history-table th {
+  padding: 14px 16px;
+
+  font-size: 13px;
+  font-weight: 700;
+  color: #44495a;
+  text-align: left;
+
+  border-bottom: 1px solid #dce1ea;
+}
+
+.ps-history-table td {
+  padding: 16px;
+
+  font-size: 13px;
+  color: #222b3c;
+
+  border-bottom: 1px solid #eef0f5;
+  vertical-align: middle;
+}
+
+.ps-receipt-no {
+  font-weight: 700;
+}
+
+.ps-received-at {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #697182;
+}
+
+.ps-status-badge {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 6px;
+
+  background: #e9fbf0;
+  color: #1f9d55;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ps-doc-button {
+  padding: 6px 14px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #4772ff;
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ps-history-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.ps-outline-button {
+  height: 48px;
+  padding: 0 28px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 10px;
+  background: white;
+
+  font-size: 15px;
+  font-weight: 800;
+  color: #44495a;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ps-outline-button:hover {
+  background: #f6f8fc;
+}
+
+@media (max-width: 700px) {
+  .ps-history-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

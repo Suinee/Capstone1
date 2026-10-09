@@ -1,0 +1,70 @@
+/* Home.css .navbar 와 동일한 구조/폰트/크기/색상 규격 (중앙 정렬 버전) */
+
+.ps-navbar {
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #eef0f5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ps-nav-inner {
+  width: min(1180px, calc(100% - 48px));
+  height: 100%;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.ps-logo {
+  justify-self: start;
+
+  color: #2d59b3;
+  font-size: 23px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.ps-nav-menu {
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+.ps-nav-menu a {
+  color: #555e6f;
+  font-size: 16px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.ps-nav-menu a:hover {
+  color: #4772ff;
+}
+
+@media (max-width: 700px) {
+  .ps-navbar {
+    height: 60px;
+  }
+
+  .ps-nav-inner {
+    width: calc(100% - 38px);
+  }
+
+  .ps-logo {
+    font-size: 18px;
+  }
+
+  .ps-nav-menu {
+    gap: 20px;
+  }
+
+  .ps-nav-menu a {
+    font-size: 10px;
+  }
+}
