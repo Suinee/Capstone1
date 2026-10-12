@@ -8,8 +8,15 @@ function KioskPayment({
   onCancel,
   onAddMenu,
   onHome,
+
+  onChangeMenu,
+  onChangeSide,
+  onChangeDrink,
+
+  initialQuantity = 1,
+  isCartEditing = false,
 }) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(initialQuantity);
 
   const handleDecrease = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
@@ -33,12 +40,32 @@ function KioskPayment({
     setQuantity((prev) => prev + 1);
   };
 
-  const items = [selectedMenu, selectedSide, selectedDrink].filter(Boolean);
+  const items = [
+    {
+      type: "MENU",
+      item: selectedMenu,
+      onChange: onChangeMenu,
+    },
+    {
+      type: "SIDE",
+      item: selectedSide,
+      onChange: onChangeSide,
+    },
+    {
+      type: "DRINK",
+      item: selectedDrink,
+      onChange: onChangeDrink,
+    },
+  ].filter((data) => data.item);
+
+  const isSet = selectedMenu?.menuType === "SET";
 
   const totalPrice =
-    ((selectedMenu?.price || 0) +
-      (selectedSide?.price || 0) +
-      (selectedDrink?.price || 0)) *
+    (Number(selectedMenu?.price ?? 0) +
+      (selectedMenu?.menuType === "SET"
+        ? Number(selectedSide?.setExtraPrice ?? 0) +
+          Number(selectedDrink?.setExtraPrice ?? 0)
+        : 0)) *
     quantity;
 
   return (
@@ -65,14 +92,15 @@ function KioskPayment({
         </div>
 
         <div className="kiosk-ingredient-list">
-          {items.map((item) => (
-            <div className="ingredient-item" key={item.menuId}>
+          {items.map(({ type, item, onChange }) => (
+            <div className="ingredient-item" key={type}>
               <span className="ingredient-name">{item.name}</span>
 
               <div className="ingredient-actions">
                 <button
                   type="button"
                   className="ingredient-button tertiary-btn"
+                  onClick={onChange}
                 >
                   변경
                 </button>
@@ -116,7 +144,7 @@ function KioskPayment({
             onClick={handleAddMenu}
             disabled={!selectedMenu}
           >
-            메뉴 추가
+            {isCartEditing ? "수정 완료" : "메뉴 추가"}
           </button>
         </div>
       </main>

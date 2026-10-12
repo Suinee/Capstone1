@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import "./KioskMenu.css";
 
-function KioskMenu({ onSelectMenu, cart = [], onPayment }) {
+function KioskMenu({
+  onSelectMenu,
+  cart = [],
+  onPayment,
+  onEditCartItem,
+  onRemoveCartItem,
+}) {
   // 현재 선택한 카테고리
   const [selectedCategory, setSelectedCategory] = useState("BURGER");
 
@@ -133,9 +139,7 @@ function KioskMenu({ onSelectMenu, cart = [], onPayment }) {
                         <span className="menu-card-price">
                           {soldOut
                             ? "품절"
-                            : menu.price === 0
-                              ? "기본"
-                              : `₩${menu.price.toLocaleString("ko-KR")}`}
+                            : `₩${menu.price.toLocaleString("ko-KR")}`}
                         </span>
                       )}
                     </button>
@@ -165,21 +169,39 @@ function KioskMenu({ onSelectMenu, cart = [], onPayment }) {
             <div className="cart-items">
               {cart.map((item) => (
                 <div className="cart-item" key={item.cartId}>
-                  <div className="cart-item-info">
-                    <strong>{item.selectedMenu?.name}</strong>
+                  {/* 주문 클릭 시 수정 화면으로 이동 */}
+                  <button
+                    type="button"
+                    className="cart-item-edit"
+                    onClick={() => onEditCartItem(item)}
+                    aria-label={`${item.selectedMenu?.name} 주문 수정`}
+                  >
+                    <div className="cart-item-info">
+                      <strong>{item.selectedMenu?.name}</strong>
 
-                    <span>
-                      {[item.selectedSide?.name, item.selectedDrink?.name]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                  </div>
+                      <span>
+                        {[item.selectedSide?.name, item.selectedDrink?.name]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    </div>
 
-                  <div className="cart-item-quantity">{item.quantity}</div>
+                    <div className="cart-item-quantity">{item.quantity}</div>
 
-                  <strong className="cart-item-price">
-                    {item.totalPrice?.toLocaleString("ko-KR")}원
-                  </strong>
+                    <strong className="cart-item-price">
+                      {item.totalPrice?.toLocaleString("ko-KR")}원
+                    </strong>
+                  </button>
+
+                  {/* X 버튼 : 해당 주문 삭제 */}
+                  <button
+                    type="button"
+                    className="cart-item-delete"
+                    onClick={() => onRemoveCartItem(item.cartId)}
+                    aria-label={`${item.selectedMenu?.name} 주문 삭제`}
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
             </div>

@@ -33,6 +33,9 @@ public class MenuController {
     // 메뉴 추가
     @PostMapping
     public Menu addMenu(@RequestBody Menu menu) {
+        if (menu.getSetExtraPrice() == null) {
+            menu.setSetExtraPrice(0);
+        }
         return menuRepository.save(menu);
     }
 
@@ -50,6 +53,11 @@ public class MenuController {
         // 가격
         if (updatedMenu.getPrice() != null) {
             menu.setPrice(updatedMenu.getPrice());
+        }
+
+        // 세트 변경 추가금 (0원도 저장 가능)
+        if (updatedMenu.getSetExtraPrice() != null) {
+            menu.setSetExtraPrice(updatedMenu.getSetExtraPrice());
         }
 
         // 재고

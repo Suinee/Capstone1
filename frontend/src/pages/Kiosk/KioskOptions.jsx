@@ -5,6 +5,9 @@ import "./KioskOptions.css";
 function ProductCard({ option, selected, onSelect }) {
   const soldOut = option.stockQuantity === 0;
 
+  // 0원, null 모두 안전하게 처리
+  const setExtraPrice = Number(option.setExtraPrice ?? 0);
+
   return (
     <button
       type="button"
@@ -26,9 +29,9 @@ function ProductCard({ option, selected, onSelect }) {
       <span className="option-price">
         {soldOut
           ? "품절"
-          : option.price === 0
+          : setExtraPrice === 0
             ? "기본"
-            : `+ ₩${option.price.toLocaleString("ko-KR")}`}
+            : `+ ₩${setExtraPrice.toLocaleString("ko-KR")}`}
       </span>
     </button>
   );
@@ -43,6 +46,12 @@ export default function KioskOptions({
   onCancel,
   onHome,
   onNext,
+
+  isEditing = false,
+  editDraft,
+  onEditSelect,
+  onEditConfirm,
+  onEditCancel,
 }) {
   const nutritionDialog = useRef(null);
 
@@ -60,7 +69,11 @@ export default function KioskOptions({
   const isSideStep = frame === 2;
 
   // 현재 선택된 메뉴
-  const selected = isSideStep ? selectedSide : selectedDrink;
+  const selected = isEditing
+    ? editDraft
+    : isSideStep
+      ? selectedSide
+      : selectedDrink;
 
   // 진행 단계
   const currentStep = frame - 1;
@@ -156,7 +169,7 @@ export default function KioskOptions({
                   key={option.menuId}
                   option={option}
                   selected={selected?.menuId === option.menuId}
-                  onSelect={onSelect}
+                  onSelect={isEditing ? onEditSelect : onSelect}
                 />
               ))}
             </div>
@@ -165,21 +178,26 @@ export default function KioskOptions({
 
         {/* 하단 버튼 */}
         <footer className="order-footer">
-          <button className="cancel-button" onClick={onCancel}>
+          <button
+            className="cancel-button"
+            onClick={isEditing ? onEditCancel : onCancel}
+          >
             취소하기
           </button>
 
           <div className="order-navigation">
-            <button className="order-navigation-button" onClick={onHome}>
-              처음으로
-            </button>
+            {!isEditing && (
+              <button className="order-navigation-button" onClick={onHome}>
+                처음으로
+              </button>
+            )}
 
             <button
               className="order-navigation-button next-button"
               disabled={!selected}
-              onClick={onNext}
+              onClick={isEditing ? onEditConfirm : onNext}
             >
-              다음
+              {isEditing ? "수정하기" : "다음"}
             </button>
           </div>
         </footer>

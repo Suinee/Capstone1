@@ -23,6 +23,10 @@ public class Menu {
     @Column(nullable = false)
     private Integer price;
 
+    // 세트 구성 변경 시 추가금 (사이드/음료), 단독 판매가는 price
+    @Column(name = "set_extra_price")
+    private Integer setExtraPrice;
+
     @Column(name = "image_url")
     private String imageUrl;
 

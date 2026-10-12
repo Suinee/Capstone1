@@ -7,6 +7,7 @@ export default function AdminMenu() {
   const [form, setForm] = useState({
     name: "",
     price: "",
+    setExtraPrice: "0",
     imageUrl: "",
     stockQuantity: "",
     category: "BURGER",
@@ -18,6 +19,7 @@ export default function AdminMenu() {
 
   const [editForm, setEditForm] = useState({
     price: "",
+    setExtraPrice: "0",
     stockQuantity: "",
     calories: "",
     carbohydrate: "",
@@ -31,6 +33,7 @@ export default function AdminMenu() {
 
     setEditForm({
       price: menu.price ?? "",
+      setExtraPrice: menu.setExtraPrice ?? 0,
       stockQuantity: menu.stockQuantity ?? "",
       calories: menu.calories ?? "",
       carbohydrate: menu.carbohydrate ?? "",
@@ -93,6 +96,11 @@ export default function AdminMenu() {
       stockQuantity: Number(editForm.stockQuantity),
     };
 
+    // 사이드/음료는 단독 판매가와 세트 변경 추가금을 각각 저장
+    if (editingMenu.category === "SIDE" || editingMenu.category === "DRINK") {
+      body.setExtraPrice = Number(editForm.setExtraPrice);
+    }
+
     // 버거만 영양정보 전송
     if (editingMenu.category === "BURGER") {
       body.calories = numberOrNull(editForm.calories);
@@ -137,6 +145,8 @@ export default function AdminMenu() {
     const newMenu = {
       name: form.name,
       price: Number(form.price),
+      setExtraPrice:
+        form.category === "BURGER" ? 0 : Number(form.setExtraPrice),
       imageUrl: form.imageUrl,
       stockQuantity: Number(form.stockQuantity),
 
@@ -167,6 +177,7 @@ export default function AdminMenu() {
       setForm({
         name: "",
         price: "",
+        setExtraPrice: "0",
         imageUrl: "",
         stockQuantity: "",
         category: "BURGER",
@@ -196,11 +207,28 @@ export default function AdminMenu() {
         <input
           name="price"
           type="number"
-          placeholder="가격"
+          placeholder={
+            form.category === "BURGER" ? "버거 가격" : "단독 판매 가격"
+          }
+          min="0"
+          step="1"
           value={form.price}
           onChange={handleChange}
           required
         />
+
+        {(form.category === "SIDE" || form.category === "DRINK") && (
+          <input
+            name="setExtraPrice"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="세트 변경 추가금 (기본 메뉴는 0)"
+            value={form.setExtraPrice}
+            onChange={handleChange}
+            required
+          />
+        )}
 
         <input
           name="imageUrl"
@@ -267,7 +295,16 @@ export default function AdminMenu() {
 
             <div>
               <strong>{menu.name}</strong>
-              <p>₩{menu.price.toLocaleString()}</p>
+              <p>
+                {menu.category === "BURGER" ? "가격" : "단독 판매가"}: ₩
+                {(menu.price ?? 0).toLocaleString("ko-KR")}
+              </p>
+              {(menu.category === "SIDE" || menu.category === "DRINK") && (
+                <p>
+                  세트 추가금: +₩
+                  {(menu.setExtraPrice ?? 0).toLocaleString("ko-KR")}
+                </p>
+              )}
               <p>재고: {menu.stockQuantity}</p>
             </div>
           </div>
@@ -294,15 +331,35 @@ export default function AdminMenu() {
 
             <form onSubmit={handleUpdate}>
               <label>
-                가격
+                {editingMenu.category === "BURGER"
+                  ? "버거 가격 (원)"
+                  : "단독 판매 가격 (원)"}
                 <input
                   type="number"
                   name="price"
+                  min="0"
+                  step="1"
                   value={editForm.price}
                   onChange={handleEditChange}
                   required
                 />
               </label>
+
+              {(editingMenu.category === "SIDE" ||
+                editingMenu.category === "DRINK") && (
+                <label>
+                  세트 변경 추가금 (원)
+                  <input
+                    type="number"
+                    name="setExtraPrice"
+                    min="0"
+                    step="1"
+                    value={editForm.setExtraPrice}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </label>
+              )}
 
               <label>
                 재고

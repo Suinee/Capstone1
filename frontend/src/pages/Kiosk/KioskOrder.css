@@ -312,3 +312,32 @@ body {
 .error-message {
   color: #d64040;
 }
+
+.order-edit-actions {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.edit-confirm-button {
+  min-width: 280px;
+  height: 70px;
+  border: none;
+  border-radius: 16px;
+  background: #5d83ff;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-confirm-button:disabled {
+  background: #d9d9d9;
+  cursor: default;
+}
+
+.option-card.is-selected {
+  border: 3px solid #5d83ff;
+  background-color: #f0f4ff;
+}

@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import "./KioskOrder.css";
 
-function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
+function KioskOrder({
+  selectedBaseMenu,
+  onSelect,
+  onCancel,
+
+  isEditing = false,
+  editDraft,
+  onEditSelect,
+  onEditConfirm,
+  onEditCancel,
+}) {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -104,9 +114,19 @@ function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
               <button
                 className={`option-card ${
                   singleMenu.stockQuantity === 0 ? "sold-out" : ""
+                } ${
+                  isEditing && editDraft?.menuId === singleMenu.menuId
+                    ? "is-selected"
+                    : ""
                 }`}
                 disabled={singleMenu.stockQuantity === 0}
-                onClick={() => onSelect(singleMenu)}
+                onClick={() => {
+                  if (isEditing) {
+                    onEditSelect(singleMenu);
+                  } else {
+                    onSelect(singleMenu);
+                  }
+                }}
               >
                 <div className="image-box">
                   <img src={singleMenu.imageUrl} alt={singleMenu.name} />
@@ -127,9 +147,14 @@ function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
             )}
 
             {/* 세트 */}
+            {/* 세트 */}
             {setRepresentative && (
               <button
-                className={`option-card ${allSetsSoldOut ? "sold-out" : ""}`}
+                className={`option-card ${allSetsSoldOut ? "sold-out" : ""} ${
+                  isEditing && editDraft?.menuType === "SET"
+                    ? "is-selected"
+                    : ""
+                }`}
                 disabled={allSetsSoldOut}
                 onClick={() => setStep("SET_SIZE")}
               >
@@ -150,9 +175,25 @@ function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
             )}
           </div>
 
-          <button className="cancel-button" onClick={onCancel}>
-            취소하기
-          </button>
+          {isEditing ? (
+            <div className="order-edit-actions">
+              <button className="cancel-button" onClick={onEditCancel}>
+                취소하기
+              </button>
+
+              <button
+                className="edit-confirm-button"
+                disabled={editDraft?.menuType !== "SINGLE"}
+                onClick={onEditConfirm}
+              >
+                수정하기
+              </button>
+            </div>
+          ) : (
+            <button className="cancel-button" onClick={onCancel}>
+              취소하기
+            </button>
+          )}
         </main>
       </div>
     );
@@ -182,9 +223,19 @@ function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
             return (
               <button
                 key={menu.menuId}
-                className={`option-card ${soldOut ? "sold-out" : ""}`}
+                className={`option-card ${soldOut ? "sold-out" : ""} ${
+                  isEditing && editDraft?.menuId === menu.menuId
+                    ? "is-selected"
+                    : ""
+                }`}
                 disabled={soldOut}
-                onClick={() => onSelect(menu)}
+                onClick={() => {
+                  if (isEditing) {
+                    onEditSelect(menu);
+                  } else {
+                    onSelect(menu);
+                  }
+                }}
               >
                 <div className="image-box">
                   <img src={menu.imageUrl} alt={menu.name} />
@@ -202,9 +253,21 @@ function KioskOrder({ selectedBaseMenu, onSelect, onCancel }) {
           })}
         </div>
 
-        <button className="cancel-button" onClick={() => setStep("TYPE")}>
-          이전으로
-        </button>
+        <div className="order-edit-actions">
+          <button className="cancel-button" onClick={() => setStep("TYPE")}>
+            이전으로
+          </button>
+
+          {isEditing && (
+            <button
+              className="edit-confirm-button"
+              disabled={editDraft?.menuType !== "SET"}
+              onClick={onEditConfirm}
+            >
+              수정하기
+            </button>
+          )}
+        </div>
       </main>
     </div>
   );
