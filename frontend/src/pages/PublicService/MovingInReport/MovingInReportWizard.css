@@ -1,0 +1,768 @@
+.mir-wizard-main {
+  padding: 40px 0 100px;
+}
+
+.mir-wizard-container {
+  width: min(820px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ===== 헤더 / 진행 표시줄 ===== */
+
+.mir-wizard-title {
+  margin: 0 0 24px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #10182c;
+}
+
+.mir-progress {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.mir-progress-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mir-progress-step {
+  display: flex;
+  align-items: center;
+}
+
+.mir-progress-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: 2px solid #c7cee0;
+  background: white;
+
+  font-size: 11px;
+  color: white;
+  font-weight: 800;
+}
+
+.mir-progress-dot.current {
+  border-color: #4772ff;
+  box-shadow: 0 0 0 4px rgba(71, 114, 255, 0.15);
+}
+
+.mir-progress-dot.current::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4772ff;
+}
+
+.mir-progress-dot.done {
+  border-color: #4772ff;
+  background: #4772ff;
+}
+
+.mir-progress-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e6ef;
+}
+
+.mir-progress-line.done {
+  background: #4772ff;
+}
+
+.mir-progress-labels {
+  margin-top: 8px;
+}
+
+.mir-progress-number {
+  display: block;
+  font-size: 11px;
+  color: #9aa1b0;
+}
+
+.mir-progress-label {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #44495a;
+}
+
+.mir-step-counter {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4772ff;
+}
+
+.mir-section-title {
+  margin: 0 0 24px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #10182c;
+}
+
+/* ===== 공용 박스 ===== */
+
+.mir-before-box {
+  padding: 20px 22px;
+  margin-bottom: 28px;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+}
+
+.mir-before-title {
+  margin: 0 0 12px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.mir-before-box hr {
+  border: none;
+  border-top: 1px dashed #dce1ea;
+  margin: 14px 0;
+}
+
+.mir-before-box p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #44495a;
+}
+
+.mir-before-box a {
+  color: #2452b8;
+  font-weight: 700;
+}
+
+.mir-notice-block {
+  margin-bottom: 28px;
+}
+
+.mir-notice-block h2 {
+  margin: 0 0 16px;
+  font-size: 19px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-notice-block h3 {
+  margin: 20px 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mir-notice-block ul,
+.mir-notice-block ol {
+  margin: 0 0 10px;
+  padding-left: 18px;
+
+  font-size: 13px;
+  line-height: 1.8;
+  color: #44495a;
+}
+
+.mir-notice-block li {
+  margin-bottom: 6px;
+}
+
+.mir-info-highlight-box {
+  margin: 16px 0;
+  padding: 16px 18px;
+
+  border-radius: 10px;
+  background: #f6f8fc;
+}
+
+.mir-info-highlight-box p {
+  margin: 0 0 0 0;
+  font-size: 13px;
+}
+
+.mir-info-highlight-box ul {
+  margin-top: 8px;
+}
+
+.mir-checkbox-row {
+  display: flex;
+  justify-content: center;
+
+  padding: 18px;
+  margin-top: 24px;
+
+  border-radius: 12px;
+  background: #f6f8fc;
+}
+
+.mir-checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mir-checkbox-row input {
+  width: 18px;
+  height: 18px;
+  accent-color: #4772ff;
+}
+
+/* ===== 폼 박스 ===== */
+
+.mir-form-box {
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+
+.mir-form-box-title {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-field-group {
+  padding: 16px 0;
+  border-top: 1px solid #eef0f5;
+}
+
+.mir-form-box .mir-field-group:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.mir-field-label {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.mir-required {
+  color: #ff6d76;
+  font-weight: 600;
+}
+
+.mir-readonly-input,
+.mir-text-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+}
+
+.mir-readonly-input {
+  background: #eef0f5;
+  color: #697182;
+}
+
+.mir-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mir-phone-row input {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+
+  font-size: 14px;
+  text-align: center;
+}
+
+.mir-reason-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 24px;
+}
+
+.mir-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  cursor: pointer;
+}
+
+.mir-radio input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+.mir-reason-other-input {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+
+  height: 42px;
+  padding: 0 14px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+/* ===== 주소 조회 ===== */
+
+.mir-address-section-title {
+  margin: 0 0 18px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-address-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.mir-address-row select {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  background: white;
+}
+
+.mir-address-row select:disabled {
+  background: #f2f3f7;
+  color: #9aa1b0;
+}
+
+.mir-address-query-button {
+  flex-shrink: 0;
+  padding: 0 18px;
+
+  border: 1px dashed #4772ff;
+  border-radius: 8px;
+  background: white;
+
+  color: #4772ff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mir-address-error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff6d76;
+  line-height: 1.6;
+}
+
+.mir-address-table {
+  width: 100%;
+  margin-top: 16px;
+  border-top: 1px solid #dce1ea;
+}
+
+.mir-address-table-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+
+  border-bottom: 1px solid #eef0f5;
+}
+
+.mir-address-table-row dt {
+  padding: 14px 16px;
+  background: #f6f8fc;
+
+  font-size: 13px;
+  font-weight: 700;
+  color: #44495a;
+}
+
+.mir-address-table-row dd {
+  margin: 0;
+  padding: 14px 16px;
+
+  font-size: 14px;
+  color: #222b3c;
+}
+
+.mir-not-found-message {
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff6d76;
+}
+
+/* ===== 이사 가는 사람 선택 테이블 ===== */
+
+.mir-household-table {
+  width: 100%;
+  margin-top: 18px;
+  border-collapse: collapse;
+
+  border: 1px solid #dce1ea;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mir-household-table th {
+  padding: 12px 14px;
+
+  background: #f6f8fc;
+  font-size: 13px;
+  font-weight: 700;
+  color: #44495a;
+  text-align: left;
+
+  border-bottom: 1px solid #dce1ea;
+}
+
+.mir-household-table td {
+  padding: 12px 14px;
+
+  font-size: 13px;
+  color: #222b3c;
+
+  border-bottom: 1px solid #eef0f5;
+}
+
+.mir-household-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+.mir-applicant-tag {
+  margin-left: 4px;
+  color: #4772ff;
+  font-weight: 700;
+}
+
+/* ===== 동의 박스 ===== */
+
+.mir-consent-section-title {
+  margin: 28px 0 14px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-consent-box {
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+}
+
+.mir-consent-box-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.mir-consent-box p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #44495a;
+}
+
+.mir-consent-box strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.mir-consent-radio-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.mir-extra-consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mir-extra-consent-row input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+/* ===== 현재 주소 (4단계) ===== */
+
+.mir-search-row {
+  display: flex;
+  gap: 10px;
+}
+
+.mir-search-row input {
+  flex: 1;
+}
+
+.mir-search-button {
+  flex-shrink: 0;
+  padding: 0 18px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  background: white;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #44495a;
+  cursor: pointer;
+}
+
+.mir-building-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mir-building-row select,
+.mir-building-row input {
+  height: 42px;
+  padding: 0 12px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.mir-building-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #697182;
+}
+
+.mir-helper-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #4772ff;
+}
+
+.mir-detail-address-input {
+  width: 100%;
+  margin-top: 14px;
+
+  height: 42px;
+  padding: 0 14px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.mir-detail-address-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #697182;
+  line-height: 1.6;
+}
+
+.mir-household-type-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== 부가 서비스 아코디언 ===== */
+
+.mir-extra-services {
+  margin: 28px 0;
+}
+
+.mir-extra-services-title {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.mir-accordion-item {
+  border: 1px solid #dce1ea;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.mir-accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: none;
+  background: white;
+  cursor: pointer;
+
+  font-size: 13px;
+  color: #222b3c;
+  text-align: left;
+}
+
+.mir-accordion-header input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+.mir-accordion-header span.mir-accordion-text {
+  flex: 1;
+}
+
+.mir-accordion-chevron {
+  color: #9aa1b0;
+  transition: 0.2s;
+}
+
+.mir-accordion-chevron.open {
+  transform: rotate(180deg);
+}
+
+.mir-accordion-body {
+  padding: 0 16px 14px 44px;
+  font-size: 12px;
+  color: #697182;
+  line-height: 1.6;
+}
+
+/* ===== 버튼 ===== */
+
+.mir-wizard-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.mir-wizard-buttons-left {
+  display: flex;
+  gap: 12px;
+}
+
+.mir-ghost-button,
+.mir-outline-button,
+.mir-primary-button {
+  height: 48px;
+  padding: 0 26px;
+
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mir-ghost-button {
+  border: 1px solid #c7cee0;
+  background: white;
+  color: #44495a;
+}
+
+.mir-outline-button {
+  border: 1px solid #c7cee0;
+  background: white;
+  color: #44495a;
+}
+
+.mir-primary-button {
+  border: none;
+  background: #4772ff;
+  color: white;
+}
+
+.mir-primary-button:disabled {
+  background: #c7cee0;
+  cursor: not-allowed;
+}
+
+.mir-primary-button:not(:disabled):hover {
+  background: #2452b8;
+}
+
+/* ===== 완료 페이지 ===== */
+
+.mir-complete-box {
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.mir-complete-icon {
+  font-size: 52px;
+}
+
+.mir-complete-title {
+  margin: 20px 0 10px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #10182c;
+}
+
+.mir-complete-desc {
+  margin: 0 0 30px;
+  font-size: 14px;
+  color: #697182;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .mir-reason-grid,
+  .mir-building-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mir-wizard-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .mir-wizard-buttons-left {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,318 @@
+.ps-page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #222b3c;
+}
+
+.ps-detail-main {
+  padding: 40px 0 100px;
+}
+
+.ps-detail-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ps-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 13px;
+  color: #697182;
+  margin-bottom: 18px;
+}
+
+.ps-breadcrumb a {
+  color: #697182;
+  text-decoration: none;
+}
+
+.ps-detail-title {
+  margin: 0 0 32px;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #10182c;
+}
+
+.ps-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 48px;
+  align-items: start;
+}
+
+.ps-detail-section {
+  padding: 28px 0;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.ps-detail-section h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.ps-detail-section h3 {
+  margin: 20px 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.ps-sub-heading {
+  margin: 16px 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.ps-overview-list {
+  margin: 0;
+}
+
+.ps-overview-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+
+  padding: 12px 0;
+  border-bottom: 1px solid #f2f3f7;
+
+  font-size: 14px;
+}
+
+.ps-overview-row dt {
+  font-weight: 700;
+  color: #10182c;
+}
+
+.ps-overview-row dd {
+  margin: 0;
+  color: #44495a;
+  line-height: 1.6;
+}
+
+.ps-bullet-list,
+.ps-link-list {
+  margin: 0;
+  padding-left: 18px;
+
+  font-size: 14px;
+  line-height: 1.75;
+  color: #44495a;
+}
+
+.ps-bullet-list li,
+.ps-link-list li {
+  margin-bottom: 8px;
+}
+
+.ps-bullet-list-note {
+  font-size: 13px;
+  color: #697182;
+}
+
+.ps-procedure-list {
+  display: flex;
+  gap: 16px;
+
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.ps-procedure-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 18px;
+  border: 1px solid #dce1ea;
+  border-radius: 12px;
+}
+
+.ps-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+
+  background: #4772ff;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ps-procedure-list strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.ps-step-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+
+  background: #eef3ff;
+  color: #2452b8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ps-note {
+  font-size: 13px;
+  color: #697182;
+  background: #f6f8fc;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.ps-survey-box {
+  margin-top: 36px;
+  padding: 28px;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  background: #f6f8fc;
+
+  text-align: center;
+}
+
+.ps-survey-question {
+  margin: 0 0 16px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.ps-survey-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ps-survey-buttons button {
+  padding: 10px 22px;
+
+  border: 1px solid #c7cee0;
+  border-radius: 8px;
+  background: white;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ps-report-banner {
+  margin-top: 24px;
+  padding: 22px 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 14px;
+  background: #10182c;
+  color: white;
+}
+
+.ps-report-banner strong {
+  font-size: 16px;
+}
+
+.ps-report-banner p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #c6cbe0;
+}
+
+.ps-report-banner span {
+  font-size: 22px;
+}
+
+.ps-detail-sidebar {
+  position: sticky;
+  top: 96px;
+}
+
+.ps-sidebar-box {
+  padding: 22px;
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  background: white;
+}
+
+.ps-sidebar-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.ps-sidebar-nav {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ps-sidebar-nav a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  font-size: 13px;
+  color: #555e6f;
+  text-decoration: none;
+}
+
+.ps-sidebar-nav li.active a {
+  background: #eef3ff;
+  color: #2452b8;
+  font-weight: 700;
+}
+
+.ps-issue-button {
+  width: 100%;
+  height: 46px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #4772ff;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.ps-issue-button:hover {
+  background: #2452b8;
+}
+
+@media (max-width: 900px) {
+  .ps-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ps-detail-sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .ps-procedure-list {
+    flex-direction: column;
+  }
+}
