@@ -12,6 +12,7 @@ import { createScoreEngine } from "./scoreEngine.js";
 import { HesitationContext } from "./useHesitation.js";
 import useBehaviorCollector from "./useBehaviorCollector.js";
 import useAdaptiveHelp from "./useAdaptiveHelp.js";
+import HesitationDebugPanel from "./components/HesitationDebugPanel.jsx";
 
 export default function HesitationProvider({
   children,
@@ -103,11 +104,11 @@ export default function HesitationProvider({
   );
 
   return (
-    <HesitationContext.Provider value={value}>
-      {/* 기존 레이아웃에 별도 박스를 추가하지 않도록 설정 */}
-      <div ref={rootRef} style={{ display: "contents" }}>
-        {children}
+  <HesitationContext.Provider value={value}>
+    <div ref={rootRef} style={{ display: "contents" }}>
+      {children}
+      <HesitationDebugPanel />
       </div>
-    </HesitationContext.Provider>
-  );
+      </HesitationContext.Provider>
+    );
 }
