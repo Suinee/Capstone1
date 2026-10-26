@@ -108,11 +108,16 @@ export function evaluateRules ({
             enters,
             (event) => event.targetId,
         )) {
-            const hoverIds = new Set(items.map((event) => event.hoverIds));
+            // 수집기가 보내는 속성명은 hoverId
+            const hoverIds = new Set(
+                items.map((event) => event.hoverId),
+            );
 
-            const duration = recent.filter(
+            const duration = recent
+            .filter(
                 (event) =>
-                    event.type === "hover_slice" && hoverIds.has(event.hoverIds),
+                    event.type === "hover_slice" &&
+                hoverIds.has(event.hoverId),
             )
             .reduce((total, event) => {
                 const clippedStart = Math.max(
@@ -120,7 +125,10 @@ export function evaluateRules ({
                     now - config.windowMs,
                 );
 
-                return total + Math.max(0, event.time - clippedStart);
+                return (
+                    total +
+                    Math.max(0, event.time - clippedStart)
+                );
             }, 0);
 
             if (
@@ -138,6 +146,7 @@ export function evaluateRules ({
             }
         }
     }
+    
     // 입력 중단 이후 반복 수정
     if (enabled.has("inputRevision")) {
         const inputEvents = fresh(
