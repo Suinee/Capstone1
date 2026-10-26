@@ -41,8 +41,12 @@ function KioskFlow() {
     setEditingCartId(null);
     setEditTarget(null);
     setEditDraft(null);
+    setSimpleEditCategory(null);
 
+    setCart([]);
     setFrame(0);
+
+    window.location.replace("/");
   };
   // 장바구니에서 메뉴를 클릭했을 때
   const handleEditCartItem = (item) => {
@@ -144,11 +148,18 @@ function KioskFlow() {
     setEditTarget(target);
 
     if (target === "MENU") {
+      if (
+        selectedMenu?.category === "SIDE" ||
+        selectedMenu?.category === "DRINK"
+      ) {
+        setEditTarget(null);
+        setSimpleEditCategory(selectedMenu.category);
+        setFrame(6);
+        return;
+      }
+
       setEditDraft(selectedMenu);
-
-      // 현재 버거 그룹을 KioskOrder에서 사용할 수 있도록 설정
       setSelectedBaseMenu(selectedMenu);
-
       setFrame(1);
     }
 

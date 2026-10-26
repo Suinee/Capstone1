@@ -63,7 +63,11 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
 
   if (phase === "processing") {
     return (
-      <div className="kiosk-payment-status-page" role="status" aria-live="polite">
+      <div
+        className="kiosk-payment-status-page"
+        role="status"
+        aria-live="polite"
+      >
         <div className="kiosk-payment-status-top">결제 진행 중</div>
         <main className="kiosk-payment-processing">
           <div className="kiosk-payment-spinner" aria-hidden="true" />
@@ -77,17 +81,28 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
 
   if (phase === "complete") {
     return (
-      <div className="kiosk-payment-status-page" role="status" aria-live="polite">
+      <div
+        className="kiosk-payment-status-page"
+        role="status"
+        aria-live="polite"
+      >
         <div className="kiosk-payment-status-top">결제 완료</div>
         <main className="kiosk-payment-complete">
-          <h1 className="kiosk-payment-complete-title">결제가 완료되었습니다</h1>
+          <h1 className="kiosk-payment-complete-title">
+            결제가 완료되었습니다
+          </h1>
 
           <div className="kiosk-payment-queue-block">
             <h2>대기번호</h2>
-            <strong className="kiosk-payment-queue-number">{queueNumber}</strong>
+            <strong className="kiosk-payment-queue-number">
+              {queueNumber}
+            </strong>
           </div>
 
-          <section className="kiosk-payment-receipt-section" aria-label="영수증 수령 안내">
+          <section
+            className="kiosk-payment-receipt-section"
+            aria-label="영수증 수령 안내"
+          >
             <h2>영수증을 꼭 가져가세요</h2>
             <svg
               className="kiosk-payment-receipt-icon"
@@ -103,13 +118,22 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
                 strokeWidth="3.5"
                 strokeLinejoin="round"
               />
-              <path d="M28 34H72M28 48H72M28 62H72M28 76H60M28 91H50" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-              <path d="M33 21H67" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+              <path
+                d="M28 34H72M28 48H72M28 62H72M28 76H60M28 91H50"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M33 21H67"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
             </svg>
             <p>
               제품 수령 시 영수증의 대기번호가 필요합니다.
-              <br />
-              꼭 소지 부탁드립니다.
+              <br />꼭 소지 부탁드립니다.
             </p>
           </section>
 

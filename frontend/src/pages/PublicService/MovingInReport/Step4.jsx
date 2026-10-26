@@ -2,9 +2,14 @@ import { useState } from "react";
 import MovingInReportTopBar from "./MovingInReportTopBar";
 import WizardHeader from "./WizardHeader";
 import "./MovingInReportWizard.css";
+import "../PublicServiceDemo.css";
 
-// 실제 도로명주소 검색(API) 연동은 추후 진행 예정 — 현재는 데모용 mock 검색 결과
-const MOCK_SEARCH_ADDRESS = "서울특별시 강남구 테헤란로 123";
+// 실제 도로명주소 API를 호출하지 않는 가상의 체험 주소입니다.
+const MOCK_SEARCH_ADDRESSES = [
+  "서울특별시 강남구 (체험용 주소 A)",
+  "경기도 수원시 (체험용 주소 B)",
+  "부산광역시 해운대구 (체험용 주소 C)",
+];
 
 const extraServiceOptions = [
   {
@@ -56,6 +61,7 @@ function Step4({
   onCancel,
 }) {
   const [openKeys, setOpenKeys] = useState([]);
+  const [addressListOpen, setAddressListOpen] = useState(false);
 
   const toggleOpen = (key) => {
     setOpenKeys((prev) =>
@@ -63,7 +69,7 @@ function Step4({
     );
   };
 
-  const canSubmit = Boolean(currentAddress) && Boolean(householdType);
+  const canSubmit = Boolean(currentAddress.trim()) && Boolean(householdType);
 
   return (
     <div className="ps-page">
@@ -95,11 +101,34 @@ function Step4({
                 <button
                   type="button"
                   className="mir-search-button"
-                  onClick={() => onCurrentAddressChange(MOCK_SEARCH_ADDRESS)}
+                  onClick={() => setAddressListOpen((prev) => !prev)}
                 >
                   검색
                 </button>
               </div>
+
+              {addressListOpen && (
+                <div
+                  className="mir-demo-address-list"
+                  aria-label="체험용 주소 목록"
+                >
+                  <p>
+                    체험용 주소를 선택해 주세요 (실제 주소 검색이 아닙니다).
+                  </p>
+                  {MOCK_SEARCH_ADDRESSES.map((address) => (
+                    <button
+                      key={address}
+                      type="button"
+                      onClick={() => {
+                        onCurrentAddressChange(address);
+                        setAddressListOpen(false);
+                      }}
+                    >
+                      {address}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               <div className="mir-building-row">
                 <div>
@@ -150,8 +179,8 @@ function Step4({
                 · 상세한 주소가 있다면 그 외 주소란에 반드시 기재(미기재시
                 전입신고가 반려될 수 있음)
                 <br />
-                (건축물의 이름, 동 번호 및 호수까지 작성하고 호수가 없는
-                경우 층수만 작성)
+                (건축물의 이름, 동 번호 및 호수까지 작성하고 호수가 없는 경우
+                층수만 작성)
               </p>
             </div>
 
@@ -188,32 +217,38 @@ function Step4({
             <h2 className="mir-extra-services-title">
               전입 신고와 함께 신청할 수 있는 서비스
             </h2>
+            <p className="mir-detail-address-note">
+              ※ 아래 항목은 시연용 선택이며 실제 다른 기관에 신청되지 않습니다.
+            </p>
 
             {extraServiceOptions.map((option) => {
               const isOpen = openKeys.includes(option.key);
 
               return (
                 <div className="mir-accordion-item" key={option.key}>
-                  <button
-                    type="button"
-                    className="mir-accordion-header"
-                    onClick={() => toggleOpen(option.key)}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={extraServices.includes(option.key)}
-                      onClick={(event) => event.stopPropagation()}
-                      onChange={() => onToggleExtraService(option.key)}
-                    />
-                    <span className="mir-accordion-text">{option.label}</span>
-                    <span
-                      className={`mir-accordion-chevron ${
-                        isOpen ? "open" : ""
-                      }`}
+                  <div className="mir-accordion-header">
+                    <label className="mir-demo-accordion-check">
+                      <input
+                        type="checkbox"
+                        checked={extraServices.includes(option.key)}
+                        onChange={() => onToggleExtraService(option.key)}
+                        aria-label={`${option.label} 신청 여부`}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="mir-demo-accordion-toggle"
+                      onClick={() => toggleOpen(option.key)}
+                      aria-expanded={isOpen}
                     >
-                      ⌄
-                    </span>
-                  </button>
+                      <span className="mir-accordion-text">{option.label}</span>
+                      <span
+                        className={`mir-accordion-chevron ${isOpen ? "open" : ""}`}
+                      >
+                        ⌄
+                      </span>
+                    </button>
+                  </div>
 
                   {isOpen && (
                     <div className="mir-accordion-body">{option.detail}</div>
@@ -225,11 +260,19 @@ function Step4({
 
           <div className="mir-wizard-buttons">
             <div className="mir-wizard-buttons-left">
-              <button type="button" className="mir-outline-button" onClick={onPrev}>
+              <button
+                type="button"
+                className="mir-outline-button"
+                onClick={onPrev}
+              >
                 이전으로
               </button>
 
-              <button type="button" className="mir-ghost-button" onClick={onCancel}>
+              <button
+                type="button"
+                className="mir-ghost-button"
+                onClick={onCancel}
+              >
                 취소
               </button>
             </div>

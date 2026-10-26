@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
 import "./PublicServiceDetail.css";
+import "../PublicServiceDemo.css";
 
 const sections = [
   { id: "overview", label: "서비스 개요" },
@@ -26,6 +27,10 @@ function PublicServiceDetail() {
           </nav>
 
           <h1 className="ps-detail-title">주민등록표 등본(초본) 발급</h1>
+          <p className="ps-demo-notice" role="note">
+            ADAPTI 체험 페이지입니다. 화면 설명은 민원 절차 안내용이며 실제
+            발급은 진행되지 않습니다.
+          </p>
 
           <div className="ps-detail-layout">
             <div className="ps-detail-content">
@@ -46,8 +51,8 @@ function PublicServiceDetail() {
                   <div className="ps-overview-row">
                     <dt>발급서류</dt>
                     <dd>
-                      주민등록표 등본(초본) (주민등록법 시행규칙: 별지 서식
-                      18, 19호)
+                      주민등록표 등본(초본) (주민등록법 시행규칙: 별지 서식 18,
+                      19호)
                     </dd>
                   </div>
 
@@ -64,8 +69,8 @@ function PublicServiceDetail() {
                   <div className="ps-overview-row">
                     <dt>수수료</dt>
                     <dd>
-                      1통(400원) / 이해관계인의 등·초본교부는 500원 /
-                      인터넷으로 발급받을 때는 무료임
+                      1통(400원) / 이해관계인의 등·초본교부는 500원 / 인터넷으로
+                      발급받을 때는 무료임
                     </dd>
                   </div>
                 </dl>
@@ -80,14 +85,14 @@ function PublicServiceDetail() {
                   <li>
                     이 민원은 주민등록 등본 또는 초본의 교부를 받으려는 자가
                     신청하는 민원입니다. 주민등록 등본은 세대별 주민등록표로서
-                    한 세대의 모든 구성원의 주민등록 사항이 기재되며,
-                    주민등록 초본은 개인에 관한 기록으로서 한 사람의 상세한
-                    주민등록 사항이 기재됩니다.
+                    한 세대의 모든 구성원의 주민등록 사항이 기재되며, 주민등록
+                    초본은 개인에 관한 기록으로서 한 사람의 상세한 주민등록
+                    사항이 기재됩니다.
                   </li>
                   <li>
-                    신청자가 외국인이면, 주민등록법 시행령 제47조제1항에
-                    따라 다음의 경우에 한해 주민등록 등본 또는 초본을
-                    발급받을 수 있습니다.
+                    신청자가 외국인이면, 주민등록법 시행령 제47조제1항에 따라
+                    다음의 경우에 한해 주민등록 등본 또는 초본을 발급받을 수
+                    있습니다.
                   </li>
                 </ul>
               </section>
@@ -133,8 +138,8 @@ function PublicServiceDetail() {
                 <ul className="ps-bullet-list">
                   <li>
                     신분증 제시 (주민등록증, 모바일 주민등록증, 청소년증,
-                    운전면허증, 국가유공자증, 장애인등록증, 외국인등록증,
-                    여권 등 유효기간 내 신분증에 한함)
+                    운전면허증, 국가유공자증, 장애인등록증, 외국인등록증, 여권
+                    등 유효기간 내 신분증에 한함)
                   </li>
                 </ul>
 
@@ -172,9 +177,7 @@ function PublicServiceDetail() {
               </section>
 
               <section className="ps-survey-box">
-                <p className="ps-survey-question">
-                  이 페이지에 만족하시나요?
-                </p>
+                <p className="ps-survey-question">이 페이지에 만족하시나요?</p>
 
                 <div className="ps-survey-buttons">
                   <button type="button">✓ 네 🙂</button>
@@ -200,7 +203,10 @@ function PublicServiceDetail() {
 
                 <ul className="ps-sidebar-nav">
                   {sections.map((section, index) => (
-                    <li key={section.id} className={index === 0 ? "active" : ""}>
+                    <li
+                      key={section.id}
+                      className={index === 0 ? "active" : ""}
+                    >
                       <a href={`#${section.id}`}>{section.label}</a>
                     </li>
                   ))}

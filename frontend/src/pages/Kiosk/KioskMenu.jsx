@@ -46,14 +46,33 @@ function KioskMenu({
 
   // 버거는 같은 menuGroup을 하나로 묶어서 표시
   // 사이드 / 음료는 전부 표시
+  const burgerGroups = new Map();
+
+  if (selectedCategory === "BURGER") {
+    menus.forEach((menu) => {
+      const key = menu.menuGroup ?? menu.menuId;
+      const current = burgerGroups.get(key);
+
+      const available = Number(menu.stockQuantity) > 0;
+      const currentAvailable = current
+        ? Number(current.stockQuantity) > 0
+        : false;
+
+      if (
+        !current ||
+        (available && !currentAvailable) ||
+        (available &&
+          currentAvailable &&
+          menu.menuType === "SINGLE" &&
+          current.menuType !== "SINGLE")
+      ) {
+        burgerGroups.set(key, menu);
+      }
+    });
+  }
+
   const displayMenus =
-    selectedCategory === "BURGER"
-      ? menus.filter(
-          (menu, index, array) =>
-            index ===
-            array.findIndex((item) => item.menuGroup === menu.menuGroup),
-        )
-      : menus;
+    selectedCategory === "BURGER" ? Array.from(burgerGroups.values()) : menus;
 
   // 장바구니 총 가격
   const cartTotal = cart.reduce((sum, item) => sum + (item.totalPrice || 0), 0);

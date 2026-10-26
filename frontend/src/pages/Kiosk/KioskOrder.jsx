@@ -203,12 +203,18 @@ function KioskOrder({
   // 2단계 : 미디움 / 라지 세트 선택
   // ------------------------------------------------
 
+  const burgerName =
+    selectedBaseMenu?.name
+      ?.replace(" 단품", "")
+      .replace(" 미디움세트", "")
+      .replace(" 라지세트", "") ?? "버거";
+
   return (
     <div className="kiosk-page">
       <header className="header">
         <span className="logo">ADPATI</span>
 
-        <span className="menu-name">불고기버거 세트</span>
+        <span className="menu-name">{burgerName} 세트</span>
       </header>
 
       <main className="content">

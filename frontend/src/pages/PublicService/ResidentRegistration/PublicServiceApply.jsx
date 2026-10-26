@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
+import { saveDemoApplication } from "../demoApplicationStore";
 import "./PublicServiceApply.css";
 
 const serviceOptions = [
@@ -9,6 +10,12 @@ const serviceOptions = [
   "주민등록표 등본(영문) 발급",
   "주민등록표 초본(영문) 발급",
 ];
+
+const addressBySido = {
+  서울특별시: ["중구", "강남구"],
+  경기도: ["수원시", "성남시"],
+  부산광역시: ["해운대구"],
+};
 
 const selectableFields = [
   "과거의 주소 변동사항",
@@ -44,6 +51,16 @@ function PublicServiceApply() {
   };
 
   const handleSubmit = () => {
+    if (!sido || !sigungu) {
+      window.alert("체험용 주소의 시도와 시군구를 모두 선택해 주세요.");
+      return;
+    }
+    if (issueType === "select" && checkedFields.length === 0) {
+      window.alert("선택 발급 항목을 하나 이상 선택해 주세요.");
+      return;
+    }
+
+    saveDemoApplication(selectedService); // 개인 주소 등 입력값은 저장하지 않음
     navigate("/public-service/resident-registration/history");
   };
 
@@ -55,6 +72,10 @@ function PublicServiceApply() {
         <div className="ps-apply-container">
           <h1 className="ps-apply-title">주민등록표 등본(초본) 발급</h1>
           <p className="ps-apply-guide">신청할 서비스를 선택하세요.</p>
+          <p className="ps-field-note" role="note">
+            ※ ADAPTI 체험 화면입니다. 실제 정부24 민원 접수나 증명서 발급은
+            이루어지지 않습니다.
+          </p>
 
           <div className="ps-service-select-box">
             {serviceOptions.map((option) => (
@@ -66,7 +87,9 @@ function PublicServiceApply() {
                 }`}
                 onClick={() => setSelectedService(option)}
               >
-                {selectedService === option && <span className="ps-check">✓</span>}
+                {selectedService === option && (
+                  <span className="ps-check">✓</span>
+                )}
                 {option}
               </button>
             ))}
@@ -89,27 +112,37 @@ function PublicServiceApply() {
               </p>
 
               <div className="ps-select-row">
-                <select value={sido} onChange={(event) => setSido(event.target.value)}>
+                <select
+                  value={sido}
+                  onChange={(event) => {
+                    setSido(event.target.value);
+                    setSigungu("");
+                  }}
+                >
                   <option value="">시도 선택</option>
-                  <option value="서울특별시">서울특별시</option>
-                  <option value="경기도">경기도</option>
-                  <option value="부산광역시">부산광역시</option>
+                  {Object.keys(addressBySido).map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
                 </select>
 
                 <select
                   value={sigungu}
                   onChange={(event) => setSigungu(event.target.value)}
+                  disabled={!sido}
                 >
                   <option value="">시군구 선택</option>
-                  <option value="중구">중구</option>
-                  <option value="강남구">강남구</option>
-                  <option value="해운대구">해운대구</option>
+                  {(addressBySido[sido] ?? []).map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <p className="ps-field-note">
-                ※ 회원정보 등록된 주소입니다. 주민등록상 주소와 다를 경우
-                변경하세요.
+                ※ 회원정보와 연동되지 않는 체험용 주소 선택입니다.
               </p>
             </div>
 
@@ -170,6 +203,10 @@ function PublicServiceApply() {
 
           <section className="ps-form-box">
             <h2 className="ps-form-box-title">수령 방법</h2>
+            <p className="ps-field-note">
+              ※ 수령 방법은 체험용 선택 항목이며 우편물 또는 전자문서가 실제
+              발송되지는 않습니다.
+            </p>
 
             <div className="ps-field-group">
               <p className="ps-field-label">

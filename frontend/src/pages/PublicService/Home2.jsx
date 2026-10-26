@@ -38,6 +38,10 @@ function Home2() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
 
+  const filteredServices = services.filter((service) =>
+    service.title.includes(keyword.trim()),
+  );
+
   return (
     <div className="home2-page">
       <PublicServiceTopBar />
@@ -52,7 +56,7 @@ function Home2() {
                 쉽고 빠르게 찾아보세요.
               </h1>
 
-              <p>복잡한 신청 과정도 ADPATI가 필요한 순간 안내해드립니다.</p>
+              <p>복잡한 신청 과정도 ADAPTI가 필요한 순간 안내해드립니다.</p>
 
               <div className="home2-search-box">
                 <span className="home2-search-icon">🔍</span>
@@ -72,13 +76,14 @@ function Home2() {
             <h2>자주 찾는 서비스</h2>
 
             <div className="home2-service-grid">
-              {services.map((service) => (
+              {filteredServices.map((service) => (
                 <button
                   type="button"
                   key={service.key}
                   className={`home2-service-card ${
                     service.enabled ? "" : "disabled"
                   }`}
+                  disabled={!service.enabled}
                   onClick={() => {
                     if (service.enabled) {
                       navigate(service.path);
@@ -99,6 +104,9 @@ function Home2() {
                   </span>
                 </button>
               ))}
+              {filteredServices.length === 0 && (
+                <p role="status">검색 결과가 없습니다.</p>
+              )}
             </div>
           </div>
         </section>
@@ -106,10 +114,10 @@ function Home2() {
 
       <footer className="home2-footer">
         <div className="home2-container home2-footer-inner">
-          <h2>ADPATI</h2>
+          <h2>ADAPTI</h2>
           <strong>Adaptive Interface Project</strong>
           <p>사용자 행동 기반 실시간 적응형 인터페이스</p>
-          <span>김소윤 · 류아연 · 정수인</span>
+          <span>김소율 · 류아연 · 정수인</span>
         </div>
       </footer>
     </div>

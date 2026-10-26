@@ -8,6 +8,7 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Complete from "./Complete";
 import { lookupPreviousAddress } from "./mockAddressData";
+import { saveDemoApplication } from "../demoApplicationStore";
 
 function MovingInReportFlow() {
   const navigate = useNavigate();
@@ -46,11 +47,53 @@ function MovingInReportFlow() {
     );
   };
 
+  const clearLookupResult = () => {
+    setLookupResult(null);
+    setSelectedMovers([]);
+    setConsent(null);
+    setExtraConsent(false);
+  };
+
+  const handleNameChange = (value) => {
+    setApplicantName(value);
+    clearLookupResult();
+  };
+
+  const handleBirthChange = (value) => {
+    setApplicantBirth(value);
+    clearLookupResult();
+  };
+
+  // 이전주소 선택이 변경되면 이미 조회한 개인정보/동의 상태를 무효화합니다.
+  const clearPreviousAddressLookup = () => {
+    setLookupResult(null);
+    setSelectedMovers([]);
+    setConsent(null);
+    setExtraConsent(false);
+  };
+
+  const handlePreviousSidoChange = (value) => {
+    setPrevSido(value);
+    setPrevSigungu("");
+    clearPreviousAddressLookup();
+  };
+
+  const handlePreviousSigunguChange = (value) => {
+    setPrevSigungu(value);
+    clearPreviousAddressLookup();
+  };
+
   const handleLookup = (sido, sigungu) => {
     setLookupResult(lookupPreviousAddress(sido, sigungu));
     setSelectedMovers([]);
     setConsent(null);
     setExtraConsent(false);
+  };
+
+  const handleSubmit = () => {
+    // 전입 주소·전화번호·세대원 정보는 저장하지 않습니다.
+    saveDemoApplication("전입신고");
+    setFrame(5);
   };
 
   const handleToggleExtraService = (key) => {
@@ -77,7 +120,7 @@ function MovingInReportFlow() {
   if (frame === 2) {
     return (
       <Step2
-        applicantName="김소율"
+        applicantName="체험 사용자"
         phone={phone}
         onPhoneChange={setPhone}
         reason={reason}
@@ -95,9 +138,9 @@ function MovingInReportFlow() {
     return (
       <Step3
         sido={prevSido}
-        onSidoChange={setPrevSido}
+        onSidoChange={handlePreviousSidoChange}
         sigungu={prevSigungu}
-        onSigunguChange={setPrevSigungu}
+        onSigunguChange={handlePreviousSigunguChange}
         lookupResult={lookupResult}
         onLookup={handleLookup}
         selectedMovers={selectedMovers}
@@ -131,14 +174,21 @@ function MovingInReportFlow() {
         extraServices={extraServices}
         onToggleExtraService={handleToggleExtraService}
         onPrev={() => setFrame(3)}
-        onSubmit={() => setFrame(5)}
+        onSubmit={handleSubmit}
         onCancel={goHome}
       />
     );
   }
 
   if (frame === 5) {
-    return <Complete onGoHome={goHome} />;
+    return (
+      <Complete
+        onGoHome={goHome}
+        onGoHistory={() =>
+          navigate("/public-service/resident-registration/history")
+        }
+      />
+    );
   }
 
   return null;

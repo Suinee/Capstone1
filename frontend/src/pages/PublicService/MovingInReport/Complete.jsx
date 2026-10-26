@@ -1,7 +1,7 @@
 import MovingInReportTopBar from "./MovingInReportTopBar";
 import "./MovingInReportWizard.css";
 
-function Complete({ onGoHome }) {
+function Complete({ onGoHome, onGoHistory }) {
   return (
     <div className="ps-page">
       <MovingInReportTopBar />
@@ -11,23 +11,33 @@ function Complete({ onGoHome }) {
           <div className="mir-complete-box">
             <div className="mir-complete-icon">✅</div>
 
-            <h1 className="mir-complete-title">전입신고 신청이 완료되었습니다.</h1>
+            <h1 className="mir-complete-title">
+              전입신고 체험이 완료되었습니다.
+            </h1>
 
             <p className="mir-complete-desc">
-              신청하신 내용은 관할 읍·면·동 행정복지센터에서 확인 후 처리될
-              예정입니다.
+              ADAPTI에서 모의 신청 과정을 완료했습니다.
               <br />
-              처리 상태는 My Gov &gt; 나의 신청내역 &gt; 서비스 신청내역
-              메뉴에서 확인하실 수 있습니다.
+              실제 행정기관에 전입신고가 접수되거나 주민등록 정보가 변경된 것은
+              아닙니다. 체험 신청내역은 이 브라우저 탭에서만 확인할 수 있습니다.
             </p>
 
-            <button
-              type="button"
-              className="mir-primary-button"
-              onClick={onGoHome}
-            >
-              공공서비스 홈으로
-            </button>
+            <div className="mir-wizard-buttons">
+              <button
+                type="button"
+                className="mir-outline-button"
+                onClick={onGoHome}
+              >
+                공공서비스 홈으로
+              </button>
+              <button
+                type="button"
+                className="mir-primary-button"
+                onClick={onGoHistory}
+              >
+                체험 신청내역 확인
+              </button>
+            </div>
           </div>
         </div>
       </main>

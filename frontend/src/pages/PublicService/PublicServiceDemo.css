@@ -1,0 +1,26 @@
+/* 추가 UI에만 적용합니다. 기존 페이지 CSS를 변경하지 않습니다. */
+.ps-demo-notice { padding: 12px 16px; background: #f3f6ff; border-left: 4px solid #5d83ff; color: #33415c; margin: 12px 0 18px; }
+.ps-demo-empty { padding: 30px; text-align: center; color: #666; }
+.mir-demo-address-list { display: grid; gap: 8px; padding: 14px; margin: 10px 0; border: 1px solid #d6dce6; border-radius: 8px; background: #f9fbff; }
+.mir-demo-address-list p { margin: 0 0 8px; }
+.mir-demo-address-list button { background: white; border: 1px solid #d6dce6; border-radius: 7px; cursor: pointer; padding: 12px; text-align: left; font: inherit; }
+.mir-demo-address-list button:hover, .mir-demo-address-list button:focus-visible { border-color: #5d83ff; background: #eef2ff; }
+.mir-accordion-header { display: flex; align-items: center; gap: 14px; }
+.mir-demo-accordion-check { display: inline-flex; align-items: center; flex-shrink: 0; cursor: pointer; }
+.mir-demo-accordion-toggle { border: 0; background: transparent; text-align: left; cursor: pointer; color: inherit; font: inherit; padding: 0; display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 16px; }
+.ps-demo-modal-backdrop { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.ps-demo-modal { background: white; color: #202635; width: min(560px, 100%); border-radius: 12px; padding: 26px; box-shadow: 0 10px 42px rgba(0,0,0,.2); max-height: 90vh; overflow: auto; }
+.ps-demo-print-card h2 { margin: 0 0 14px; }
+.ps-demo-watermark { font-weight: 700; font-size: 1.15rem; color: #ab1f1f; }
+.ps-demo-print-card dl { display: grid; grid-template-columns: 115px 1fr; gap: 12px; padding: 16px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+.ps-demo-print-card dt { font-weight: 700; }
+.ps-demo-print-card dd { margin: 0; overflow-wrap: anywhere; }
+.ps-demo-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+.ps-demo-modal-actions button { cursor: pointer; padding: 10px 14px; font: inherit; background: white; border: 1px solid #aaa; border-radius: 6px; }
+.ps-demo-modal-actions button:last-child { background: #5d83ff; color: #fff; border-color: #5d83ff; }
+@media print {
+  body * { visibility: hidden !important; }
+  .ps-demo-print-card, .ps-demo-print-card * { visibility: visible !important; }
+  .ps-demo-print-card { position: absolute; top: 0; left: 0; width: 100%; color: #000; padding: 30px; }
+  .ps-demo-modal { overflow: visible; }
+}

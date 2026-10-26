@@ -73,9 +73,15 @@ function KioskPayment({
       <header className="kiosk-payment-header">
         <div className="kiosk-brand">ADAPTI</div>
 
-        <button type="button" className="kiosk-nutrition-button">
-          영양정보
-        </button>
+        {selectedMenu?.category === "BURGER" && (
+          <button
+            type="button"
+            className="kiosk-nutrition-button"
+            onClick={() => nutritionDialog.current?.showModal()}
+          >
+            영양정보
+          </button>
+        )}
       </header>
 
       <main className="kiosk-payment-content">

@@ -30,8 +30,27 @@ function Step2({
   onNext,
   onCancel,
 }) {
-  const canGoNext =
-    reason && phone.part2.length === 4 && phone.part3.length === 4;
+  const validName = applicantName.trim().length >= 2;
+
+  const validBirth =
+    /^\d{4}-\d{2}-\d{2}$/.test(applicantBirth) &&
+    !Number.isNaN(new Date(applicantBirth).getTime()) &&
+    applicantBirth <= new Date().toLocaleDateString("en-CA");
+
+  const phoneValid =
+    /^01[016789]$/.test(phone.part1) &&
+    /^\d{4}$/.test(phone.part2) &&
+    /^\d{4}$/.test(phone.part3);
+
+  const validReason =
+    reason && (reason !== "etc" || etcReason.trim().length > 0);
+
+  const canGoNext = validName && validBirth && validPhone && validReason;
+
+  const updatePhone = (part, maxLength) => (event) => {
+    const digits = event.target.value.replace(/\D/g, "").slice(0, maxLength);
+    onPhoneChange({ ...phone, [part]: digits });
+  };
 
   return (
     <div className="ps-page">
@@ -63,30 +82,34 @@ function Step2({
                 <input
                   type="text"
                   maxLength={3}
+                  inputMode="numeric"
+                  aria-label="휴대전화 앞자리"
                   value={phone.part1}
-                  onChange={(event) =>
-                    onPhoneChange({ ...phone, part1: event.target.value })
-                  }
+                  onChange={updatePhone("part1", 3)}
                 />
                 <span>-</span>
                 <input
                   type="text"
                   maxLength={4}
+                  inputMode="numeric"
+                  aria-label="휴대전화 가운데 자리"
                   value={phone.part2}
-                  onChange={(event) =>
-                    onPhoneChange({ ...phone, part2: event.target.value })
-                  }
+                  onChange={updatePhone("part2", 4)}
                 />
                 <span>-</span>
                 <input
                   type="text"
                   maxLength={4}
+                  inputMode="numeric"
+                  aria-label="휴대전화 끝자리"
                   value={phone.part3}
-                  onChange={(event) =>
-                    onPhoneChange({ ...phone, part3: event.target.value })
-                  }
+                  onChange={updatePhone("part3", 4)}
                 />
               </div>
+              <p className="mir-detail-address-note">
+                ※ 체험용 번호를 입력해 주세요. 입력한 연락처는 서버에 전송하거나
+                저장하지 않습니다.
+              </p>
             </div>
           </section>
 
@@ -126,11 +149,19 @@ function Step2({
 
           <div className="mir-wizard-buttons">
             <div className="mir-wizard-buttons-left">
-              <button type="button" className="mir-ghost-button" onClick={onCancel}>
+              <button
+                type="button"
+                className="mir-ghost-button"
+                onClick={onCancel}
+              >
                 취소
               </button>
 
-              <button type="button" className="mir-outline-button" onClick={onPrev}>
+              <button
+                type="button"
+                className="mir-outline-button"
+                onClick={onPrev}
+              >
                 이전으로
               </button>
             </div>
