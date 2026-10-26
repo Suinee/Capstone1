@@ -3,6 +3,7 @@ import "./KioskSettlement.css";
 import "./KioskSettlementFlow.css";
 import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
 import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
+import useHesitation from "../../features/hesitation/useHesitation";
 
 const paymentMethods = [
   { name: "간편결제", image: "/images/QR.png" },
@@ -17,7 +18,9 @@ function KioskSettlement({
   onComplete,
   onHesitationStateChange,
 }) {
-  const [phase, setPhase] = useState("select"); // select / processing / complete
+  const { openHelpRequest } = useHesitation();
+
+  const [phase, setPhase] = useState("select");
   const [queueNumber, setQueueNumber] = useState(null);
   const [secondsLeft, setSecondsLeft] = useState(10);
   const onCompleteRef = useRef(onComplete);
@@ -228,7 +231,13 @@ function KioskSettlement({
         >
           처음으로
         </button>
-        <button type="button" className="common-button primary-btn">
+        <button
+          type="button"
+          className="common-button primary-btn"
+          onClick={openHelpRequest}
+          data-hesitation-ignore
+          aria-haspopup="dialog"
+        >
           도움 기능
         </button>
       </footer>

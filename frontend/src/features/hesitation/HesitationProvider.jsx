@@ -1,6 +1,7 @@
 // 세션, 화면 방문, 점수, 기록을 관리하고 각 기능 연결
 
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -14,6 +15,7 @@ import useBehaviorCollector from "./useBehaviorCollector.js";
 import useAdaptiveHelp from "./useAdaptiveHelp.js";
 import HesitationDebugPanel from "./components/HesitationDebugPanel.jsx";
 import { subscribeKioskHesitation } from "./kioskHesitationEvents.js";
+import KioskHelpUI from "../../pages/Kiosk/KioskHelpUI.jsx";
 
 export default function HesitationProvider({
   children,
@@ -40,6 +42,40 @@ export default function HesitationProvider({
   );
 
   const { help, closeHelp, openHelp } = useAdaptiveHelp(engine, automaticHelp);
+
+  // 기존 화면 버튼과 공통 도움 UI가 함께 사용하는 선택 창 상태
+  const [helpDialog, setHelpDialog] = useState({
+    screenVisitId: null,
+    mode: null,
+  });
+
+  // 현재 화면에 속한 창만 표시합니다.
+  const helpDialogMode =
+    snapshot.measuring && helpDialog.screenVisitId === snapshot.screenVisitId
+      ? helpDialog.mode
+      : null;
+
+  // mode: null / "request" / "staff"
+  const setHelpDialogMode = useCallback(
+    (mode) => {
+      const current = engine.getSnapshot();
+
+      setHelpDialog({
+        screenVisitId: current.screenVisitId,
+        mode,
+      });
+    },
+    [engine],
+  );
+
+  // 기존 ‘도움 기능’ 버튼에서 호출할 함수
+  const openHelpRequest = useCallback(() => {
+    const current = engine.getSnapshot();
+
+    if (!current.measuring) return;
+
+    setHelpDialogMode("request");
+  }, [engine, setHelpDialogMode]);
 
   useBehaviorCollector({
     rootRef,
@@ -167,14 +203,30 @@ export default function HesitationProvider({
       help,
       closeHelp,
       openHelp,
+
+      helpDialogMode,
+      setHelpDialogMode,
+      openHelpRequest,
     }),
-    [snapshot, actions, help, closeHelp, openHelp],
+    [
+      snapshot,
+      actions,
+      help,
+      closeHelp,
+      openHelp,
+      helpDialogMode,
+      setHelpDialogMode,
+      openHelpRequest,
+    ],
   );
 
   return (
     <HesitationContext.Provider value={value}>
       <div ref={rootRef} style={{ display: "contents" }}>
         {children}
+
+        {snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} />}
+
         <HesitationDebugPanel />
       </div>
     </HesitationContext.Provider>

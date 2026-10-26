@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./KioskPayment.css";
 import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
 import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
+import useHesitation from "../../features/hesitation/useHesitation";
 
 function KioskPayment({
   selectedMenu,
@@ -19,6 +20,8 @@ function KioskPayment({
   isCartEditing = false,
   onHesitationStateChange,
 }) {
+  const { openHelpRequest } = useHesitation();
+
   const [quantity, setQuantity] = useState(initialQuantity);
   const nutritionDialog = useRef(null);
 
@@ -199,7 +202,13 @@ function KioskPayment({
           처음으로
         </button>
 
-        <button type="button" className="common-button primary-btn">
+        <button
+          type="button"
+          className="common-button primary-btn"
+          onClick={openHelpRequest}
+          data-hesitation-ignore
+          aria-haspopup="dialog"
+        >
           도움 기능
         </button>
       </footer>
