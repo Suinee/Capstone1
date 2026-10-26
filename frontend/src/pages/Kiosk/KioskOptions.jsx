@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { orderSteps } from "./orderOptions";
 import "./KioskOptions.css";
+import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
-function ProductCard({ option, selected, onSelect }) {
+function ProductCard({ option, selected, onSelect, screenId }) {
   const soldOut = option.stockQuantity === 0;
 
   // 0원, null 모두 안전하게 처리
@@ -15,7 +17,15 @@ function ProductCard({ option, selected, onSelect }) {
         selected ? "is-selected" : ""
       } ${soldOut ? "sold-out" : ""}`}
       aria-pressed={selected}
-      onClick={() => onSelect(option)}
+      data-hesitation-id={`${screenId}-${option.menuId}`}
+      data-hesitation-action="select"
+      onClick={() => {
+        emitKioskHesitation("SELECTION_COMPLETE", {
+          screenId,
+          itemId: option.menuId,
+        });
+        onSelect(option);
+      }}
       disabled={soldOut}
     >
       <span className="image-box">
@@ -52,6 +62,7 @@ export default function KioskOptions({
   onEditSelect,
   onEditConfirm,
   onEditCancel,
+  onHesitationStateChange,
 }) {
   const nutritionDialog = useRef(null);
 
@@ -67,6 +78,9 @@ export default function KioskOptions({
   // frame 2 = 사이드
   // frame 3 = 음료
   const isSideStep = frame === 2;
+  const screenId = isSideStep ? KIOSK_SCREEN_IDS.SIDE : KIOSK_SCREEN_IDS.DRINK;
+  const selectionTargetId = isSideStep ? "side-options" : "drink-options";
+  const progressTargetId = isSideStep ? "side-next" : "drink-next";
 
   // 현재 선택된 메뉴
   const selected = isEditing
@@ -77,6 +91,17 @@ export default function KioskOptions({
 
   // 진행 단계
   const currentStep = frame - 1;
+  const canProceed = Boolean(selected) && !loading && !error;
+
+  useEffect(() => {
+    onHesitationStateChange?.({
+      screenId,
+      loading,
+      error: Boolean(error),
+      selectionComplete: Boolean(selected),
+      canProceed,
+    });
+  }, [screenId, loading, error, selected, canProceed, onHesitationStateChange]);
 
   // DB에서 카테고리별 메뉴 불러오기
   useEffect(() => {
@@ -85,7 +110,10 @@ export default function KioskOptions({
     setLoading(true);
     setError("");
 
-    fetch(`http://localhost:8080/api/menus/category/${category}`)
+    const controller = new AbortController();
+    fetch(`http://localhost:8080/api/menus/category/${category}`, {
+      signal: controller.signal,
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("메뉴 조회 실패");
@@ -98,23 +126,27 @@ export default function KioskOptions({
         setLoading(false);
       })
       .catch((error) => {
+        if (error.name === "AbortError") return;
         console.error(error);
         setError("메뉴를 불러오지 못했습니다.");
         setLoading(false);
       });
+
+    return () => controller.abort();
   }, [frame]);
 
   return (
     <div className="kiosk-page order-page">
       {/* 상단 */}
       <header className="header order-header">
-        <span className="logo">ADPATI</span>
+        <span className="logo">ADAPTI</span>
 
         <span className="menu-name">{selectedMenu?.name}</span>
 
         {selectedMenu?.category === "BURGER" && (
           <button
             className="nutrition-button"
+            data-hesitation-id="options-nutrition"
             onClick={() => nutritionDialog.current?.showModal()}
           >
             영양정보
@@ -123,30 +155,32 @@ export default function KioskOptions({
       </header>
 
       <main className="order-layout">
-        {/* 주문 단계 */}
-        <nav className="order-progress" aria-label="주문 단계">
-          <ol>
-            {orderSteps.map((label, index) => (
-              <li
-                key={index}
-                className={
-                  index === currentStep
-                    ? "is-current"
-                    : index < currentStep
-                      ? "is-complete"
-                      : ""
-                }
-                aria-current={index === currentStep ? "step" : undefined}
-              >
-                <span className="step-marker" aria-hidden="true">
-                  {index < currentStep ? "✓" : ""}
-                </span>
+        {/* 단독 사이드/음료 수정 시 세트 주문용 단계 표시를 숨깁니다. */}
+        {selectedMenu?.category === "BURGER" && (
+          <nav className="order-progress" aria-label="주문 단계">
+            <ol>
+              {orderSteps.map((label, index) => (
+                <li
+                  key={index}
+                  className={
+                    index === currentStep
+                      ? "is-current"
+                      : index < currentStep
+                        ? "is-complete"
+                        : ""
+                  }
+                  aria-current={index === currentStep ? "step" : undefined}
+                >
+                  <span className="step-marker" aria-hidden="true">
+                    {index < currentStep ? "✓" : ""}
+                  </span>
 
-                <span>{label}</span>
-              </li>
-            ))}
-          </ol>
-        </nav>
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
 
         {/* 메뉴 */}
         <section
@@ -163,13 +197,18 @@ export default function KioskOptions({
 
           {/* DB 메뉴 */}
           {!loading && !error && (
-            <div className="order-grid">
+            <div
+              className="order-grid"
+              id={selectionTargetId}
+              data-hesitation-target={selectionTargetId}
+            >
               {options.map((option) => (
                 <ProductCard
                   key={option.menuId}
                   option={option}
                   selected={selected?.menuId === option.menuId}
                   onSelect={isEditing ? onEditSelect : onSelect}
+                  screenId={screenId}
                 />
               ))}
             </div>
@@ -180,6 +219,7 @@ export default function KioskOptions({
         <footer className="order-footer">
           <button
             className="cancel-button"
+            data-hesitation-id="options-cancel"
             onClick={isEditing ? onEditCancel : onCancel}
           >
             취소하기
@@ -187,14 +227,21 @@ export default function KioskOptions({
 
           <div className="order-navigation">
             {!isEditing && (
-              <button className="order-navigation-button" onClick={onHome}>
+              <button
+                className="order-navigation-button"
+                data-hesitation-id="options-home"
+                onClick={onHome}
+              >
                 처음으로
               </button>
             )}
 
             <button
               className="order-navigation-button next-button"
-              disabled={!selected}
+              id={progressTargetId}
+              data-hesitation-id={progressTargetId}
+              data-hesitation-action="proceed"
+              disabled={!canProceed}
               onClick={isEditing ? onEditConfirm : onNext}
             >
               {isEditing ? "수정하기" : "다음"}
@@ -243,7 +290,12 @@ export default function KioskOptions({
         )}
 
         <form method="dialog">
-          <button className="order-navigation-button">닫기</button>
+          <button
+            className="order-navigation-button"
+            data-hesitation-id="options-nutrition-close"
+          >
+            닫기
+          </button>
         </form>
       </dialog>
     </div>

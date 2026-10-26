@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./KioskPayment.css";
+import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
 function KioskPayment({
   selectedMenu,
@@ -15,8 +17,20 @@ function KioskPayment({
 
   initialQuantity = 1,
   isCartEditing = false,
+  onHesitationStateChange,
 }) {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const nutritionDialog = useRef(null);
+
+  useEffect(() => {
+    onHesitationStateChange?.({
+      screenId: KIOSK_SCREEN_IDS.REVIEW,
+      loading: false,
+      error: false,
+      selectionComplete: true,
+      canProceed: Boolean(selectedMenu),
+    });
+  }, [selectedMenu, onHesitationStateChange]);
 
   const handleDecrease = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
@@ -27,6 +41,10 @@ function KioskPayment({
       return;
     }
 
+    emitKioskHesitation("SELECTION_COMPLETE", {
+      screenId: KIOSK_SCREEN_IDS.REVIEW,
+      itemId: "order-add",
+    });
     onAddMenu({
       selectedMenu,
       selectedSide,
@@ -77,6 +95,7 @@ function KioskPayment({
           <button
             type="button"
             className="kiosk-nutrition-button"
+            data-hesitation-id="review-nutrition"
             onClick={() => nutritionDialog.current?.showModal()}
           >
             영양정보
@@ -106,6 +125,7 @@ function KioskPayment({
                 <button
                   type="button"
                   className="ingredient-button tertiary-btn"
+                  data-hesitation-id={`change-${type.toLowerCase()}`}
                   onClick={onChange}
                 >
                   변경
@@ -119,6 +139,11 @@ function KioskPayment({
           <button
             type="button"
             className="qty-control"
+            data-hesitation-ignore="repeatedClick"
+            data-repeat-click-excluded="true"
+            data-hesitation-action="quantity"
+            data-hesitation-id="quantity-minus"
+            aria-label="수량 감소"
             onClick={handleDecrease}
           >
             −
@@ -129,6 +154,11 @@ function KioskPayment({
           <button
             type="button"
             className="qty-control"
+            data-hesitation-ignore="repeatedClick"
+            data-repeat-click-excluded="true"
+            data-hesitation-action="quantity"
+            data-hesitation-id="quantity-plus"
+            aria-label="수량 증가"
             onClick={handleIncrease}
           >
             +
@@ -139,6 +169,7 @@ function KioskPayment({
           <button
             type="button"
             className="primary-action secondary-btn"
+            data-hesitation-id="review-cancel"
             onClick={onCancel}
           >
             취소
@@ -148,6 +179,9 @@ function KioskPayment({
             type="button"
             className="primary-action primary-btn"
             onClick={handleAddMenu}
+            id="order-add"
+            data-hesitation-id="order-add"
+            data-hesitation-action="proceed"
             disabled={!selectedMenu}
           >
             {isCartEditing ? "수정 완료" : "메뉴 추가"}
@@ -159,6 +193,7 @@ function KioskPayment({
         <button
           type="button"
           className="common-button secondary-btn"
+          data-hesitation-id="review-home"
           onClick={onHome}
         >
           처음으로
@@ -168,6 +203,30 @@ function KioskPayment({
           도움 기능
         </button>
       </footer>
+
+      <dialog
+        ref={nutritionDialog}
+        className="nutrition-dialog"
+        aria-label="영양정보"
+      >
+        <h2>{selectedMenu?.name} 영양정보</h2>
+        {selectedMenu?.calories != null ? (
+          <div className="nutrition-info">
+            <p>열량: {selectedMenu.calories} kcal</p>
+            <p>탄수화물: {selectedMenu.carbohydrate} g</p>
+            <p>단백질: {selectedMenu.protein} g</p>
+            <p>지방: {selectedMenu.fat} g</p>
+            <p>나트륨: {selectedMenu.sodium} mg</p>
+          </div>
+        ) : (
+          <p>등록된 영양정보가 없습니다.</p>
+        )}
+        <form method="dialog">
+          <button type="submit" data-hesitation-id="review-nutrition-close">
+            닫기
+          </button>
+        </form>
+      </dialog>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./KioskMenu.css";
+import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
 function KioskMenu({
   onSelectMenu,
@@ -7,6 +9,7 @@ function KioskMenu({
   onPayment,
   onEditCartItem,
   onRemoveCartItem,
+  onHesitationStateChange,
 }) {
   // 현재 선택한 카테고리
   const [selectedCategory, setSelectedCategory] = useState("BURGER");
@@ -25,7 +28,10 @@ function KioskMenu({
     setLoading(true);
     setError("");
 
-    fetch(`http://localhost:8080/api/menus/category/${selectedCategory}`)
+    const controller = new AbortController();
+    fetch(`http://localhost:8080/api/menus/category/${selectedCategory}`, {
+      signal: controller.signal,
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("메뉴 조회 실패");
@@ -38,11 +44,24 @@ function KioskMenu({
         setLoading(false);
       })
       .catch((error) => {
+        if (error.name === "AbortError") return;
         console.error(error);
         setError("메뉴를 불러오지 못했습니다.");
         setLoading(false);
       });
+
+    return () => controller.abort();
   }, [selectedCategory]);
+
+  useEffect(() => {
+    onHesitationStateChange?.({
+      screenId: KIOSK_SCREEN_IDS.MENU,
+      loading,
+      error: Boolean(error),
+      selectionComplete: false,
+      canProceed: !loading && !error,
+    });
+  }, [loading, error, selectedCategory, onHesitationStateChange]);
 
   // 버거는 같은 menuGroup을 하나로 묶어서 표시
   // 사이드 / 음료는 전부 표시
@@ -84,7 +103,7 @@ function KioskMenu({
     <div className="kiosk-page">
       {/* 상단 */}
       <header className="header">
-        <span className="logo">ADPATI</span>
+        <span className="logo">ADAPTI</span>
         <span className="menu-name">메뉴 선택</span>
       </header>
 
@@ -100,7 +119,14 @@ function KioskMenu({
                 className={`category-button ${
                   selectedCategory === category.value ? "active" : ""
                 }`}
-                onClick={() => setSelectedCategory(category.value)}
+                data-hesitation-id={`category-${category.value}`}
+                data-hesitation-action="category"
+                onClick={() => {
+                  if (selectedCategory === category.value) return;
+                  // 카테고리가 바뀐 즉시 측정을 끄고 새 메뉴의 응답을 기다립니다.
+                  setLoading(true);
+                  setSelectedCategory(category.value);
+                }}
               >
                 {category.label}
               </button>
@@ -124,7 +150,11 @@ function KioskMenu({
             {error && <p className="status-message error-message">{error}</p>}
 
             {!loading && !error && (
-              <div className="menu-grid">
+              <div
+                className="menu-grid"
+                id="menu-options"
+                data-hesitation-target="menu-options"
+              >
                 {displayMenus.map((menu) => {
                   const soldOut = menu.stockQuantity === 0;
 
@@ -134,7 +164,15 @@ function KioskMenu({
                       type="button"
                       className={`menu-card ${soldOut ? "sold-out" : ""}`}
                       disabled={soldOut}
-                      onClick={() => onSelectMenu(menu)}
+                      data-hesitation-id={`menu-${menu.menuId}`}
+                      data-hesitation-action="select"
+                      onClick={() => {
+                        emitKioskHesitation("SELECTION_COMPLETE", {
+                          screenId: KIOSK_SCREEN_IDS.MENU,
+                          itemId: menu.menuId,
+                        });
+                        onSelectMenu(menu);
+                      }}
                     >
                       <div className="menu-image-box">
                         <img src={menu.imageUrl} alt={menu.name} />
@@ -188,10 +226,10 @@ function KioskMenu({
             <div className="cart-items">
               {cart.map((item) => (
                 <div className="cart-item" key={item.cartId}>
-                  {/* 주문 클릭 시 수정 화면으로 이동 */}
                   <button
                     type="button"
                     className="cart-item-edit"
+                    data-hesitation-id={`cart-edit-${item.cartId}`}
                     onClick={() => onEditCartItem(item)}
                     aria-label={`${item.selectedMenu?.name} 주문 수정`}
                   >
@@ -212,10 +250,10 @@ function KioskMenu({
                     </strong>
                   </button>
 
-                  {/* X 버튼 : 해당 주문 삭제 */}
                   <button
                     type="button"
                     className="cart-item-delete"
+                    data-hesitation-id={`cart-remove-${item.cartId}`}
                     onClick={() => onRemoveCartItem(item.cartId)}
                     aria-label={`${item.selectedMenu?.name} 주문 삭제`}
                   >
@@ -228,6 +266,7 @@ function KioskMenu({
             <button
               type="button"
               className="cart-payment-button"
+              data-hesitation-id="cart-checkout"
               onClick={onPayment}
             >
               결제하기

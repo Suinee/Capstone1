@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./KioskOrder.css";
+import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
 function KioskOrder({
   selectedBaseMenu,
@@ -11,6 +13,8 @@ function KioskOrder({
   onEditSelect,
   onEditConfirm,
   onEditCancel,
+  onStepChange,
+  onHesitationStateChange,
 }) {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,9 +23,42 @@ function KioskOrder({
   // TYPE = 단품/세트 선택
   // SET_SIZE = 미디움/라지 세트 선택
   const [step, setStep] = useState("TYPE");
+  const screenId =
+    step === "TYPE" ? KIOSK_SCREEN_IDS.ORDER_TYPE : KIOSK_SCREEN_IDS.SET_SIZE;
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/menus/category/BURGER")
+    onStepChange?.(step);
+  }, [step, onStepChange]);
+
+  useEffect(() => {
+    const selectionComplete =
+      isEditing &&
+      Boolean(editDraft) &&
+      (step === "TYPE"
+        ? editDraft.menuType === "SINGLE"
+        : editDraft.menuType === "SET");
+    onHesitationStateChange?.({
+      screenId,
+      loading,
+      error: Boolean(error),
+      selectionComplete,
+      canProceed: !loading && !error && selectionComplete,
+    });
+  }, [
+    screenId,
+    step,
+    loading,
+    error,
+    isEditing,
+    editDraft,
+    onHesitationStateChange,
+  ]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("http://localhost:8080/api/menus/category/BURGER", {
+      signal: controller.signal,
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("메뉴 데이터를 불러오지 못했습니다.");
@@ -34,10 +71,13 @@ function KioskOrder({
         setLoading(false);
       })
       .catch((error) => {
+        if (error.name === "AbortError") return;
         console.error(error);
         setError("메뉴를 불러오는 중 오류가 발생했습니다.");
         setLoading(false);
       });
+
+    return () => controller.abort();
   }, []);
 
   // 선택한 버거와 같은 그룹만 가져오기
@@ -95,7 +135,7 @@ function KioskOrder({
     return (
       <div className="kiosk-page">
         <header className="header">
-          <span className="logo">ADPATI</span>
+          <span className="logo">ADAPTI</span>
 
           <span className="menu-name">
             {selectedBaseMenu?.name
@@ -108,7 +148,11 @@ function KioskOrder({
         <main className="content">
           <h1 className="title">세트로 주문하시겠습니까?</h1>
 
-          <div className="option-container">
+          <div
+            className="option-container"
+            id="order-type-options"
+            data-hesitation-target="order-type-options"
+          >
             {/* 단품 */}
             {singleMenu && (
               <button
@@ -120,7 +164,13 @@ function KioskOrder({
                     : ""
                 }`}
                 disabled={singleMenu.stockQuantity === 0}
+                data-hesitation-id={`single-${singleMenu.menuId}`}
+                data-hesitation-action="select"
                 onClick={() => {
+                  emitKioskHesitation("SELECTION_COMPLETE", {
+                    screenId: KIOSK_SCREEN_IDS.ORDER_TYPE,
+                    itemId: singleMenu.menuId,
+                  });
                   if (isEditing) {
                     onEditSelect(singleMenu);
                   } else {
@@ -156,10 +206,21 @@ function KioskOrder({
                     : ""
                 }`}
                 disabled={allSetsSoldOut}
-                onClick={() => setStep("SET_SIZE")}
+                data-hesitation-id="choose-set"
+                data-hesitation-action="select"
+                onClick={() => {
+                  emitKioskHesitation("SELECTION_COMPLETE", {
+                    screenId: KIOSK_SCREEN_IDS.ORDER_TYPE,
+                    itemId: "SET",
+                  });
+                  setStep("SET_SIZE");
+                }}
               >
                 <div className="image-box">
-                  <img src={setRepresentative.imageUrl} alt="불고기버거 세트" />
+                  <img
+                    src={setRepresentative.imageUrl}
+                    alt={setRepresentative.name}
+                  />
 
                   {allSetsSoldOut && <div className="sold-out-badge">품절</div>}
                 </div>
@@ -177,12 +238,17 @@ function KioskOrder({
 
           {isEditing ? (
             <div className="order-edit-actions">
-              <button className="cancel-button" onClick={onEditCancel}>
+              <button
+                className="cancel-button"
+                data-hesitation-id="order-edit-cancel"
+                onClick={onEditCancel}
+              >
                 취소하기
               </button>
 
               <button
                 className="edit-confirm-button"
+                data-hesitation-id="order-edit-confirm"
                 disabled={editDraft?.menuType !== "SINGLE"}
                 onClick={onEditConfirm}
               >
@@ -190,7 +256,11 @@ function KioskOrder({
               </button>
             </div>
           ) : (
-            <button className="cancel-button" onClick={onCancel}>
+            <button
+              className="cancel-button"
+              data-hesitation-id="order-cancel"
+              onClick={onCancel}
+            >
               취소하기
             </button>
           )}
@@ -212,7 +282,7 @@ function KioskOrder({
   return (
     <div className="kiosk-page">
       <header className="header">
-        <span className="logo">ADPATI</span>
+        <span className="logo">ADAPTI</span>
 
         <span className="menu-name">{burgerName} 세트</span>
       </header>
@@ -222,7 +292,11 @@ function KioskOrder({
 
         <p className="status-message">세트 크기를 선택해주세요</p>
 
-        <div className="option-container">
+        <div
+          className="option-container"
+          id="set-size-options"
+          data-hesitation-target="set-size-options"
+        >
           {setMenuOptions.map((menu) => {
             const soldOut = menu.stockQuantity === 0;
 
@@ -235,7 +309,13 @@ function KioskOrder({
                     : ""
                 }`}
                 disabled={soldOut}
+                data-hesitation-id={`set-size-${menu.menuId}`}
+                data-hesitation-action="select"
                 onClick={() => {
+                  emitKioskHesitation("SELECTION_COMPLETE", {
+                    screenId: KIOSK_SCREEN_IDS.SET_SIZE,
+                    itemId: menu.menuId,
+                  });
                   if (isEditing) {
                     onEditSelect(menu);
                   } else {
@@ -260,13 +340,18 @@ function KioskOrder({
         </div>
 
         <div className="order-edit-actions">
-          <button className="cancel-button" onClick={() => setStep("TYPE")}>
+          <button
+            className="cancel-button"
+            data-hesitation-id="set-size-back"
+            onClick={() => setStep("TYPE")}
+          >
             이전으로
           </button>
 
           {isEditing && (
             <button
               className="edit-confirm-button"
+              data-hesitation-id="order-edit-confirm"
               disabled={editDraft?.menuType !== "SET"}
               onClick={onEditConfirm}
             >

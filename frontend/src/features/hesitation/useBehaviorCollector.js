@@ -28,21 +28,43 @@ export default function useBehaviorCollector({
       return engine.record({ ...event, screenVisitId });
     }
 
-    function isIgnored(node) {
-      return (
-        node instanceof Element &&
-        Boolean(node.closest("[data-hesitation-ignore]"))
-      );
+    // data-hesitation-ignore="repeatedClick"은 반복 클릭 규칙만 제외합니다.
+    // 속성값이 없거나 "all"/"true"인 경우에는 전체 행동 수집을 제외합니다.
+    function hasIgnoreToken(node, token) {
+      if (!(node instanceof Element)) return false;
+      let current = node;
+      while (current && root.contains(current)) {
+        if (current.hasAttribute("data-hesitation-ignore")) {
+          const value = current.getAttribute("data-hesitation-ignore") ?? "";
+          const tokens = value.trim().split(/[\s,]+/);
+          if (
+            tokens.includes(token) ||
+            tokens.includes("all") ||
+            tokens.includes("true") ||
+            value.trim() === ""
+          ) {
+            return true;
+          }
+        }
+        current = current.parentElement;
+      }
+      return false;
     }
 
+    function isIgnored(node) {
+      return hasIgnoreToken(node, "all");
+    }
+
+    // 이전 화면들의 data-element-id와 새 키오스크의
+    // data-hesitation-id를 모두 인식합니다.
     function targetOf(node) {
-      if (!(node instanceof Element) || isIgnored(node)) {
-        return null;
-      }
-
-      const element = node.closest("[data-element-id]");
-
+      if (!(node instanceof Element) || isIgnored(node)) return null;
+      const element = node.closest("[data-hesitation-id], [data-element-id]");
       return element && root.contains(element) ? element : null;
+    }
+
+    function getTargetId(element) {
+      return element?.dataset.hesitationId ?? element?.dataset.elementId;
     }
 
     function listen(type, handler) {
@@ -84,7 +106,7 @@ export default function useBehaviorCollector({
 
       if (!element) return;
 
-      const targetId = element.dataset.elementId;
+      const targetId = getTargetId(element);
       const hoverId = crypto.randomUUID();
 
       emit({ type: "hover_enter", targetId, hoverId });
@@ -104,9 +126,10 @@ export default function useBehaviorCollector({
 
       emit({
         type: "click",
-        targetId: element.dataset.elementId,
+        targetId: getTargetId(element),
         repeatClickExcluded:
-          element.dataset.repeatClickExcluded === "true",
+          element.dataset.repeatClickExcluded === "true" ||
+          hasIgnoreToken(event.target, "repeatedClick"),
       });
     });
 
@@ -149,17 +172,14 @@ export default function useBehaviorCollector({
 
       const movedOutside =
         !pointerAnchor ||
-        Math.hypot(
-          point.x - pointerAnchor.x,
-          point.y - pointerAnchor.y,
-        ) > config.pointerPauseRadius;
+        Math.hypot(point.x - pointerAnchor.x, point.y - pointerAnchor.y) >
+          config.pointerPauseRadius;
 
       if (movedOutside) {
         clearTimeout(pointerTimer);
         pointerAnchor = point;
 
-        const targetId =
-          targetOf(event.target)?.dataset.elementId ?? "screen";
+        const targetId = getTargetId(targetOf(event.target)) ?? "screen";
 
         pointerTimer = setTimeout(() => {
           emit({
@@ -191,7 +211,7 @@ export default function useBehaviorCollector({
 
         emit({
           type: "input_pause",
-          targetId: element.dataset.elementId,
+          targetId: getTargetId(element),
         });
       }, config.inputPauseMs);
     }
@@ -212,7 +232,7 @@ export default function useBehaviorCollector({
       // 입력값 자체는 수집 X
       emit({
         type: "input",
-        targetId: element.dataset.elementId,
+        targetId: getTargetId(element),
         inputType,
       });
 
@@ -223,7 +243,7 @@ export default function useBehaviorCollector({
       if (inputType.startsWith("insert") && state.deleted) {
         emit({
           type: "input_revision",
-          targetId: element.dataset.elementId,
+          targetId: getTargetId(element),
         });
 
         state.deleted = false;
@@ -247,7 +267,7 @@ export default function useBehaviorCollector({
       if (element) {
         emit({
           type: "focus_in",
-          targetId: element.dataset.elementId,
+          targetId: getTargetId(element),
         });
       }
     });
@@ -266,15 +286,13 @@ export default function useBehaviorCollector({
 
       emit({
         type: "focus_out",
-        targetId: element.dataset.elementId,
+        targetId: getTargetId(element),
       });
     });
 
     function onScroll(event) {
       const element =
-        event.target === document
-          ? document.scrollingElement
-          : event.target;
+        event.target === document ? document.scrollingElement : event.target;
 
       if (!(element instanceof Element) || isIgnored(element)) return;
 
@@ -302,10 +320,7 @@ export default function useBehaviorCollector({
     // DOM scroll은 일반적인 버블링을 하지 않으므로 캡처 단계에서 수집
     document.addEventListener("scroll", onScroll, true);
 
-    const hoverInterval = setInterval(
-      flushHover,
-      config.tickMs,
-    );
+    const hoverInterval = setInterval(flushHover, config.tickMs);
 
     return () => {
       changeHover(null);

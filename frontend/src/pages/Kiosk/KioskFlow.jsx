@@ -1,4 +1,15 @@
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  KIOSK_SCREEN_IDS,
+  getKioskTask,
+} from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
 import KioskMenu from "./KioskMenu";
 import KioskOrder from "./KioskOrder";
@@ -8,6 +19,71 @@ import KioskSettlement from "./KioskSettlement";
 
 function KioskFlow() {
   const [frame, setFrame] = useState(0);
+  const [orderStep, setOrderStep] = useState("TYPE");
+  const sessionActiveRef = useRef(false);
+  const uiStateRef = useRef(null);
+
+  // KioskOrder의 내부 TYPE / SET_SIZE 단계도 별도 화면으로 추적합니다.
+  const screenId =
+    frame === 0
+      ? KIOSK_SCREEN_IDS.MENU
+      : frame === 1
+        ? orderStep === "SET_SIZE"
+          ? KIOSK_SCREEN_IDS.SET_SIZE
+          : KIOSK_SCREEN_IDS.ORDER_TYPE
+        : frame === 2
+          ? KIOSK_SCREEN_IDS.SIDE
+          : frame === 3
+            ? KIOSK_SCREEN_IDS.DRINK
+            : frame === 4
+              ? KIOSK_SCREEN_IDS.REVIEW
+              : frame === 5
+                ? KIOSK_SCREEN_IDS.PAYMENT_METHOD
+                : null;
+
+  const goToFrame = (nextFrame) => {
+    if (nextFrame === 1) setOrderStep("TYPE");
+    setFrame(nextFrame);
+  };
+
+  const finishSession = useCallback((reason) => {
+    if (!sessionActiveRef.current) return;
+    sessionActiveRef.current = false;
+    emitKioskHesitation("SESSION_END", { reason });
+  }, []);
+
+  useLayoutEffect(() => {
+    sessionActiveRef.current = true;
+    emitKioskHesitation("SESSION_START", { source: "kiosk" });
+    return () => finishSession("unmount");
+  }, [finishSession]);
+
+  // 각 페이지에서 로딩 여부, 선택 완료 여부, 진행 가능 여부를 알려 줍니다.
+  const handleHesitationUiState = useCallback((state) => {
+    uiStateRef.current = state;
+    emitKioskHesitation("UI_STATE", {
+      ...state,
+      measurementEnabled:
+        state.measurementEnabled ?? (!state.loading && !state.error),
+      task: getKioskTask(state.screenId, Boolean(state.selectionComplete)),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!screenId) return;
+    const currentState =
+      uiStateRef.current?.screenId === screenId ? uiStateRef.current : null;
+    emitKioskHesitation("SCREEN_CHANGE", {
+      screenId,
+      task: getKioskTask(screenId, Boolean(currentState?.selectionComplete)),
+      ...currentState,
+      // 페이지가 로딩 상태를 알리기 전에는 측정하지 않습니다.
+      measurementEnabled: currentState
+        ? (currentState.measurementEnabled ??
+          (!currentState.loading && !currentState.error))
+        : false,
+    });
+  }, [screenId]);
 
   // Step2 메뉴 선택
   const [selectedBaseMenu, setSelectedBaseMenu] = useState(null);
@@ -41,11 +117,11 @@ function KioskFlow() {
     setEditingCartId(null);
     setEditTarget(null);
     setEditDraft(null);
-    setSimpleEditCategory(null);
 
     setCart([]);
-    setFrame(0);
+    goToFrame(0);
 
+    finishSession("home");
     window.location.replace("/");
   };
   // 장바구니에서 메뉴를 클릭했을 때
@@ -62,7 +138,7 @@ function KioskFlow() {
     setEditDraft(null);
 
     // 주문 확인 화면으로 이동
-    setFrame(4);
+    goToFrame(4);
   };
 
   // 장바구니에서 X 버튼을 눌렀을 때
@@ -82,7 +158,7 @@ function KioskFlow() {
     setSelectedDrink(null);
 
     // 장바구니가 있는 메뉴 선택 화면으로 복귀
-    setFrame(0);
+    goToFrame(0);
   };
 
   // 사이드 / 음료 단독 장바구니 추가
@@ -99,6 +175,15 @@ function KioskFlow() {
     };
 
     setCart((prev) => [...prev, newItem]);
+    // 사이드/음료 단독 주문: 화면 이동 없이 선택과 장바구니 추가 완료
+    emitKioskHesitation("CART_ADDED", {
+      screenId: KIOSK_SCREEN_IDS.MENU,
+      itemId: menu.menuId,
+    });
+    emitKioskHesitation("TASK_RESET", {
+      screenId: KIOSK_SCREEN_IDS.MENU,
+      task: getKioskTask(KIOSK_SCREEN_IDS.MENU),
+    });
   };
 
   const handleAddToCart = (order) => {
@@ -130,6 +215,14 @@ function KioskFlow() {
       ]);
     }
 
+    emitKioskHesitation(
+      editingCartId !== null ? "CART_UPDATED" : "CART_ADDED",
+      {
+        screenId: KIOSK_SCREEN_IDS.REVIEW,
+        itemId: order.selectedMenu.menuId,
+      },
+    );
+
     // 선택 및 수정 상태 초기화
     setEditingCartId(null);
     setEditTarget(null);
@@ -140,7 +233,7 @@ function KioskFlow() {
     setSelectedDrink(null);
 
     // 메뉴 선택 화면으로 복귀
-    setFrame(0);
+    goToFrame(0);
   };
 
   // 변경 버튼을 눌렀을 때
@@ -148,29 +241,28 @@ function KioskFlow() {
     setEditTarget(target);
 
     if (target === "MENU") {
-      if (
-        selectedMenu?.category === "SIDE" ||
-        selectedMenu?.category === "DRINK"
-      ) {
-        setEditTarget(null);
-        setSimpleEditCategory(selectedMenu.category);
-        setFrame(6);
+      setEditDraft(selectedMenu);
+      // 단독 사이드/음료 주문은 기존 KioskOptions의 수정 화면으로 이동
+      if (selectedMenu?.category === "SIDE") {
+        goToFrame(2);
         return;
       }
-
-      setEditDraft(selectedMenu);
+      if (selectedMenu?.category === "DRINK") {
+        goToFrame(3);
+        return;
+      }
       setSelectedBaseMenu(selectedMenu);
-      setFrame(1);
+      goToFrame(1);
     }
 
     if (target === "SIDE") {
       setEditDraft(selectedSide);
-      setFrame(2);
+      goToFrame(2);
     }
 
     if (target === "DRINK") {
       setEditDraft(selectedDrink);
-      setFrame(3);
+      goToFrame(3);
     }
   };
 
@@ -178,10 +270,9 @@ function KioskFlow() {
   const handleCancelEdit = () => {
     setEditTarget(null);
     setEditDraft(null);
-    setFrame(4);
+    goToFrame(4);
   };
 
-  // 수정하기
   // 수정하기
   const handleConfirmEdit = () => {
     if (!editDraft) return;
@@ -204,7 +295,7 @@ function KioskFlow() {
         setEditDraft(null);
 
         // 사이드 선택부터 다시 진행
-        setFrame(2);
+        goToFrame(2);
         return;
       }
     }
@@ -224,17 +315,18 @@ function KioskFlow() {
     setEditDraft(null);
 
     // 주문 확인 화면으로 이동
-    setFrame(4);
+    goToFrame(4);
   };
 
   if (frame === 0) {
     return (
       <KioskMenu
+        onHesitationStateChange={handleHesitationUiState}
         cart={cart}
         onSelectMenu={(menu) => {
           if (menu.category === "BURGER") {
             setSelectedBaseMenu(menu);
-            setFrame(1);
+            goToFrame(1);
           }
 
           if (menu.category === "SIDE" || menu.category === "DRINK") {
@@ -243,7 +335,7 @@ function KioskFlow() {
         }}
         onEditCartItem={handleEditCartItem}
         onRemoveCartItem={handleRemoveCartItem}
-        onPayment={() => setFrame(5)}
+        onPayment={() => goToFrame(5)}
         onHome={handleHome}
       />
     );
@@ -253,6 +345,8 @@ function KioskFlow() {
   if (frame === 1) {
     return (
       <KioskOrder
+        onHesitationStateChange={handleHesitationUiState}
+        onStepChange={setOrderStep}
         selectedBaseMenu={selectedBaseMenu}
         isEditing={editTarget === "MENU"}
         editDraft={editDraft}
@@ -265,14 +359,14 @@ function KioskFlow() {
           if (menu.menuType === "SET") {
             setSelectedSide(null);
             setSelectedDrink(null);
-            setFrame(2);
+            goToFrame(2);
           } else {
-            setFrame(4);
+            goToFrame(4);
           }
         }}
         onCancel={() => {
           setSelectedMenu(null);
-          setFrame(0);
+          goToFrame(0);
         }}
       />
     );
@@ -282,21 +376,23 @@ function KioskFlow() {
   if (frame === 2) {
     return (
       <KioskOptions
+        key="side-options-step"
+        onHesitationStateChange={handleHesitationUiState}
         frame={2}
         selectedMenu={selectedMenu}
         selectedSide={selectedSide}
         selectedDrink={selectedDrink}
-        isEditing={editTarget === "SIDE"}
+        isEditing={editTarget === "SIDE" || editTarget === "MENU"}
         editDraft={editDraft}
         onEditSelect={setEditDraft}
         onEditConfirm={handleConfirmEdit}
         onEditCancel={handleCancelEdit}
         onSelect={setSelectedSide}
-        onCancel={() => setFrame(1)}
+        onCancel={() => goToFrame(1)}
         onHome={handleHome}
         onNext={() => {
           if (selectedSide) {
-            setFrame(3);
+            goToFrame(3);
           }
         }}
       />
@@ -307,21 +403,23 @@ function KioskFlow() {
   if (frame === 3) {
     return (
       <KioskOptions
+        key="drink-options-step"
+        onHesitationStateChange={handleHesitationUiState}
         frame={3}
         selectedMenu={selectedMenu}
         selectedSide={selectedSide}
         selectedDrink={selectedDrink}
-        isEditing={editTarget === "DRINK"}
+        isEditing={editTarget === "DRINK" || editTarget === "MENU"}
         editDraft={editDraft}
         onEditSelect={setEditDraft}
         onEditConfirm={handleConfirmEdit}
         onEditCancel={handleCancelEdit}
         onSelect={setSelectedDrink}
-        onCancel={() => setFrame(2)}
+        onCancel={() => goToFrame(2)}
         onHome={handleHome}
         onNext={() => {
           if (selectedDrink) {
-            setFrame(4);
+            goToFrame(4);
           }
         }}
       />
@@ -334,6 +432,7 @@ function KioskFlow() {
 
     return (
       <KioskPayment
+        onHesitationStateChange={handleHesitationUiState}
         selectedMenu={selectedMenu}
         selectedSide={selectedSide}
         selectedDrink={selectedDrink}
@@ -343,7 +442,7 @@ function KioskFlow() {
         onChangeSide={() => handleStartEdit("SIDE")}
         onChangeDrink={() => handleStartEdit("DRINK")}
         onCancel={
-          editingCartId !== null ? handleCancelCartEdit : () => setFrame(1)
+          editingCartId !== null ? handleCancelCartEdit : () => goToFrame(1)
         }
         onAddMenu={handleAddToCart}
         onHome={handleHome}
@@ -354,13 +453,13 @@ function KioskFlow() {
   if (frame === 5) {
     return (
       <KioskSettlement
-        onBack={() => setFrame(0)}
+        onHesitationStateChange={handleHesitationUiState}
+        onBack={() => goToFrame(0)}
         onHome={handleHome}
         onComplete={() => {
-          // 결제 완료 후 장바구니 초기화
           setCart([]);
 
-          // ADAPTI 메인페이지 이동
+          finishSession("payment_complete");
           window.location.replace("/");
         }}
       />

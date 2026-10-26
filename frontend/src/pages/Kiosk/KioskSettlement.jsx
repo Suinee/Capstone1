@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./KioskSettlement.css";
 import "./KioskSettlementFlow.css";
+import { KIOSK_SCREEN_IDS } from "../../features/hesitation/kioskHesitationConfig";
+import { emitKioskHesitation } from "../../features/hesitation/kioskHesitationEvents";
 
 const paymentMethods = [
   { name: "간편결제", image: "/images/QR.png" },
@@ -9,11 +11,29 @@ const paymentMethods = [
 ];
 
 // UI 시연용: 실제 결제 승인이나 대기번호 서버 발급은 하지 않습니다.
-function KioskSettlement({ onBack, onHome, onComplete }) {
+function KioskSettlement({
+  onBack,
+  onHome,
+  onComplete,
+  onHesitationStateChange,
+}) {
   const [phase, setPhase] = useState("select"); // select / processing / complete
   const [queueNumber, setQueueNumber] = useState(null);
   const [secondsLeft, setSecondsLeft] = useState(10);
   const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    // select만 측정; processing과 complete는 확실히 감지 중단
+    onHesitationStateChange?.({
+      screenId: KIOSK_SCREEN_IDS.PAYMENT_METHOD,
+      loading: false,
+      error: false,
+      selectionComplete: phase !== "select",
+      canProceed: phase === "select",
+      measurementEnabled: phase === "select",
+      phase,
+    });
+  }, [phase, onHesitationStateChange]);
 
   // 타이머를 재시작하지 않고 최신 완료 콜백만 참조합니다.
   useEffect(() => {
@@ -22,6 +42,14 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
 
   const handlePaymentSelect = () => {
     if (phase !== "select") return; // 연속 클릭 방지
+    emitKioskHesitation("SELECTION_COMPLETE", {
+      screenId: KIOSK_SCREEN_IDS.PAYMENT_METHOD,
+    });
+    emitKioskHesitation("MEASUREMENT_CHANGE", {
+      screenId: KIOSK_SCREEN_IDS.PAYMENT_METHOD,
+      enabled: false,
+      reason: "payment_processing",
+    });
     setPhase("processing");
   };
 
@@ -159,12 +187,18 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
           <span>포인트 적립은 “이전단계” 선택</span>
         </div>
 
-        <div className="kiosk-payment-methods">
+        <div
+          className="kiosk-payment-methods"
+          id="payment-method-options"
+          data-hesitation-target="payment-method-options"
+        >
           {paymentMethods.map((method) => (
             <button
               type="button"
               className="payment-method-card"
               key={method.name}
+              data-hesitation-id={`payment-${method.name}`}
+              data-hesitation-action="select"
               onClick={handlePaymentSelect}
             >
               <div className="payment-method-icon">
@@ -178,6 +212,7 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
         <button
           type="button"
           className="settlement-back-button"
+          data-hesitation-id="payment-back"
           onClick={onBack}
         >
           이전단계
@@ -188,6 +223,7 @@ function KioskSettlement({ onBack, onHome, onComplete }) {
         <button
           type="button"
           className="common-button secondary-btn"
+          data-hesitation-id="payment-home"
           onClick={onHome}
         >
           처음으로

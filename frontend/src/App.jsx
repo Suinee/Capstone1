@@ -16,11 +16,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/kiosk" element={
-          <HesitationProvider>
-            <KioskFlow />
-          </HesitationProvider>
-          } 
+        <Route
+          path="/kiosk"
+          element={
+            <HesitationProvider>
+              <KioskFlow />
+            </HesitationProvider>
+          }
         />
 
         <Route path="/admin/menu" element={<AdminMenu />} />
