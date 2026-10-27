@@ -18,6 +18,8 @@ export default function HesitationDebugPanel() {
     screenVisitId,
     measuring,
     score,
+    navigationScore,
+    screenScore,
     level,
     task,
     metrics,
@@ -87,6 +89,7 @@ export default function HesitationDebugPanel() {
       <hr />
 
       <div>누적 점수: {score}점</div>
+      <div>현재 화면: {screenScore}점 · 화면 왕복 누적: {navigationScore}점</div>
       <div>지원 수준: {level}단계</div>
       <div>도움 상태: {help.status}</div>
       <div>관찰 대상: {help.observedTargetId ?? "없음"}</div>
