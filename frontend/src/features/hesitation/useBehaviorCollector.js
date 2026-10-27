@@ -23,6 +23,11 @@ export default function useBehaviorCollector({
     const inputStates = new Map();
     const scrollPositions = new WeakMap();
     const removers = [];
+    // 측정 시작 위치를 저장해 첫 왕복의 첫 이동도 포함한다.
+    if (document.scrollingElement) scrollPositions.set(document.scrollingElement, document.scrollingElement.scrollTop);
+    for (const node of root.querySelectorAll("*")) {
+      if (node.scrollHeight > node.clientHeight) scrollPositions.set(node, node.scrollTop);
+    }
 
     function emit(event) {
       return engine.record({ ...event, screenVisitId });
@@ -59,7 +64,9 @@ export default function useBehaviorCollector({
     // data-hesitation-id를 모두 인식합니다.
     function targetOf(node) {
       if (!(node instanceof Element) || isIgnored(node)) return null;
-      const element = node.closest("[data-hesitation-id], [data-element-id]");
+      const marked = node.closest("[data-hesitation-id], [data-element-id]");
+      const control = node.closest("label")?.control;
+      const element = marked ?? (control?.matches("[data-hesitation-id], [data-element-id]") ? control : null);
       return element && root.contains(element) ? element : null;
     }
 
@@ -122,7 +129,7 @@ export default function useBehaviorCollector({
     listen("click", (event) => {
       const element = targetOf(event.target);
 
-      if (!element) return;
+      if (!element || (event.target !== element && event.target.closest("label")?.control === element)) return;
 
       emit({
         type: "click",
@@ -221,7 +228,7 @@ export default function useBehaviorCollector({
 
       if (
         !element ||
-        !element.matches("input, textarea, [contenteditable='true']")
+        !element.matches("input:not([type=radio]):not([type=checkbox]):not([type=button]):not([type=submit]):not([readonly]):not([disabled]), textarea:not([readonly]):not([disabled]), [contenteditable='true']")
       ) {
         return;
       }
@@ -315,6 +322,7 @@ export default function useBehaviorCollector({
       emit({
         type: "scroll",
         targetId:
+          element.getAttribute("data-hesitation-id") ??
           element.getAttribute("data-element-id") ??
           (isPage ? "page-scroll" : "unmarked-scroll"),
         deltaY: currentY - previousY,

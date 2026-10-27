@@ -1,7 +1,7 @@
 // 공통 시간, 횟수, 점수 기준
 
 export const DEFAULT_CONFIG = Object.freeze({
-    ruleVersion: "target-help-1.1",
+    ruleVersion: "target-help-1.2",
 
     // 엔진이 시간 기반 조건을 확인하는 간격
     tickMs: 250,

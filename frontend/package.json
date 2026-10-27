@@ -7,11 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "test:hesitation": "node --test tests/kioskHelp.test.mjs",
+    "test:hesitation": "node --test tests/hesitationAudit.test.mjs tests/publicHesitation.test.mjs tests/publicHelp.test.mjs",
     "preview": "vite preview",
     "test:public-service": "node --test tests/publicServiceApi.test.mjs",
     "test:public-hesitation": "node --test tests/publicHesitation.test.mjs",
-    "test:public-help": "node --test tests/publicHelp.test.mjs"
+    "test:public-help": "node --test tests/publicHelp.test.mjs",
+    "test:hesitation-audit": "node --test tests/hesitationAudit.test.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
