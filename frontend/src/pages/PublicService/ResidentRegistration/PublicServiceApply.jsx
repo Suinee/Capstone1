@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
-import { saveDemoApplication } from "../demoApplicationStore";
+import useDemoSubmission from "../useDemoSubmission";
 import "./PublicServiceApply.css";
 
 const serviceOptions = [
@@ -33,6 +33,7 @@ const receiveOptions = [
 ];
 
 function PublicServiceApply() {
+  const { submit, submitting, submitError } = useDemoSubmission("resident-registration");
   const navigate = useNavigate();
 
   const [selectedService, setSelectedService] = useState(serviceOptions[0]);
@@ -50,7 +51,7 @@ function PublicServiceApply() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!sido || !sigungu) {
       window.alert("체험용 주소의 시도와 시군구를 모두 선택해 주세요.");
       return;
@@ -60,7 +61,7 @@ function PublicServiceApply() {
       return;
     }
 
-    saveDemoApplication(selectedService); // 개인 주소 등 입력값은 저장하지 않음
+    if (!(await submit(selectedService))) return; // 개인 주소 등 입력값은 저장하지 않음
     navigate("/public-service/resident-registration/history");
   };
 
@@ -229,6 +230,8 @@ function PublicServiceApply() {
             </div>
           </section>
 
+          {submitError && <p role="alert">{submitError}</p>}
+          {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="ps-apply-buttons">
             <button
               type="button"
@@ -241,6 +244,7 @@ function PublicServiceApply() {
             <button
               type="button"
               className="ps-primary-button"
+              disabled={submitting}
               onClick={handleSubmit}
             >
               신청하기
@@ -253,3 +257,4 @@ function PublicServiceApply() {
 }
 
 export default PublicServiceApply;
+

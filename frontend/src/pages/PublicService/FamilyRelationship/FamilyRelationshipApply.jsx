@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
-import { saveDemoApplication } from "../demoApplicationStore";
+import useDemoSubmission from "../useDemoSubmission";
 import "../PublicServiceDemo.css";
 import "./FamilyRelationshipApply.css";
 
@@ -93,6 +93,7 @@ const reasonOptions = [
 ];
 
 function FamilyRelationshipApply() {
+  const { submit, submitting, submitError } = useDemoSubmission("family-relationship");
   const navigate = useNavigate();
 
   const [target, setTarget] = useState("본인");
@@ -118,12 +119,14 @@ function FamilyRelationshipApply() {
 
   const handleGuideClick = (message) => window.alert(message);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setReceipt(null);
     const proofLabel = proofTypeOptions.find(
       (option) => option.key === proofType,
     ).label;
 
-    const record = saveDemoApplication(`${selectedCert.label} (${proofLabel})`);
+    const record = await submit(`${selectedCert.label} (${proofLabel})`);
+    if (!record) return;
     setReceipt(record);
   };
 
@@ -397,10 +400,13 @@ function FamilyRelationshipApply() {
             </div>
           </section>
 
+          {submitError && <p role="alert">{submitError}</p>}
+          {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="fr-buttons">
             <button
               type="button"
               className="fr-primary-button"
+              disabled={submitting}
               onClick={handleSubmit}
             >
               신청하기 <span aria-hidden="true">↗</span>
@@ -423,3 +429,4 @@ function FamilyRelationshipApply() {
 }
 
 export default FamilyRelationshipApply;
+

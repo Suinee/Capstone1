@@ -42,6 +42,8 @@ const extraServiceOptions = [
 ];
 
 function Step4({
+  submitting,
+  submitError,
   currentAddress,
   onCurrentAddressChange,
   buildingType,
@@ -78,6 +80,8 @@ function Step4({
       <main className="mir-wizard-main">
         <div className="mir-wizard-container">
           <WizardHeader currentStep={4} sectionTitle="현재 주소" />
+          {submitError && <p role="alert">{submitError}</p>}
+          {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
 
           <section className="mir-form-box">
             <h3 className="mir-address-section-title">현재 거주지 정보</h3>
@@ -280,7 +284,7 @@ function Step4({
             <button
               type="button"
               className="mir-primary-button"
-              disabled={!canSubmit}
+              disabled={!canSubmit || submitting}
               onClick={onSubmit}
             >
               신청하기
@@ -293,3 +297,4 @@ function Step4({
 }
 
 export default Step4;
+

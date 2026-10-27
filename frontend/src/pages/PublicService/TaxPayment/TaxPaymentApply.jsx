@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
-import { saveDemoApplication } from "../demoApplicationStore";
+import useDemoSubmission from "../useDemoSubmission";
 import { DEMO_APPLICANT } from "./applicantProfile";
 import "../PublicServiceDemo.css";
 import "./TaxPaymentApply.css";
@@ -13,6 +13,7 @@ const receiveOptions = [
 ];
 
 function TaxPaymentApply() {
+  const { submit, submitting, submitError } = useDemoSubmission("tax-payment");
   const navigate = useNavigate();
 
   const [residentNoVisible, setResidentNoVisible] = useState("공개");
@@ -20,8 +21,8 @@ function TaxPaymentApply() {
   const [purpose, setPurpose] = useState("대금수령");
   const [receiveType, setReceiveType] = useState(receiveOptions[0]);
 
-  const handleSubmit = () => {
-    saveDemoApplication("납세증명서 발급");
+  const handleSubmit = async () => {
+    if (!(await submit("납세증명서 발급"))) return;
     navigate("/public-service/resident-registration/history");
   };
 
@@ -181,6 +182,8 @@ function TaxPaymentApply() {
             </div>
           </section>
 
+          {submitError && <p role="alert">{submitError}</p>}
+          {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="tp-apply-buttons">
             <button
               type="button"
@@ -193,6 +196,7 @@ function TaxPaymentApply() {
             <button
               type="button"
               className="tp-primary-button"
+              disabled={submitting}
               onClick={handleSubmit}
             >
               신청하기
@@ -205,3 +209,4 @@ function TaxPaymentApply() {
 }
 
 export default TaxPaymentApply;
+

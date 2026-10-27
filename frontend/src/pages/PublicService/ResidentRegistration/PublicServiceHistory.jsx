@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
 import { dateToInput, getDemoApplications } from "../demoApplicationStore";
@@ -12,7 +12,21 @@ before.setDate(today.getDate() - 30);
 
 function PublicServiceHistory() {
   const navigate = useNavigate();
-  const [historyItems] = useState(getDemoApplications);
+  const [historyItems, setHistoryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [reload, setReload] = useState(0);
+  useEffect(() => {
+    let active = true;
+    getDemoApplications().then((items) => {
+      if (active) setHistoryItems(items);
+    }).catch((error) => {
+      if (active) setLoadError(error.message);
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, [reload]);
   const [startDate, setStartDate] = useState(dateToInput(before));
   const [endDate, setEndDate] = useState(dateToInput(today));
   const [keyword, setKeyword] = useState("");
@@ -95,6 +109,10 @@ function PublicServiceHistory() {
             </button>
           </div>
 
+          {loading && <p role="status">신청 내역을 불러오고 있습니다…</p>}
+          {loadError && <div role="alert">{loadError}
+            <button type="button" onClick={() => { setLoading(true); setLoadError(""); setReload((n) => n + 1); }}>다시 불러오기</button>
+          </div>}
           <table className="ps-history-table">
             <thead>
               <tr>
@@ -125,7 +143,7 @@ function PublicServiceHistory() {
                   </td>
                 </tr>
               ))}
-              {filteredItems.length === 0 && (
+              {!loading && !loadError && filteredItems.length === 0 && (
                 <tr>
                   <td colSpan={4} className="ps-demo-empty">
                     조회된 체험 신청내역이 없습니다.
@@ -186,3 +204,4 @@ function PublicServiceHistory() {
 }
 
 export default PublicServiceHistory;
+

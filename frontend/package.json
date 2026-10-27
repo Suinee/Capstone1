@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "test:hesitation": "node --test tests/kioskHelp.test.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:public-service": "node --test tests/publicServiceApi.test.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

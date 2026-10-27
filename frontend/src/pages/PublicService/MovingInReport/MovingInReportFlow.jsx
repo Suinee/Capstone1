@@ -8,9 +8,10 @@ import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Complete from "./Complete";
 import { lookupPreviousAddress } from "./mockAddressData";
-import { saveDemoApplication } from "../demoApplicationStore";
+import useDemoSubmission from "../useDemoSubmission";
 
 function MovingInReportFlow() {
+  const { submit, submitting, submitError } = useDemoSubmission("moving-in-report");
   const navigate = useNavigate();
   const [frame, setFrame] = useState(0);
 
@@ -73,9 +74,9 @@ function MovingInReportFlow() {
     setExtraConsent(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 전입 주소·전화번호·세대원 정보는 저장하지 않습니다.
-    saveDemoApplication("전입신고");
+    if (!(await submit("전입신고"))) return;
     setFrame(5);
   };
 
@@ -142,6 +143,8 @@ function MovingInReportFlow() {
   if (frame === 4) {
     return (
       <Step4
+        submitting={submitting}
+        submitError={submitError}
         currentAddress={currentAddress}
         onCurrentAddressChange={setCurrentAddress}
         buildingType={buildingType}
@@ -178,3 +181,4 @@ function MovingInReportFlow() {
 }
 
 export default MovingInReportFlow;
+

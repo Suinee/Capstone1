@@ -12,7 +12,8 @@ function PublicServiceTopBar() {
         <nav className="ps-nav-menu">
           <a href="/#service">금융서비스</a>
           <Link to="/public-service">공공서비스</Link>
-          <a href="/#result">키오스크</a>
+          <Link to="/kiosk">키오스크</Link>
+          <Link to="/public-service/resident-registration/history">신청내역</Link>
         </nav>
       </div>
     </header>
@@ -20,3 +21,4 @@ function PublicServiceTopBar() {
 }
 
 export default PublicServiceTopBar;
+
