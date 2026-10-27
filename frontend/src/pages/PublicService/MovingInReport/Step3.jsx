@@ -128,7 +128,7 @@ function Step3({
                   <span className="mir-required">(필수)</span>
                 </p>
 
-                <table className="mir-household-table">
+                <table className="mir-household-table" data-hesitation-target="moving-movers">
                   <thead>
                     <tr>
                       <th></th>
@@ -209,7 +209,7 @@ function Step3({
                   가족관계증명서를 제출하여야 합니다.
                 </p>
 
-                <div className="mir-consent-radio-row">
+                <div className="mir-consent-radio-row" data-hesitation-target="moving-consent-options">
                   <label className="mir-radio">
                     <input data-hesitation-id="moving-consent-disagree"
                       type="radio"

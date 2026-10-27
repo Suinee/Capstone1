@@ -116,7 +116,7 @@ function Step2({
                 구분 <span className="mir-required">(필수)</span>
               </p>
 
-              <div className="mir-reason-grid">
+              <div className="mir-reason-grid" data-hesitation-target="moving-reason-options">
                 {reasonOptions.map((option) => (
                   <label className="mir-radio" key={option.value}>
                     <input data-hesitation-id={`moving-reason-${option.value}`}

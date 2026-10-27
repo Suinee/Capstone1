@@ -305,6 +305,10 @@ export default function useBehaviorCollector({
 
       scrollPositions.set(element, currentY);
 
+      // 도움 UI의 '항목 위치 보기'가 만든 스크롤은 사용자 탐색으로 가산하지 않는다.
+      // 위치 기준은 갱신해 다음 사용자 스크롤에 이동량이 섞이지 않게 한다.
+      if (performance.now() < Number(root.dataset.hesitationIgnoreScrollUntil ?? 0)) return;
+
       // 측정 시작 전 위치를 모르는 경우 첫 이벤트는 기준점으로 사용
       if (previousY === undefined) return;
 

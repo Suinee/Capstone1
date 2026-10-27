@@ -10,7 +10,8 @@
     "test:hesitation": "node --test tests/kioskHelp.test.mjs",
     "preview": "vite preview",
     "test:public-service": "node --test tests/publicServiceApi.test.mjs",
-    "test:public-hesitation": "node --test tests/publicHesitation.test.mjs"
+    "test:public-hesitation": "node --test tests/publicHesitation.test.mjs",
+    "test:public-help": "node --test tests/publicHelp.test.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

@@ -1,52 +1,9 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { resolveKioskHelp } from "./resolveKioskHelp.js";
 
-const emptyTarget = {
-  observedTargetId: null,
-  highlightTargetId: null,
-  helpKey: null,
-  sourceSignalKey: null,
-  sourceAddedScore: 0,
-};
-const initialState = {
-  screenVisitId: null,
-  status: "hidden",
-  level: 0,
-  ...emptyTarget,
-  suppressedUntil: 0,
-  reason: "initial",
-  version: 0,
-};
+import { helpReducer, initialState } from "./adaptiveHelpState.js";
 
-function helpReducer(state, action) {
-  switch (action.type) {
-    case "SCREEN":
-      if (state.screenVisitId === action.screenVisitId) return state;
-      return { ...initialState, screenVisitId: action.screenVisitId,
-        reason: "screenChanged", version: state.version + 1 };
-    case "SIGNAL":
-      if (state.screenVisitId !== action.screenVisitId || action.level === 0 ||
-          action.at < state.suppressedUntil) return state;
-      return { ...state, ...action.target, status: "visible", level: action.level,
-        sourceAddedScore: action.addedScore, reason: "newSignal", version: state.version + 1 };
-    case "CLOSE":
-      if (state.status !== "visible") return state;
-      return { ...state, status: "suppressed", suppressedUntil: action.until,
-        reason: "userClosed", version: state.version + 1 };
-    case "RESOLVE":
-      if (state.screenVisitId !== action.screenVisitId) return state;
-      return { ...state, ...emptyTarget, status: "hidden", level: 0,
-        reason: "actionCompleted", version: state.version + 1 };
-    case "MANUAL_OPEN":
-      if (state.screenVisitId !== action.screenVisitId) return state;
-      return { ...state, ...emptyTarget, ...action.target, status: "visible",
-        level: Math.max(1, action.level), reason: "manualRequest", version: state.version + 1 };
-    default:
-      return state;
-  }
-}
-
-export default function useAdaptiveHelp(engine, automatic = true, enabled = true) {
+export default function useAdaptiveHelp(engine, automatic = true, enabled = true, { resolveHelp = resolveKioskHelp, clearOnPause = false } = {}) {
   const [help, dispatch] = useReducer(helpReducer, initialState);
   const lastLoggedVersion = useRef(0);
 
@@ -56,13 +13,16 @@ export default function useAdaptiveHelp(engine, automatic = true, enabled = true
     const unsubscribe = engine.subscribe((message) => {
       const snapshot = message.snapshot;
       if (message.type === "screen") syncScreen(snapshot);
+      if (clearOnPause && message.type === "measurement" && !snapshot.measuring) {
+        dispatch({ type: "RESOLVE", screenVisitId: snapshot.screenVisitId });
+      }
       if (message.type === "resolved") dispatch({ type: "RESOLVE", screenVisitId: snapshot.screenVisitId });
       // 0점짜리 중복 신호나 단순 마우스 이동으로 도움 대상을 바꾸지 않습니다.
       if (message.type === "signal" && automatic && message.addedScore > 0) {
         dispatch({
           type: "SIGNAL", screenVisitId: snapshot.screenVisitId,
           level: snapshot.level, at: message.at, addedScore: message.addedScore,
-          target: resolveKioskHelp({
+          target: resolveHelp({
             screenId: snapshot.screenId, signals: message.signals,
             task: snapshot.task, metrics: snapshot.metrics,
           }),
@@ -71,7 +31,7 @@ export default function useAdaptiveHelp(engine, automatic = true, enabled = true
     });
     syncScreen(engine.getSnapshot());
     return unsubscribe;
-  }, [engine, automatic, enabled]);
+  }, [engine, automatic, enabled, resolveHelp, clearOnPause]);
 
   useEffect(() => {
     if (!help.screenVisitId || help.version === lastLoggedVersion.current) return;
@@ -100,8 +60,15 @@ export default function useAdaptiveHelp(engine, automatic = true, enabled = true
     dispatch({ type: "SCREEN", screenVisitId: snapshot.screenVisitId });
     dispatch({
       type: "MANUAL_OPEN", screenVisitId: snapshot.screenVisitId, level: snapshot.level,
-      target: resolveKioskHelp({ screenId: snapshot.screenId, task: snapshot.task }),
+      target: resolveHelp({ screenId: snapshot.screenId, task: snapshot.task }),
     });
-  }, [engine, enabled]);
-  return { help, closeHelp, openHelp };
+  }, [engine, enabled, resolveHelp]);
+  const expandHelp = useCallback(() => {
+    const snapshot = engine.getSnapshot();
+    if (snapshot.measuring) dispatch({ type: "EXPAND", screenVisitId: snapshot.screenVisitId });
+  }, [engine]);
+  const resolveCurrentHelp = useCallback(() => {
+    dispatch({ type: "RESOLVE", screenVisitId: engine.getSnapshot().screenVisitId });
+  }, [engine]);
+  return { help, closeHelp, openHelp, expandHelp, resolveCurrentHelp };
 }

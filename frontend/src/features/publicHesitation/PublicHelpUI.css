@@ -1,0 +1,30 @@
+.public-help-ui { font-family: inherit; color: #12354b; }
+.public-help-launcher { position: fixed; z-index: 8000; bottom: 24px; left: 24px; display: flex; align-items: center; gap: 9px; padding: 13px 19px; border: 1px solid #147a85; border-radius: 999px; background: #fff; color: #125967; font: inherit; font-weight: 700; box-shadow: 0 4px 18px #12354b22; cursor: pointer; }
+.public-help-launcher span { display: grid; place-items: center; border-radius: 50%; background: #126573; color: white; width: 23px; height: 23px; }
+.public-help-panel { position: fixed; z-index: 8000; left: 24px; bottom: 24px; width: min(390px, calc(100vw - 48px)); max-height: min(520px, 48dvh); overflow-y: auto; box-sizing: border-box; padding: 20px; border: 1px solid #7bb7bc; border-top: 4px solid #167682; border-radius: 16px; background: #fff; box-shadow: 0 10px 36px #12354b30; font-size: 15px; line-height: 1.65; }
+.public-help-heading { display: flex; gap: 9px; align-items: center; }
+.public-help-heading h2 { flex: 1; margin: 0; font-size: 18px; line-height: 1.4; }
+.public-help-badge { flex: 0 0 auto; border-radius: 6px; background: #e5f4f2; color: #145b65; font-weight: 700; padding: 2px 8px; font-size: 12px; }
+.public-help-ui button { min-height: 44px; }
+.public-help-close { flex-shrink: 0; width: 44px; border: 0; background: transparent; color: #496574; font-size: 25px; cursor: pointer; border-radius: 8px; }
+.public-help-short { margin: 12px 0 0; font-weight: 700; }
+.public-help-explanation { margin: 10px 0 0; color: #435a67; }
+.public-help-steps { padding-left: 24px; margin: 14px 0 0; }
+.public-help-steps li { margin-bottom: 10px; padding-left: 4px; }
+.public-help-steps li::marker { color: #126573; font-weight: 700; }
+.public-help-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.public-help-actions button { flex: 1 1 auto; padding: 8px 12px; border: 1px solid #bed1d6; background: #f7fafb; color: #244b5b; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.public-help-actions .public-help-more { background: #126573; color: #fff; border-color: #126573; }
+.public-help-ui button:focus-visible, .public-help-heading h2:focus-visible { outline: 3px solid #097fa0; outline-offset: 3px; }
+[data-public-help-level] { outline: 3px solid #168092 !important; outline-offset: 5px; box-shadow: 0 0 0 8px #1680921a !important; scroll-margin-top: 120px; }
+[data-public-help-level="3"] { outline-color: #086477 !important; }
+@media (max-width: 600px) {
+  .public-help-panel { left: 12px; bottom: 12px; width: calc(100vw - 24px); padding: 16px; max-height: 44dvh; }
+  .public-help-launcher { left: 12px; bottom: 12px; }
+  .public-help-heading h2 { font-size: 17px; }
+}
+
+/* 끝부분의 입력/신청 버튼도 도움창 위로 스크롤할 수 있는 여유 공간. */
+.public-help-spacer { height: 88px; }
+.public-help-ui--visible .public-help-spacer { height: min(568px, calc(48dvh + 48px)); }
+@media (max-width: 600px) { .public-help-ui--visible .public-help-spacer { height: calc(44dvh + 24px); } }

@@ -35,7 +35,8 @@ export default function HesitationDebugPanel() {
       style={{
         position: "fixed",
         right: 12,
-        bottom: 12,
+        bottom: task.context?.domain === "public-service" ? "auto" : 12,
+        top: task.context?.domain === "public-service" ? 12 : "auto",
         zIndex: 9999,
         width: 280,
         maxHeight: "55vh",
@@ -49,11 +50,12 @@ export default function HesitationDebugPanel() {
         lineHeight: 1.7,
       }}
     >
-      <strong>망설임 감지 확인</strong>
+      <details open={task.context?.domain !== "public-service"}>
+      <summary>망설임 감지 확인 (개발용)</summary>
 
       <div style={{ overflowWrap: "anywhere" }}>세션: {sessionId}</div>
       {task.context?.domain === "public-service" && (
-        <div>공공서비스 감지 전용 · 자동 도움 미연결</div>
+        <div>공공서비스 · 단계별 도움 연결</div>
       )}
 
       <div>화면: {screenId ?? "미등록"}</div>
@@ -125,6 +127,7 @@ export default function HesitationDebugPanel() {
       >
         콘솔에서 로그 보기
       </button>
+      </details>
     </aside>
   );
 }
