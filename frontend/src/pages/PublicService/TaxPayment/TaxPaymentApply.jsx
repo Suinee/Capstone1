@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
@@ -13,6 +14,7 @@ const receiveOptions = [
 ];
 
 function TaxPaymentApply() {
+  usePublicScreen("public:tax:apply");
   const { submit, submitting, submitError } = useDemoSubmission("tax-payment");
   const navigate = useNavigate();
 
@@ -108,7 +110,7 @@ function TaxPaymentApply() {
               <div className="tp-radio-row">
                 {["공개", "비공개"].map((option) => (
                   <label className="tp-radio" key={option}>
-                    <input
+                    <input data-hesitation-id={`tax-disclosure-${option === "공개" ? "show" : "hide"}`}
                       type="radio"
                       name="residentNoVisible"
                       checked={residentNoVisible === option}
@@ -127,7 +129,7 @@ function TaxPaymentApply() {
               <div className="tp-radio-row">
                 {["공개", "비공개"].map((option) => (
                   <label className="tp-radio" key={option}>
-                    <input
+                    <input data-hesitation-id={`tax-address-disclosure-${option === "공개" ? "show" : "hide"}`}
                       type="radio"
                       name="addressVisible"
                       checked={addressVisible === option}
@@ -146,7 +148,7 @@ function TaxPaymentApply() {
               <div className="tp-radio-row">
                 {["대금수령", "기타"].map((option) => (
                   <label className="tp-radio" key={option}>
-                    <input
+                    <input data-hesitation-id={`tax-purpose-${option === "대금수령" ? "payment" : "other"}`}
                       type="radio"
                       name="purpose"
                       checked={purpose === option}
@@ -169,7 +171,7 @@ function TaxPaymentApply() {
               <div className="tp-receive-row">
                 {receiveOptions.map((option) => (
                   <label className="tp-radio" key={option}>
-                    <input
+                    <input data-hesitation-id={`tax-receive-type-${receiveOptions.indexOf(option)}`}
                       type="radio"
                       name="receiveType"
                       checked={receiveType === option}
@@ -185,7 +187,7 @@ function TaxPaymentApply() {
           {submitError && <p role="alert">{submitError}</p>}
           {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="tp-apply-buttons">
-            <button
+            <button data-hesitation-id="tax-cancel"
               type="button"
               className="tp-outline-button"
               onClick={() => navigate("/public-service/tax-payment")}
@@ -193,7 +195,7 @@ function TaxPaymentApply() {
               취소하기
             </button>
 
-            <button
+            <button data-hesitation-id="tax-submit"
               type="button"
               className="tp-primary-button"
               disabled={submitting}

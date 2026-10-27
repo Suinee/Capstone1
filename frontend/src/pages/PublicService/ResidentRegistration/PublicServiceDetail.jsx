@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
 import "./PublicServiceDetail.css";
@@ -12,6 +13,7 @@ const sections = [
 ];
 
 function PublicServiceDetail() {
+  usePublicScreen("public:resident:detail");
   const navigate = useNavigate();
 
   return (

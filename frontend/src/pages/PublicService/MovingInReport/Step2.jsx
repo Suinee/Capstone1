@@ -74,7 +74,7 @@ function Step2({
               </p>
 
               <div className="mir-phone-row">
-                <input
+                <input data-hesitation-id="moving-phone-first"
                   type="text"
                   maxLength={3}
                   inputMode="numeric"
@@ -83,7 +83,7 @@ function Step2({
                   onChange={updatePhone("part1", 3)}
                 />
                 <span>-</span>
-                <input
+                <input data-hesitation-id="moving-phone-middle"
                   type="text"
                   maxLength={4}
                   inputMode="numeric"
@@ -92,7 +92,7 @@ function Step2({
                   onChange={updatePhone("part2", 4)}
                 />
                 <span>-</span>
-                <input
+                <input data-hesitation-id="moving-phone-last"
                   type="text"
                   maxLength={4}
                   inputMode="numeric"
@@ -119,7 +119,7 @@ function Step2({
               <div className="mir-reason-grid">
                 {reasonOptions.map((option) => (
                   <label className="mir-radio" key={option.value}>
-                    <input
+                    <input data-hesitation-id={`moving-reason-${option.value}`}
                       type="radio"
                       name="moveReason"
                       checked={reason === option.value}
@@ -130,7 +130,7 @@ function Step2({
                 ))}
 
                 {reason === "etc" && (
-                  <input
+                  <input data-hesitation-id="moving-reason-other"
                     type="text"
                     className="mir-reason-other-input"
                     placeholder="기타 전입사유를 입력하세요."
@@ -144,7 +144,7 @@ function Step2({
 
           <div className="mir-wizard-buttons">
             <div className="mir-wizard-buttons-left">
-              <button
+              <button data-hesitation-id="moving-cancel"
                 type="button"
                 className="mir-ghost-button"
                 onClick={onCancel}
@@ -152,7 +152,7 @@ function Step2({
                 취소
               </button>
 
-              <button
+              <button data-hesitation-id="moving-prev"
                 type="button"
                 className="mir-outline-button"
                 onClick={onPrev}
@@ -161,7 +161,7 @@ function Step2({
               </button>
             </div>
 
-            <button
+            <button data-hesitation-id="moving-next"
               type="button"
               className="mir-primary-button"
               disabled={!canGoNext}

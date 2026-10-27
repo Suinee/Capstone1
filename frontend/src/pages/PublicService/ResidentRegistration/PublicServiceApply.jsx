@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
@@ -33,6 +34,7 @@ const receiveOptions = [
 ];
 
 function PublicServiceApply() {
+  const reportValidation = usePublicScreen("public:resident:apply");
   const { submit, submitting, submitError } = useDemoSubmission("resident-registration");
   const navigate = useNavigate();
 
@@ -53,10 +55,12 @@ function PublicServiceApply() {
 
   const handleSubmit = async () => {
     if (!sido || !sigungu) {
+      reportValidation(!sido ? "resident-sido" : "resident-sigungu", "required");
       window.alert("체험용 주소의 시도와 시군구를 모두 선택해 주세요.");
       return;
     }
     if (issueType === "select" && checkedFields.length === 0) {
+      reportValidation("resident-fields", "required");
       window.alert("선택 발급 항목을 하나 이상 선택해 주세요.");
       return;
     }
@@ -80,7 +84,7 @@ function PublicServiceApply() {
 
           <div className="ps-service-select-box">
             {serviceOptions.map((option) => (
-              <button
+              <button data-hesitation-id={`resident-service-${serviceOptions.indexOf(option)}`} data-public-selection="true"
                 type="button"
                 key={option}
                 className={`ps-service-option ${
@@ -113,7 +117,7 @@ function PublicServiceApply() {
               </p>
 
               <div className="ps-select-row">
-                <select
+                <select data-hesitation-id="resident-sido"
                   value={sido}
                   onChange={(event) => {
                     setSido(event.target.value);
@@ -128,7 +132,7 @@ function PublicServiceApply() {
                   ))}
                 </select>
 
-                <select
+                <select data-hesitation-id="resident-sigungu"
                   value={sigungu}
                   onChange={(event) => setSigungu(event.target.value)}
                   disabled={!sido}
@@ -154,7 +158,7 @@ function PublicServiceApply() {
 
               <div className="ps-radio-row">
                 <label className="ps-radio">
-                  <input
+                  <input data-hesitation-id="resident-issue-type-full"
                     type="radio"
                     name="issueType"
                     checked={issueType === "full"}
@@ -164,7 +168,7 @@ function PublicServiceApply() {
                 </label>
 
                 <label className="ps-radio">
-                  <input
+                  <input data-hesitation-id="resident-issue-type-select"
                     type="radio"
                     name="issueType"
                     checked={issueType === "select"}
@@ -189,7 +193,7 @@ function PublicServiceApply() {
 
                   {selectableFields.map((field) => (
                     <label className="ps-checkbox" key={field}>
-                      <input
+                      <input data-hesitation-id={`resident-fields-${selectableFields.indexOf(field)}`}
                         type="checkbox"
                         checked={checkedFields.includes(field)}
                         onChange={() => toggleField(field)}
@@ -217,7 +221,7 @@ function PublicServiceApply() {
               <div className="ps-receive-grid">
                 {receiveOptions.map((option) => (
                   <label className="ps-radio" key={option}>
-                    <input
+                    <input data-hesitation-id={`resident-receive-type-${receiveOptions.indexOf(option)}`}
                       type="radio"
                       name="receiveType"
                       checked={receiveType === option}
@@ -233,7 +237,7 @@ function PublicServiceApply() {
           {submitError && <p role="alert">{submitError}</p>}
           {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="ps-apply-buttons">
-            <button
+            <button data-hesitation-id="resident-back"
               type="button"
               className="ps-outline-button"
               onClick={() => navigate("/public-service/resident-registration")}
@@ -241,7 +245,7 @@ function PublicServiceApply() {
               목록으로
             </button>
 
-            <button
+            <button data-hesitation-id="resident-submit"
               type="button"
               className="ps-primary-button"
               disabled={submitting}

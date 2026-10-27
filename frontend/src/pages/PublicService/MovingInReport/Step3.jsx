@@ -1,3 +1,4 @@
+import useHesitation from "../../../features/hesitation/useHesitation.js";
 import { useState } from "react";
 import MovingInReportTopBar from "./MovingInReportTopBar";
 import WizardHeader from "./WizardHeader";
@@ -21,6 +22,7 @@ function Step3({
   onNext,
   onCancel,
 }) {
+  const { recordError } = useHesitation();
   const [attempted, setAttempted] = useState(false);
 
   const sigunguOptions = sido ? sigunguMap[sido] || [] : [];
@@ -29,6 +31,7 @@ function Step3({
     setAttempted(true);
 
     if (!sido || !sigungu) {
+      recordError(!sido ? "moving-previous-sido" : "moving-previous-sigungu", "required", crypto.randomUUID());
       return;
     }
 
@@ -55,7 +58,7 @@ function Step3({
             <p className="mir-field-label">주소 확인</p>
 
             <div className="mir-address-row">
-              <select
+              <select data-hesitation-id="moving-previous-sido"
                 value={sido}
                 onChange={(event) => {
                   onSidoChange(event.target.value);
@@ -70,7 +73,7 @@ function Step3({
                 ))}
               </select>
 
-              <select
+              <select data-hesitation-id="moving-previous-sigungu"
                 value={sigungu}
                 onChange={(event) => onSigunguChange(event.target.value)}
                 disabled={!sido}
@@ -83,7 +86,7 @@ function Step3({
                 ))}
               </select>
 
-              <button
+              <button data-hesitation-id="moving-address-lookup"
                 type="button"
                 className="mir-address-query-button"
                 onClick={handleLookup}
@@ -140,7 +143,7 @@ function Step3({
                     {lookupResult.household.map((person) => (
                       <tr key={person.id}>
                         <td>
-                          <input
+                          <input data-hesitation-id={`moving-movers-${lookupResult.household.indexOf(person)}`}
                             type="checkbox"
                             checked={selectedMovers.includes(person.id)}
                             onChange={() => onToggleMover(person.id)}
@@ -208,7 +211,7 @@ function Step3({
 
                 <div className="mir-consent-radio-row">
                   <label className="mir-radio">
-                    <input
+                    <input data-hesitation-id="moving-consent-disagree"
                       type="radio"
                       name="infoConsent"
                       checked={consent === "disagree"}
@@ -218,7 +221,7 @@ function Step3({
                   </label>
 
                   <label className="mir-radio">
-                    <input
+                    <input data-hesitation-id="moving-consent-agree"
                       type="radio"
                       name="infoConsent"
                       checked={consent === "agree"}
@@ -237,7 +240,7 @@ function Step3({
 
               <section className="mir-consent-box">
                 <label className="mir-extra-consent-row">
-                  <input
+                  <input data-hesitation-id="moving-extra-consent"
                     type="checkbox"
                     checked={extraConsent}
                     onChange={(event) =>
@@ -260,7 +263,7 @@ function Step3({
 
           <div className="mir-wizard-buttons">
             <div className="mir-wizard-buttons-left">
-              <button
+              <button data-hesitation-id="moving-prev"
                 type="button"
                 className="mir-outline-button"
                 onClick={onPrev}
@@ -268,7 +271,7 @@ function Step3({
                 이전으로
               </button>
 
-              <button
+              <button data-hesitation-id="moving-cancel"
                 type="button"
                 className="mir-ghost-button"
                 onClick={onCancel}
@@ -277,7 +280,7 @@ function Step3({
               </button>
             </div>
 
-            <button
+            <button data-hesitation-id="moving-next"
               type="button"
               className="mir-primary-button"
               disabled={!canGoNext}

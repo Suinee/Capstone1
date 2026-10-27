@@ -126,7 +126,7 @@ function Step1({ agreed, onAgreedChange, onNext, onCancel }) {
 
           <div className="mir-checkbox-row">
             <label>
-              <input
+              <input data-hesitation-id="moving-agreement"
                 type="checkbox"
                 checked={agreed}
                 onChange={(event) => onAgreedChange(event.target.checked)}
@@ -136,7 +136,7 @@ function Step1({ agreed, onAgreedChange, onNext, onCancel }) {
           </div>
 
           <div className="mir-wizard-buttons">
-            <button
+            <button data-hesitation-id="moving-cancel"
               type="button"
               className="mir-ghost-button"
               onClick={onCancel}
@@ -144,7 +144,7 @@ function Step1({ agreed, onAgreedChange, onNext, onCancel }) {
               취소하기
             </button>
 
-            <button
+            <button data-hesitation-id="moving-next"
               type="button"
               className="mir-primary-button"
               disabled={!agreed}

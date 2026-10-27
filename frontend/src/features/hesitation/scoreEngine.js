@@ -450,6 +450,19 @@ export function createScoreEngine({
     now: advanceClock,
     tick,
     record,
+    // 서버 응답 같은 수명주기 사건은 탭이 숨겨져 있어도 기록한다.
+    // 사용자 행동 평가용 events에는 넣지 않아 망설임 점수에 영향을 주지 않는다.
+    recordLifecycleEvent(event) {
+      advanceClock();
+      if (!screenVisitId) return null;
+      return writeLog("behavior", { event: {
+        ...event,
+        id: `${sessionId}:event:${++sequence}`,
+        time: activeTime,
+        screenId,
+        screenVisitId,
+      } });
+    },
     enterScreen,
     setTask,
     setPaused,

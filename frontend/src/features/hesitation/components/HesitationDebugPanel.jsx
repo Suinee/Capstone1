@@ -13,6 +13,7 @@ const RULE_LABELS = {
 
 export default function HesitationDebugPanel() {
   const {
+    sessionId,
     screenId,
     screenVisitId,
     measuring,
@@ -49,6 +50,11 @@ export default function HesitationDebugPanel() {
       }}
     >
       <strong>망설임 감지 확인</strong>
+
+      <div style={{ overflowWrap: "anywhere" }}>세션: {sessionId}</div>
+      {task.context?.domain === "public-service" && (
+        <div>공공서비스 감지 전용 · 자동 도움 미연결</div>
+      )}
 
       <div>화면: {screenId ?? "미등록"}</div>
       <div>방문: {screenVisitId?.slice(0, 8) ?? "-"}</div>

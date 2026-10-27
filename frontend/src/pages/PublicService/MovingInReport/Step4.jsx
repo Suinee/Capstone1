@@ -102,7 +102,7 @@ function Step4({
                   placeholder="검색 버튼을 눌러 주소를 입력하세요."
                 />
 
-                <button
+                <button data-hesitation-id="moving-address-search"
                   type="button"
                   className="mir-search-button"
                   onClick={() => setAddressListOpen((prev) => !prev)}
@@ -120,7 +120,7 @@ function Step4({
                     체험용 주소를 선택해 주세요 (실제 주소 검색이 아닙니다).
                   </p>
                   {MOCK_SEARCH_ADDRESSES.map((address) => (
-                    <button
+                    <button data-hesitation-id={`moving-address-choice-${MOCK_SEARCH_ADDRESSES.indexOf(address)}`} data-public-selection="true"
                       key={address}
                       type="button"
                       onClick={() => {
@@ -137,7 +137,7 @@ function Step4({
               <div className="mir-building-row">
                 <div>
                   <span className="mir-building-label">건축물 구분</span>
-                  <select
+                  <select data-hesitation-id="moving-building-type"
                     value={buildingType}
                     onChange={(event) =>
                       onBuildingTypeChange(event.target.value)
@@ -150,7 +150,7 @@ function Step4({
 
                 <div>
                   <span className="mir-building-label">본번</span>
-                  <input
+                  <input data-hesitation-id="moving-main-number"
                     type="text"
                     value={mainNo}
                     onChange={(event) => onMainNoChange(event.target.value)}
@@ -159,7 +159,7 @@ function Step4({
 
                 <div>
                   <span className="mir-building-label">부번</span>
-                  <input
+                  <input data-hesitation-id="moving-sub-number"
                     type="text"
                     value={subNo}
                     onChange={(event) => onSubNoChange(event.target.value)}
@@ -167,11 +167,11 @@ function Step4({
                 </div>
               </div>
 
-              <a className="mir-helper-link" href="#building-help">
+              <a data-hesitation-id="moving-building-help" className="mir-helper-link" href="#building-help">
                 건물번호란?
               </a>
 
-              <input
+              <input data-hesitation-id="moving-detail-address"
                 type="text"
                 className="mir-detail-address-input"
                 placeholder="상세주소를 입력하세요. 입력 예시 : 101동 501호(인사동, 무궁화 아파트)"
@@ -195,7 +195,7 @@ function Step4({
 
               <div className="mir-household-type-group">
                 <label className="mir-radio">
-                  <input
+                  <input data-hesitation-id="moving-household-type-new"
                     type="radio"
                     name="householdType"
                     checked={householdType === "new"}
@@ -205,7 +205,7 @@ function Step4({
                 </label>
 
                 <label className="mir-radio">
-                  <input
+                  <input data-hesitation-id="moving-household-type-existing"
                     type="radio"
                     name="householdType"
                     checked={householdType === "existing"}
@@ -232,14 +232,14 @@ function Step4({
                 <div className="mir-accordion-item" key={option.key}>
                   <div className="mir-accordion-header">
                     <label className="mir-demo-accordion-check">
-                      <input
+                      <input data-hesitation-id={`moving-extra-service-${option.key}`}
                         type="checkbox"
                         checked={extraServices.includes(option.key)}
                         onChange={() => onToggleExtraService(option.key)}
                         aria-label={`${option.label} 신청 여부`}
                       />
                     </label>
-                    <button
+                    <button data-hesitation-id={`moving-extra-service-toggle-${option.key}`}
                       type="button"
                       className="mir-demo-accordion-toggle"
                       onClick={() => toggleOpen(option.key)}
@@ -264,7 +264,7 @@ function Step4({
 
           <div className="mir-wizard-buttons">
             <div className="mir-wizard-buttons-left">
-              <button
+              <button data-hesitation-id="moving-prev"
                 type="button"
                 className="mir-outline-button"
                 onClick={onPrev}
@@ -272,7 +272,7 @@ function Step4({
                 이전으로
               </button>
 
-              <button
+              <button data-hesitation-id="moving-cancel"
                 type="button"
                 className="mir-ghost-button"
                 onClick={onCancel}
@@ -281,7 +281,7 @@ function Step4({
               </button>
             </div>
 
-            <button
+            <button data-hesitation-id="moving-submit"
               type="button"
               className="mir-primary-button"
               disabled={!canSubmit || submitting}
