@@ -1,7 +1,7 @@
 import { RULE_IDS } from "../hesitation/config.js";
 
 // 사전 사용자 실험 전의 초기값. 단순 대기만으로 망설임을 확정하지 않는다.
-export const PUBLIC_CONFIG = Object.freeze({ ruleVersion: "public-help-1.0" });
+export const PUBLIC_CONFIG = Object.freeze({ ruleVersion: "public-help-1.1" });
 const screen = (serviceCode, phase, targetId, delayMs, ready = true) => ({
   serviceCode, phase, targetId, delayMs, ready,
 });

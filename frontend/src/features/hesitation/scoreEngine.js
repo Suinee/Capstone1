@@ -28,6 +28,8 @@ export function createScoreEngine({
   let visitKey = null;
 
   let score = 0;
+  let navigationScore = 0;
+  let navigationScope = null;
   let group = null;
   let events = [];
   let navigation = [];
@@ -58,7 +60,7 @@ export function createScoreEngine({
   function advanceClock() {
     const wallTime = performance.now();
 
-    if (screenVisitId && pauseReasons.size === 0) {
+    if (screenVisitId && pauseReasons.size === 0 && task.phase !== "done") {
       activeTime += Math.max(0, wallTime - lastWallTime);
     }
 
@@ -97,6 +99,8 @@ export function createScoreEngine({
       screenId,
       screenVisitId,
       score,
+      navigationScore,
+      screenScore: score - navigationScore,
       level: getHelpLevel(score, config),
       task: { ...task },
       metrics: { ...metrics },
@@ -251,6 +255,7 @@ export function createScoreEngine({
         id: crypto.randomUUID(),
         startedAt: now,
         maxScore: 0,
+        navigationMax: 0,
       };
     }
 
@@ -263,6 +268,11 @@ export function createScoreEngine({
 
     group.maxScore = nextMax;
     score += addedScore;
+    // 같은 묶음의 최대 점수 정책을 유지하면서 왕복 기여분만 다음 화면에 보존.
+    const navigationMax = Math.max(group.navigationMax, ...accepted
+      .filter(signal => signal.ruleId === "navigationLoop").map(signal => signal.score));
+    navigationScore += navigationMax - group.navigationMax;
+    group.navigationMax = navigationMax;
     lastSignals = accepted;
 
     writeLog("judgment", {
@@ -270,6 +280,8 @@ export function createScoreEngine({
       signals: accepted,
       addedScore,
       score,
+      navigationScore,
+      screenScore: score - navigationScore,
       level: getHelpLevel(score, config),
     });
 
@@ -337,11 +349,21 @@ export function createScoreEngine({
       writeLog("screen_exit", { finalScore: score });
     }
 
+    const nextScope = options.context?.domain === "public-service"
+      ? `public:${options.context.serviceCode ?? "browse"}` : "session";
+    if (nextScope !== navigationScope || task.phase === "done" ||
+        (screenId === nextScreenId && visitKey !== nextVisitKey)) {
+      navigationScore = 0;
+      navigation = [];
+      navigationConsumed.clear();
+      navigationLastScoreAt = -Infinity;
+    }
+    navigationScope = nextScope;
     screenId = nextScreenId;
     visitKey = nextVisitKey;
     screenVisitId = crypto.randomUUID();
 
-    score = 0;
+    score = navigationScore;
     group = null;
     events = [];
     gates = new Map();
@@ -378,6 +400,8 @@ export function createScoreEngine({
     writeLog("screen_enter", { task });
     publish("screen");
 
+    // 화면 진입 시 왕복을 즉시 평가해 짧은 방문도 누락하지 않는다.
+    if (isMeasuring()) tick();
     return screenVisitId;
   }
 
@@ -395,6 +419,7 @@ export function createScoreEngine({
     if (wasPaused !== paused) {
       writeLog("measurement_state", { reason, paused });
       publish("measurement");
+      if (!paused && isMeasuring()) tick();
     }
   }
 
