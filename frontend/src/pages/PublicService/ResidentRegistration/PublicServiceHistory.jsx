@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
@@ -11,6 +12,7 @@ const before = new Date();
 before.setDate(today.getDate() - 30);
 
 function PublicServiceHistory() {
+  usePublicScreen("public:history");
   const navigate = useNavigate();
   const [historyItems, setHistoryItems] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +15,7 @@ function MovingInReportFlow() {
   const { submit, submitting, submitError } = useDemoSubmission("moving-in-report");
   const navigate = useNavigate();
   const [frame, setFrame] = useState(0);
+  usePublicScreen(`public:moving:${frame}`);
 
   // Step1 유의사항
   const [agreed, setAgreed] = useState(false);

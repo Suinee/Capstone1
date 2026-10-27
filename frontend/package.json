@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "test:hesitation": "node --test tests/kioskHelp.test.mjs",
     "preview": "vite preview",
-    "test:public-service": "node --test tests/publicServiceApi.test.mjs"
+    "test:public-service": "node --test tests/publicServiceApi.test.mjs",
+    "test:public-hesitation": "node --test tests/publicHesitation.test.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

@@ -1,3 +1,4 @@
+import usePublicScreen from "../../features/publicHesitation/usePublicScreen.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
@@ -35,6 +36,7 @@ const services = [
 ];
 
 function Home2() {
+  usePublicScreen("public:home");
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
 

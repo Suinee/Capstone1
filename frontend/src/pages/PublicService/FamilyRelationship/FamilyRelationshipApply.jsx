@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
@@ -103,6 +104,8 @@ function FamilyRelationshipApply() {
   const [receiveKey, setReceiveKey] = useState("화면열람");
   const [reason, setReason] = useState("국내 기관 제출");
   const [receipt, setReceipt] = useState(null);
+  const [attempt, setAttempt] = useState(0);
+  usePublicScreen("public:family:apply", attempt);
 
   const selectedCert = certTypes.find((cert) => cert.key === certKey);
 
@@ -137,9 +140,9 @@ function FamilyRelationshipApply() {
       <main className="fr-main">
         <div className="fr-container">
           <nav className="ps-breadcrumb">
-            <a href="/">Home</a>
+            <a data-hesitation-id="family-home" href="/">Home</a>
             <span>›</span>
-            <a href="/public-service">공공서비스</a>
+            <a data-hesitation-id="family-public-home" href="/public-service">공공서비스</a>
             <span>›</span>
             <span>가족관계증명</span>
           </nav>
@@ -178,7 +181,7 @@ function FamilyRelationshipApply() {
                     key={option}
                     className={`fr-option ${target === option ? "selected" : ""}`}
                   >
-                    <input
+                    <input data-hesitation-id={`family-target-${option === "본인" ? "self" : "family"}`}
                       type="radio"
                       name="target"
                       checked={target === option}
@@ -198,7 +201,7 @@ function FamilyRelationshipApply() {
                 <span className="fr-section-no">2.</span> 증명서 종류를
                 선택해주세요.
               </h2>
-              <button
+              <button data-hesitation-id="family-cert-guide"
                 type="button"
                 className="fr-guide-button"
                 onClick={() =>
@@ -217,7 +220,7 @@ function FamilyRelationshipApply() {
                     key={cert.key}
                     className={`fr-option ${certKey === cert.key ? "selected" : ""}`}
                   >
-                    <input
+                    <input data-hesitation-id={`family-cert-type-${cert.key}`}
                       type="radio"
                       name="certType"
                       checked={certKey === cert.key}
@@ -238,7 +241,7 @@ function FamilyRelationshipApply() {
                 상세증명서{selectedCert.hasSpecific && ", 특정증명서"} 중
                 선택해주세요.
               </h2>
-              <button
+              <button data-hesitation-id="family-proof-guide"
                 type="button"
                 className="fr-guide-button"
                 onClick={() =>
@@ -262,7 +265,7 @@ function FamilyRelationshipApply() {
                       key={option.key}
                       className={`fr-option ${proofType === option.key ? "selected" : ""}`}
                     >
-                      <input
+                      <input data-hesitation-id={`family-proof-type-${option.key}`}
                         type="radio"
                         name="proofType"
                         checked={proofType === option.key}
@@ -292,7 +295,7 @@ function FamilyRelationshipApply() {
                     key={option}
                     className={`fr-option ${disclosure === option ? "selected" : ""}`}
                   >
-                    <input
+                    <input data-hesitation-id={`family-disclosure-${disclosureOptions.indexOf(option)}`}
                       type="radio"
                       name="disclosure"
                       checked={disclosure === option}
@@ -318,7 +321,7 @@ function FamilyRelationshipApply() {
                 <label
                   className={`fr-option ${receiveKey === "직접인쇄" ? "selected" : ""}`}
                 >
-                  <input
+                  <input data-hesitation-id="family-receive-type-print"
                     type="radio"
                     name="receiveType"
                     checked={receiveKey === "직접인쇄"}
@@ -330,7 +333,7 @@ function FamilyRelationshipApply() {
                 <label
                   className={`fr-option ${receiveKey === "전자문서지갑" ? "selected" : ""}`}
                 >
-                  <input
+                  <input data-hesitation-id="family-receive-type-wallet"
                     type="radio"
                     name="receiveType"
                     checked={receiveKey === "전자문서지갑"}
@@ -339,7 +342,7 @@ function FamilyRelationshipApply() {
                   전자문서지갑
                 </label>
 
-                <button
+                <button data-hesitation-id="family-wallet-guide"
                   type="button"
                   className="fr-guide-button"
                   onClick={() =>
@@ -354,7 +357,7 @@ function FamilyRelationshipApply() {
                 <label
                   className={`fr-option ${receiveKey === "화면열람" ? "selected" : ""}`}
                 >
-                  <input
+                  <input data-hesitation-id="family-receive-type-view"
                     type="radio"
                     name="receiveType"
                     checked={receiveKey === "화면열람"}
@@ -387,7 +390,7 @@ function FamilyRelationshipApply() {
                     key={option}
                     className={`fr-option ${reason === option ? "selected" : ""}`}
                   >
-                    <input
+                    <input data-hesitation-id={`family-reason-${reasonOptions.indexOf(option)}`}
                       type="radio"
                       name="reason"
                       checked={reason === option}
@@ -403,16 +406,16 @@ function FamilyRelationshipApply() {
           {submitError && <p role="alert">{submitError}</p>}
           {submitting && <p role="status">신청 내역을 저장하고 있습니다…</p>}
           <div className="fr-buttons">
-            <button
+            <button data-hesitation-id="family-submit"
               type="button"
               className="fr-primary-button"
               disabled={submitting}
-              onClick={handleSubmit}
+              onClick={receipt ? () => { setReceipt(null); setAttempt((value) => value + 1); } : handleSubmit}
             >
-              신청하기 <span aria-hidden="true">↗</span>
+              {receipt ? "새 신청 시작" : "신청하기"} <span aria-hidden="true">↗</span>
             </button>
 
-            <button
+            <button data-hesitation-id="family-history"
               type="button"
               className="fr-outline-button"
               onClick={() =>

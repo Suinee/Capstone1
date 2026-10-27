@@ -23,6 +23,7 @@ export default function HesitationProvider({
   config,
   evaluate,
   automaticHelp = true,
+  domain = "kiosk",
 }) {
   const rootRef = useRef(null);
 
@@ -44,7 +45,9 @@ export default function HesitationProvider({
 
   const uploader = useHesitationLogUpload(engine.getLogs);
 
-  const { help, closeHelp, openHelp } = useAdaptiveHelp(engine, automaticHelp);
+  const { help, closeHelp, openHelp } = useAdaptiveHelp(
+    engine, automaticHelp && domain === "kiosk", domain === "kiosk",
+  );
 
   // 기존 화면 버튼과 공통 도움 UI가 함께 사용하는 선택 창 상태
   const [helpDialog, setHelpDialog] = useState({
@@ -110,6 +113,7 @@ export default function HesitationProvider({
   // 키오스크에서 보낸 화면/상태 이벤트를 실제 점수 엔진에 연결합니다.
   // 구독 시 이벤트 채널에 저장된 초기 화면 상태도 재생됩니다.
   useEffect(() => {
+    if (domain !== "kiosk") return;
     let resetSequence = 0;
 
     function onKioskEvent(event) {
@@ -188,7 +192,7 @@ export default function HesitationProvider({
     }
 
     return subscribeKioskHesitation(onKioskEvent);
-  }, [engine, uploader]);
+  }, [engine, uploader, domain]);
 
   // 화면에서 useEffect 의존성으로 사용해도 바뀌지 않는 함수
   const actions = useMemo(
@@ -201,8 +205,11 @@ export default function HesitationProvider({
       recordError: engine.recordError,
       completeAction: engine.completeAction,
       getLogs: engine.getLogs,
+      getSnapshot: engine.getSnapshot,
+      recordLifecycleEvent: engine.recordLifecycleEvent,
+      flushLogs: uploader.flush,
     }),
-    [engine],
+    [engine, uploader],
   );
 
   const value = useMemo(
@@ -231,10 +238,11 @@ export default function HesitationProvider({
 
   return (
     <HesitationContext.Provider value={value}>
-      <div ref={rootRef} data-kiosk-root style={{ display: "contents" }}>
+      <div ref={rootRef} data-kiosk-root={domain === "kiosk" ? "" : undefined}
+        data-hesitation-domain={domain} style={{ display: "contents" }}>
         {children}
 
-        {snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} rootRef={rootRef} />}
+        {domain === "kiosk" && snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} rootRef={rootRef} />}
 
         <HesitationDebugPanel />
       </div>

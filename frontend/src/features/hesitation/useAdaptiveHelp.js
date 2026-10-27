@@ -46,11 +46,12 @@ function helpReducer(state, action) {
   }
 }
 
-export default function useAdaptiveHelp(engine, automatic = true) {
+export default function useAdaptiveHelp(engine, automatic = true, enabled = true) {
   const [help, dispatch] = useReducer(helpReducer, initialState);
   const lastLoggedVersion = useRef(0);
 
   useEffect(() => {
+    if (!enabled) return;
     const syncScreen = (snapshot) => dispatch({ type: "SCREEN", screenVisitId: snapshot.screenVisitId });
     const unsubscribe = engine.subscribe((message) => {
       const snapshot = message.snapshot;
@@ -70,7 +71,7 @@ export default function useAdaptiveHelp(engine, automatic = true) {
     });
     syncScreen(engine.getSnapshot());
     return unsubscribe;
-  }, [engine, automatic]);
+  }, [engine, automatic, enabled]);
 
   useEffect(() => {
     if (!help.screenVisitId || help.version === lastLoggedVersion.current) return;
@@ -93,6 +94,7 @@ export default function useAdaptiveHelp(engine, automatic = true) {
     dispatch({ type: "CLOSE", until: Date.now() + engine.config.helpDismissMs });
   }, [engine]);
   const openHelp = useCallback(() => {
+    if (!enabled) return;
     const snapshot = engine.getSnapshot();
     if (!snapshot.measuring) return;
     dispatch({ type: "SCREEN", screenVisitId: snapshot.screenVisitId });
@@ -100,6 +102,6 @@ export default function useAdaptiveHelp(engine, automatic = true) {
       type: "MANUAL_OPEN", screenVisitId: snapshot.screenVisitId, level: snapshot.level,
       target: resolveKioskHelp({ screenId: snapshot.screenId, task: snapshot.task }),
     });
-  }, [engine]);
+  }, [engine, enabled]);
   return { help, closeHelp, openHelp };
 }

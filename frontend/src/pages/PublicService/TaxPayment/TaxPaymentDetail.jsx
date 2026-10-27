@@ -1,3 +1,4 @@
+import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.js";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
 import "./TaxPaymentDetail.css";
@@ -13,6 +14,7 @@ const sections = [
 ];
 
 function TaxPaymentDetail() {
+  usePublicScreen("public:tax:detail");
   const navigate = useNavigate();
 
   return (
