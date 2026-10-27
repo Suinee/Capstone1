@@ -32,11 +32,6 @@ function Step2({
 }) {
   const validName = applicantName.trim().length >= 2;
 
-  const validBirth =
-    /^\d{4}-\d{2}-\d{2}$/.test(applicantBirth) &&
-    !Number.isNaN(new Date(applicantBirth).getTime()) &&
-    applicantBirth <= new Date().toLocaleDateString("en-CA");
-
   const phoneValid =
     /^01[016789]$/.test(phone.part1) &&
     /^\d{4}$/.test(phone.part2) &&
@@ -45,7 +40,7 @@ function Step2({
   const validReason =
     reason && (reason !== "etc" || etcReason.trim().length > 0);
 
-  const canGoNext = validName && validBirth && validPhone && validReason;
+  const canGoNext = validName && phoneValid && validReason;
 
   const updatePhone = (part, maxLength) => (event) => {
     const digits = event.target.value.replace(/\D/g, "").slice(0, maxLength);

@@ -47,24 +47,7 @@ function MovingInReportFlow() {
     );
   };
 
-  const clearLookupResult = () => {
-    setLookupResult(null);
-    setSelectedMovers([]);
-    setConsent(null);
-    setExtraConsent(false);
-  };
-
-  const handleNameChange = (value) => {
-    setApplicantName(value);
-    clearLookupResult();
-  };
-
-  const handleBirthChange = (value) => {
-    setApplicantBirth(value);
-    clearLookupResult();
-  };
-
-  // 이전주소 선택이 변경되면 이미 조회한 개인정보/동의 상태를 무효화합니다.
+  // 이전주소 선택이 변경되면 기존 조회 결과와 동의 상태 초기화
   const clearPreviousAddressLookup = () => {
     setLookupResult(null);
     setSelectedMovers([]);

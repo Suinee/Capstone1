@@ -1,0 +1,226 @@
+/* Home.css 의 색상/폰트 규격(--blue:#4772ff, --navy:#10182c 등)을 그대로 사용합니다. */
+
+.fr-page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #222b3c;
+}
+
+.fr-main {
+  padding: 40px 0 100px;
+}
+
+.fr-container {
+  width: min(900px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ps-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 13px;
+  color: #697182;
+  margin-bottom: 18px;
+}
+
+.ps-breadcrumb a {
+  color: #697182;
+  text-decoration: none;
+}
+
+.fr-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0 0 16px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #10182c;
+}
+
+.fr-title-icon {
+  color: #4772ff;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.fr-receipt-banner {
+  margin: 0 0 20px;
+  padding: 14px 18px;
+
+  border-radius: 10px;
+  background: #eaf7ee;
+  border: 1px solid #bfe6cb;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c7a3c;
+}
+
+/* ===== 섹션 공통 ===== */
+
+.fr-section {
+  border: 1px solid #dce1ea;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.fr-section-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 20px;
+  background: #10182c;
+}
+
+.fr-section-bar h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.fr-section-no {
+  margin-right: 2px;
+}
+
+.fr-guide-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 7px 14px;
+
+  border: 1.5px solid #e8b84b;
+  border-radius: 999px;
+  background: #1b2338;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.fr-guide-button:hover {
+  background: #272f48;
+}
+
+.fr-section-body {
+  padding: 20px;
+}
+
+/* ===== 선택지(라디오 버튼) ===== */
+
+.fr-option-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+}
+
+.fr-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 9px 16px;
+
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.fr-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+.fr-option.selected {
+  border-color: #4772ff;
+  background: #eef3ff;
+  color: #2452b8;
+  font-weight: 700;
+}
+
+/* 특징1·3·4: 선택에 따라 나오는 도움말 문구 */
+.fr-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #44495a;
+}
+
+/* ===== 하단 버튼 ===== */
+
+.fr-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.fr-primary-button,
+.fr-outline-button {
+  height: 50px;
+  padding: 0 28px;
+
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.fr-primary-button {
+  border: none;
+  background: #4772ff;
+  color: white;
+}
+
+.fr-primary-button:hover {
+  background: #2452b8;
+}
+
+.fr-outline-button {
+  border: 1px solid #10182c;
+  background: #10182c;
+  color: white;
+}
+
+.fr-outline-button:hover {
+  background: #272f48;
+}
+
+@media (max-width: 700px) {
+  .fr-section-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .fr-option-row {
+    gap: 10px 18px;
+  }
+
+  .fr-buttons {
+    flex-direction: column;
+  }
+}

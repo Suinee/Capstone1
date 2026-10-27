@@ -9,6 +9,9 @@ import PublicServiceDetail from "./pages/PublicService/ResidentRegistration/Publ
 import PublicServiceApply from "./pages/PublicService/ResidentRegistration/PublicServiceApply";
 import PublicServiceHistory from "./pages/PublicService/ResidentRegistration/PublicServiceHistory";
 import MovingInReportFlow from "./pages/PublicService/MovingInReport/MovingInReportFlow";
+import FamilyRelationshipApply from "./pages/PublicService/FamilyRelationship/FamilyRelationshipApply";
+import TaxPaymentDetail from "./pages/PublicService/TaxPayment/TaxPaymentDetail";
+import TaxPaymentApply from "./pages/PublicService/TaxPayment/TaxPaymentApply";
 
 function App() {
   return (
@@ -45,6 +48,20 @@ function App() {
         <Route
           path="/public-service/moving-in-report"
           element={<MovingInReportFlow />}
+        />
+
+        <Route
+          path="/public-service/family-relationship"
+          element={<FamilyRelationshipApply />}
+        />
+
+        <Route
+          path="/public-service/tax-payment"
+          element={<TaxPaymentDetail />}
+        />
+        <Route
+          path="/public-service/tax-payment/apply"
+          element={<TaxPaymentApply />}
         />
       </Routes>
     </BrowserRouter>
