@@ -56,6 +56,7 @@ function KioskMenu({
   useEffect(() => {
     onHesitationStateChange?.({
       screenId: KIOSK_SCREEN_IDS.MENU,
+      category: selectedCategory,
       loading,
       error: Boolean(error),
       selectionComplete: false,

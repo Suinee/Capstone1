@@ -1,6 +1,6 @@
 // 계산된 지표가 망설임 신호 조건을 만족하는지 판정
 
-import { buildMetrics, groupBy, recentEvents } from "./metrics.js";
+import { buildMetrics, getDominantTarget, groupBy, recentEvents } from "./metrics.js";
 
 function makeSignal({
     ruleId,
@@ -9,12 +9,14 @@ function makeSignal({
     evidence = [],
     mode = "event",
     suffix = "",
+    scope = "element",
 }) {
     return {
         ruleId,
         targetId,
         score,
         evidence,
+        scope,
         mode,
         key: `${ruleId}:${targetId}:${suffix}`,
     };
@@ -30,29 +32,54 @@ export function evaluateRules ({
 }) {
     const signals =[];
     const enabled = new Set(task.enabledRules);
-    const recent = recentEvents(events, now, config.windowMs);
+    const recent = recentEvents(events, now, config.windowMs).filter(
+        (event) => event.time >= task.startedAt,
+    );
     const metrics = buildMetrics(events, now, task, config);
+    const dominant = getDominantTarget(metrics.targetMetrics, now, config);
 
     // 같은 규칙에서 이미 사용한 이벤트는 다시 사용 X
     const fresh = (ruleId, items) =>
         items.filter((event) => !isConsumed(ruleId, event.id));
 
-    // 시간 지연
+    // 전체 지연에 최근 버튼 행동 근거가 있으면 그 버튼으로 귀속합니다.
     if (
         enabled.has("timeDelay") &&
         Number.isFinite(task.delayMs) &&
         metrics.taskElapsedMs > task.delayMs &&
         metrics.auxiliaryTypes.length > 0
     ) {
-        signals.push (
-            makeSignal({
-                ruleId: "timeDelay",
-                targetId: task.targetId,
-                score: config.weakScore,
-                mode: "persistent",
-                suffix: task.phase,
-            }),
-        );
+        const signal = makeSignal({
+            ruleId: "timeDelay",
+            targetId: dominant?.targetId ?? task.targetId,
+            evidence: dominant?.evidence ?? [],
+            scope: dominant ? "element" : "task",
+            score: config.weakScore,
+            mode: "persistent",
+            suffix: task.phase,
+        });
+        // 관찰 대상이 바뀔 때마다 지연 조건이 새로 점수화되지 않도록 고정합니다.
+        signal.key = `timeDelay:${task.targetId}:${task.phase}`;
+        signals.push(signal);
+    }
+
+    // 최근 관찰창 안에서 아직 사용하지 않은 hover 시간 8초당 1점.
+    // 동일 slice 재사용은 기존 엔진의 consumed가 막습니다.
+    if (enabled.has("targetDwell")) {
+        const slices = fresh("targetDwell", recent.filter((event) =>
+            event.type === "hover_slice" &&
+            event.targetId && !event.targetId.startsWith("quantity-")));
+        for (const [targetId, items] of groupBy(slices, (event) => event.targetId)) {
+            const duration = items.reduce((sum, event) => sum + Math.max(0,
+                event.time - Math.max(event.startTime, task.startedAt, now - config.windowMs)), 0);
+            const lastAt = metrics.targetMetrics[targetId]?.lastInteractionAt ?? -Infinity;
+            if (duration >= config.targetDwellMs && now - lastAt <= config.targetRecentMs) {
+                signals.push(makeSignal({
+                    ruleId: "targetDwell", targetId, score: config.weakScore,
+                    evidence: items.map((event) => event.id),
+                }));
+            }
+        }
     }
 
     // 서로 다른 종류의 보조 행동이 함께 발생
@@ -63,6 +90,7 @@ export function evaluateRules ({
         signals.push(
             makeSignal({
                 ruleId: "complexExploration",
+                scope: "task",
                 targetId: task.targetId,
                 score: config.weakScore,
                 mode: "persistent",
@@ -245,6 +273,7 @@ export function evaluateRules ({
         signals.push(
           makeSignal({
             ruleId: "navigationLoop",
+            scope: "task",
             targetId: task.targetId,
             score: config.strongScore,
             evidence,

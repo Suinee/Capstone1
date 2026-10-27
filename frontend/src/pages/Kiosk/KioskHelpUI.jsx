@@ -1,16 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import useHesitation from "../../features/hesitation/useHesitation";
-import {
-  HELP_CONTENT,
-  DEFAULT_HELP_CONTENT,
-} from "../../features/hesitation/helpContent";
+import { getKioskHelpContent } from "../../features/hesitation/helpContent";
+import useKioskHelpHighlight from "../../features/hesitation/useKioskHelpHighlight";
 import AIHelpPanel from "../../features/hesitation/components/AIHelpPanel";
 import "./KioskHelpUI.css";
 
-export default function KioskHelpUI() {
+export default function KioskHelpUI({ rootRef }) {
   const {
     screenId,
     screenVisitId,
+    measuring,
     score,
     task,
     lastSignals,
@@ -23,6 +22,7 @@ export default function KioskHelpUI() {
   } = useHesitation();
 
   const dialogRef = useRef(null);
+  const panelRef = useRef(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -45,14 +45,58 @@ export default function KioskHelpUI() {
     return () => window.clearTimeout(timer);
   }, [dialogMode, setDialogMode]);
 
-  const content = HELP_CONTENT[screenId] ?? DEFAULT_HELP_CONTENT;
+  const content = getKioskHelpContent(screenId, help.helpKey, task);
   const level = Math.max(1, Math.min(3, help.level));
 
   // 이전 화면의 도움 상태가 잠깐 남아 있어도 표시하지 않습니다.
   const showHelp =
+    measuring &&
     help.status === "visible" &&
     help.screenVisitId === screenVisitId &&
     dialogMode === null;
+
+  // 실제 키오스크의 보이는 영역을 기준으로 안내창을 배치합니다.
+  // 화면별 축소 배율, 브라우저 크기 및 스크롤도 반영합니다.
+  useLayoutEffect(() => {
+    if (!showHelp) return;
+    const panel = panelRef.current;
+    const page = rootRef.current?.querySelector(
+      ".kiosk-page, .kiosk-payment-page, .kiosk-settlement-page",
+    );
+    if (!panel || !page) return;
+
+    const positionPanel = () => {
+      const rect = page.getBoundingClientRect();
+      const viewportHeight = document.documentElement.clientHeight;
+      const inset = window.innerWidth <= 600 ? 16 : 24;
+      const left = Math.max(0, rect.left);
+      const right = Math.min(document.documentElement.clientWidth, rect.right);
+      const bottom = Math.min(viewportHeight, rect.bottom);
+      panel.style.left = `${left + inset}px`;
+      panel.style.bottom = `${Math.max(0, viewportHeight - bottom) + 100}px`;
+      panel.style.maxWidth = `${Math.max(0, right - left - inset * 2)}px`;
+      panel.style.maxHeight = `${Math.max(0, Math.min(viewportHeight * 0.65,
+        bottom - Math.max(0, rect.top) - 100 - inset))}px`;
+    };
+
+    positionPanel();
+    const observer = new ResizeObserver(positionPanel);
+    observer.observe(page);
+    window.addEventListener("resize", positionPanel);
+    window.addEventListener("scroll", positionPanel, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", positionPanel);
+      window.removeEventListener("scroll", positionPanel);
+    };
+  }, [showHelp, rootRef, screenVisitId]);
+
+  useKioskHelpHighlight({
+    rootRef,
+    targetId: help.highlightTargetId,
+    enabled: showHelp,
+    level,
+  });
 
   const handleScreenHelp = () => {
     setDialogMode(null);
@@ -70,7 +114,9 @@ export default function KioskHelpUI() {
     screenId,
     screenVisitId,
     screenTitle: content.title,
-    targetId: help.targetId ?? task.targetId,
+    targetId: help.highlightTargetId ?? task.targetId,
+    observedTargetId: help.observedTargetId,
+    helpKey: help.helpKey,
     phase: task.phase,
     score,
     recentSignals: lastSignals.map((signal) => ({
@@ -123,7 +169,8 @@ export default function KioskHelpUI() {
 
       {showHelp && (
         <section
-          className="kiosk-help-panel"
+          ref={panelRef}
+          className={`kiosk-help-panel kiosk-help-panel--level-${level}`}
           aria-label={`${level}단계 도움 안내`}
         >
           <div className="kiosk-help-heading">
@@ -132,12 +179,12 @@ export default function KioskHelpUI() {
             <h2>{level === 3 ? "상세 도움" : content.title}</h2>
           </div>
 
-          <div aria-live="polite">
+          <div id="kiosk-context-help-text" aria-live="polite">
             {level < 3 ? (
               <p>{content.levels[level - 1]}</p>
             ) : (
               <AIHelpPanel
-                key={`${screenVisitId}:${task.phase}:${task.targetId}`}
+                key={`${screenVisitId}:${task.phase}:${help.helpKey}:${help.highlightTargetId}`}
                 context={aiContext}
                 fallbackText={content.levels[1]}
               />

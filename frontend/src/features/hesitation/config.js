@@ -1,7 +1,7 @@
 // 공통 시간, 횟수, 점수 기준
 
 export const DEFAULT_CONFIG = Object.freeze({
-    ruleVersion: "initial-1.0",
+    ruleVersion: "target-help-1.1",
 
     // 엔진이 시간 기반 조건을 확인하는 간격
     tickMs: 250,
@@ -32,6 +32,10 @@ export const DEFAULT_CONFIG = Object.freeze({
     // Hover
     hoverCount: 5,
     hoverDurationMs: 3_000,
+    // 제안하는 초기 실험값: 최근 20초 안의 미사용 hover 8초당 1점
+    targetDwellMs: 8_000,
+    targetAttributionMs: 1_500,
+    targetRecentMs: 4_000,
 
     // 입력
     inputPauseMs: 2_000,
@@ -53,6 +57,7 @@ export const DEFAULT_CONFIG = Object.freeze({
 export const RULE_IDS = Object.freeze([
     "timeDelay",
     "excessiveHover",
+    "targetDwell",
     "complexExploration",
     "repeatedClick",
     "inputRevision",

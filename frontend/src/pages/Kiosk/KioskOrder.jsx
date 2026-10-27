@@ -39,6 +39,7 @@ function KioskOrder({
         : editDraft.menuType === "SET");
     onHesitationStateChange?.({
       screenId,
+      isEditing,
       loading,
       error: Boolean(error),
       selectionComplete,

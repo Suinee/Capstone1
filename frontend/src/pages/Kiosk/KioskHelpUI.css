@@ -133,3 +133,108 @@
     padding: 24px;
   }
 }
+
+/* 영역 전체에는 테두리를 그리지 않고 해당 영역의 실제 버튼만 강조합니다.
+   기존 border 폭은 유지하고 inset shadow로 한 줄의 테두리를 그려
+   이미지, 텍스트, 클릭 영역 및 주변 레이아웃의 크기를 보존합니다. */
+[data-kiosk-root] button[data-kiosk-help-level] {
+  border-color: transparent !important;
+  background-image: linear-gradient(rgb(65 105 225 / 6%), rgb(65 105 225 / 6%));
+  box-shadow: inset 0 0 0 3px #4169e1,
+    0 0 0 5px rgb(65 105 225 / 30%),
+    0 0 6px rgb(65 105 225 / 52%);
+}
+
+/* 기존 둥근 버튼의 곡률은 유지하고 각진 카드만 부드럽게 처리합니다. */
+[data-kiosk-root] :is(.option-card, .nutrition-button, .payment-method-card)[data-kiosk-help-level] {
+  border-radius: 14px;
+}
+
+/* 테두리는 고정하고 바깥 링과 빛만 2.4초 주기로 부드럽게 퍼집니다.
+   모든 그림자는 버튼의 border-radius를 따라가며 레이아웃에 영향을 주지 않습니다.
+   기존 카드의 hover 이동까지 고려해 바깥 효과를 10px 안으로 제한합니다. */
+[data-kiosk-root] button[data-kiosk-help-level="2"] {
+  background-image: linear-gradient(rgb(65 105 225 / 10%), rgb(65 105 225 / 10%));
+  box-shadow: inset 0 0 0 4px #3158cc,
+    0 0 0 6px rgb(65 105 225 / 45%),
+    0 0 6px rgb(65 105 225 / 75%);
+  animation: kiosk-help-spotlight 2.4s ease-in-out infinite;
+}
+
+@keyframes kiosk-help-spotlight {
+  0%, 100% {
+    box-shadow: inset 0 0 0 4px #3158cc,
+      0 0 0 5px rgb(65 105 225 / 45%),
+      0 0 6px rgb(65 105 225 / 65%);
+  }
+  50% {
+    box-shadow: inset 0 0 0 4px #3158cc,
+      0 0 0 10px rgb(65 105 225 / 14%),
+      0 0 6px rgb(65 105 225 / 85%);
+  }
+}
+
+/* 움직임 줄이기 설정에서는 강한 2단계 강조를 정적으로 유지합니다. */
+@media (prefers-reduced-motion: reduce) {
+  [data-kiosk-root] button[data-kiosk-help-level="2"] {
+    animation: none;
+  }
+}
+
+/* 2단계에서는 실제 강조된 버튼의 라벨과 내부 텍스트만 확대합니다.
+   px로 지정된 기존 자식 글씨도 따로 확대해 단계 차이를 유지합니다. */
+[data-kiosk-root] button[data-kiosk-help-level="2"] {
+  font-size: 28px;
+  line-height: 1.25;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+[data-kiosk-root] :is(.nutrition-button, .order-navigation-button, .cart-item-delete)[data-kiosk-help-level="2"] {
+  font-size: 32px;
+}
+[data-kiosk-root] .edit-confirm-button[data-kiosk-help-level="2"] { font-size: 30px; }
+[data-kiosk-root] .cancel-button[data-kiosk-help-level="2"] { font-size: 50px; }
+
+[data-kiosk-root] button[data-kiosk-help-level="2"] .menu-card-name { font-size: 28px; }
+[data-kiosk-root] button[data-kiosk-help-level="2"] .menu-card-price { font-size: 25px; }
+[data-kiosk-root] button[data-kiosk-help-level="2"] .option-name { font-size: 34px; }
+[data-kiosk-root] button[data-kiosk-help-level="2"] .option-price { font-size: 32px; }
+[data-kiosk-root] .payment-method-card[data-kiosk-help-level="2"] > span { font-size: 30px; }
+[data-kiosk-root] .cart-item-edit[data-kiosk-help-level="2"] :is(strong, .cart-item-quantity) { font-size: 23px; }
+[data-kiosk-root] .cart-item-edit[data-kiosk-help-level="2"] .cart-item-info > span { font-size: 17px; }
+
+/* 고정 높이 카드에서 이미지는 유지하고 내부 여백을 조정합니다.
+   긴 상품명은 두 줄 영역 안에서 스크롤할 수 있어 가격과 겹치지 않습니다. */
+[data-kiosk-root] .menu-card[data-kiosk-help-level="2"] { padding-block: 16px; }
+[data-kiosk-root] .menu-card[data-kiosk-help-level="2"] .menu-card-name {
+  max-height: 2.5em;
+  overflow-y: auto;
+  flex-shrink: 1;
+}
+[data-kiosk-root] .order-option[data-kiosk-help-level="2"] { padding: 12px 8px; }
+[data-kiosk-root] .order-option[data-kiosk-help-level="2"] .image-box { margin-bottom: 8px; }
+[data-kiosk-root] .order-option[data-kiosk-help-level="2"] :is(.option-name, .option-price) {
+  font-size: 31px;
+  line-height: 1.2;
+}
+[data-kiosk-root] .order-option[data-kiosk-help-level="2"] .option-name {
+  min-height: 0;
+  max-height: 2.4em;
+  overflow-y: auto;
+  flex-shrink: 1;
+}
+[data-kiosk-root] button[data-kiosk-help-level="2"] :is(.option-price, .menu-card-price) { flex-shrink: 0; }
+
+/* 내부 스크롤 경계의 기존 카드 여백을 유지합니다. */
+[data-kiosk-root] .order-products {
+  padding: 16px 14px 30px;
+}
+
+.kiosk-help-panel--level-1 {
+  width: min(380px, calc(100vw - 48px));
+  padding: 18px 20px;
+}
+.kiosk-help-panel--level-1 h2 { font-size: 20px; }
+.kiosk-help-panel--level-1 p { margin: 10px 0; }
+.kiosk-help-panel--level-2 { border-width: 3px; }

@@ -96,12 +96,13 @@ export default function KioskOptions({
   useEffect(() => {
     onHesitationStateChange?.({
       screenId,
+      isEditing,
       loading,
       error: Boolean(error),
       selectionComplete: Boolean(selected),
       canProceed,
     });
-  }, [screenId, loading, error, selected, canProceed, onHesitationStateChange]);
+  }, [screenId, loading, error, selected, canProceed, isEditing, onHesitationStateChange]);
 
   // DB에서 카테고리별 메뉴 불러오기
   useEffect(() => {

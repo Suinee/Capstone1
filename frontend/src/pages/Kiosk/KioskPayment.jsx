@@ -28,12 +28,14 @@ function KioskPayment({
   useEffect(() => {
     onHesitationStateChange?.({
       screenId: KIOSK_SCREEN_IDS.REVIEW,
+      isCartEditing,
+      category: selectedMenu?.category ?? null,
       loading: false,
       error: false,
       selectionComplete: true,
       canProceed: Boolean(selectedMenu),
     });
-  }, [selectedMenu, onHesitationStateChange]);
+  }, [selectedMenu, isCartEditing, onHesitationStateChange]);
 
   const handleDecrease = () => {
     setQuantity((prev) => Math.max(1, prev - 1));

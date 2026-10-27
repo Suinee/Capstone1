@@ -65,7 +65,7 @@ function KioskFlow() {
       ...state,
       measurementEnabled:
         state.measurementEnabled ?? (!state.loading && !state.error),
-      task: getKioskTask(state.screenId, Boolean(state.selectionComplete)),
+      task: getKioskTask(state.screenId, Boolean(state.selectionComplete), state),
     });
   }, []);
 
@@ -75,7 +75,7 @@ function KioskFlow() {
       uiStateRef.current?.screenId === screenId ? uiStateRef.current : null;
     emitKioskHesitation("SCREEN_CHANGE", {
       screenId,
-      task: getKioskTask(screenId, Boolean(currentState?.selectionComplete)),
+      task: getKioskTask(screenId, Boolean(currentState?.selectionComplete), currentState ?? {}),
       ...currentState,
       // 페이지가 로딩 상태를 알리기 전에는 측정하지 않습니다.
       measurementEnabled: currentState
@@ -182,7 +182,7 @@ function KioskFlow() {
     });
     emitKioskHesitation("TASK_RESET", {
       screenId: KIOSK_SCREEN_IDS.MENU,
-      task: getKioskTask(KIOSK_SCREEN_IDS.MENU),
+      task: getKioskTask(KIOSK_SCREEN_IDS.MENU, false, uiStateRef.current ?? {}),
     });
   };
 

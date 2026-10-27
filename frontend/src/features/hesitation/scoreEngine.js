@@ -50,6 +50,7 @@ export function createScoreEngine({
     delayMs: null,
     enabledRules: [...RULE_IDS],
     startedAt: 0,
+    context: {},
   };
 
   let snapshot;
@@ -355,6 +356,7 @@ export function createScoreEngine({
       delayMs: options.delayMs ?? null,
       enabledRules: [...(options.enabledRules ?? RULE_IDS)],
       startedAt: activeTime,
+      context: { ...(options.context ?? {}) },
     };
 
     // 새 화면은 로딩 완료 여부를 확인하기 전까지 측정을 멈춤
@@ -405,7 +407,8 @@ export function createScoreEngine({
 
     const actionChanged =
       next.phase !== task.phase ||
-      next.targetId !== task.targetId;
+      next.targetId !== task.targetId ||
+      JSON.stringify(next.context) !== JSON.stringify(task.context);
 
     const changed =
       actionChanged ||
@@ -419,6 +422,15 @@ export function createScoreEngine({
       ...next,
       startedAt: actionChanged ? activeTime : task.startedAt,
     };
+
+    if (actionChanged) {
+      // 선택 전 근거가 다음 버튼이나 다른 카테고리 안내에 섞이지 않도록 초기화.
+      events = [];
+      gates = new Map();
+      consumed = new Map();
+      lastSignals = [];
+      metrics = {};
+    }
 
     writeLog("task_change", { task });
 
@@ -444,8 +456,11 @@ export function createScoreEngine({
     setReady: (ready) => setPaused("notReady", !ready),
 
     // 실제 화면에서 선택 완료·검증 결과를 알려줄 때
-    recordSelection: (targetId) =>
-      record({ type: "selection", targetId }),
+    recordSelection(targetId) {
+      const event = record({ type: "selection", targetId });
+      if (event) publish("resolved");
+      return event;
+    },
 
     recordError: (targetId, code, attemptId) =>
       record({

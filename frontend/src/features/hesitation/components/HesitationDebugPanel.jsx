@@ -3,6 +3,7 @@ import useHesitation from "../useHesitation.js";
 const RULE_LABELS = {
   timeDelay: "시간 지연",
   excessiveHover: "과도한 Hover",
+  targetDwell: "버튼 체류",
   complexExploration: "복합 탐색",
   repeatedClick: "반복 클릭",
   inputRevision: "입력 중단 + 반복 수정",
@@ -80,6 +81,11 @@ export default function HesitationDebugPanel() {
       <div>누적 점수: {score}점</div>
       <div>지원 수준: {level}단계</div>
       <div>도움 상태: {help.status}</div>
+      <div>관찰 대상: {help.observedTargetId ?? "없음"}</div>
+      <div>강조 대상: {help.highlightTargetId ?? "없음"}</div>
+      <div>안내 종류: {help.helpKey ?? "없음"}</div>
+      <div>발생 신호: {help.sourceSignalKey ?? "없음"}</div>
+      <div>판단 묶음 가산점: {help.sourceAddedScore ?? 0}</div>
 
       <div style={{ marginTop: 8 }}>최근 반영 신호:</div>
 

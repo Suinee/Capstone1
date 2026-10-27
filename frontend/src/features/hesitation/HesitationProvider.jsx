@@ -231,10 +231,10 @@ export default function HesitationProvider({
 
   return (
     <HesitationContext.Provider value={value}>
-      <div ref={rootRef} style={{ display: "contents" }}>
+      <div ref={rootRef} data-kiosk-root style={{ display: "contents" }}>
         {children}
 
-        {snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} />}
+        {snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} rootRef={rootRef} />}
 
         <HesitationDebugPanel />
       </div>
