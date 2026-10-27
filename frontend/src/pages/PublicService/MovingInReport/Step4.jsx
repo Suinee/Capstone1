@@ -97,6 +97,7 @@ function Step4({
                 <input
                   type="text"
                   className="mir-readonly-input"
+                  data-hesitation-target="moving-current-address"
                   value={currentAddress}
                   readOnly
                   placeholder="검색 버튼을 눌러 주소를 입력하세요."
@@ -193,7 +194,7 @@ function Step4({
                 세대 구성 방법 <span className="mir-required">(필수)</span>
               </p>
 
-              <div className="mir-household-type-group">
+              <div className="mir-household-type-group" data-hesitation-target="moving-household-options">
                 <label className="mir-radio">
                   <input data-hesitation-id="moving-household-type-new"
                     type="radio"

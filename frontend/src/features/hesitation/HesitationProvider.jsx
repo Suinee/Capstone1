@@ -13,6 +13,7 @@ import { createScoreEngine } from "./scoreEngine.js";
 import { HesitationContext } from "./useHesitation.js";
 import useBehaviorCollector from "./useBehaviorCollector.js";
 import useAdaptiveHelp from "./useAdaptiveHelp.js";
+import { resolveKioskHelp } from "./resolveKioskHelp.js";
 import HesitationDebugPanel from "./components/HesitationDebugPanel.jsx";
 import { subscribeKioskHesitation } from "./kioskHesitationEvents.js";
 import KioskHelpUI from "../../pages/Kiosk/KioskHelpUI.jsx";
@@ -24,6 +25,8 @@ export default function HesitationProvider({
   evaluate,
   automaticHelp = true,
   domain = "kiosk",
+  resolveHelp = resolveKioskHelp,
+  HelpComponent = KioskHelpUI,
 }) {
   const rootRef = useRef(null);
 
@@ -45,8 +48,11 @@ export default function HesitationProvider({
 
   const uploader = useHesitationLogUpload(engine.getLogs);
 
-  const { help, closeHelp, openHelp } = useAdaptiveHelp(
-    engine, automaticHelp && domain === "kiosk", domain === "kiosk",
+  const resolveTarget = useCallback(
+    (input) => resolveHelp({ ...input, root: rootRef.current }), [resolveHelp],
+  );
+  const { help, closeHelp, openHelp, expandHelp, resolveCurrentHelp } = useAdaptiveHelp(
+    engine, automaticHelp, true, { resolveHelp: resolveTarget, clearOnPause: domain === "public-service" },
   );
 
   // 기존 화면 버튼과 공통 도움 UI가 함께 사용하는 선택 창 상태
@@ -219,6 +225,8 @@ export default function HesitationProvider({
       help,
       closeHelp,
       openHelp,
+      expandHelp,
+      resolveCurrentHelp,
 
       helpDialogMode,
       setHelpDialogMode,
@@ -230,6 +238,8 @@ export default function HesitationProvider({
       help,
       closeHelp,
       openHelp,
+      expandHelp,
+      resolveCurrentHelp,
       helpDialogMode,
       setHelpDialogMode,
       openHelpRequest,
@@ -242,7 +252,7 @@ export default function HesitationProvider({
         data-hesitation-domain={domain} style={{ display: "contents" }}>
         {children}
 
-        {domain === "kiosk" && snapshot.measuring && <KioskHelpUI key={snapshot.screenVisitId} rootRef={rootRef} />}
+        {snapshot.measuring && <HelpComponent key={snapshot.screenVisitId} rootRef={rootRef} />}
 
         <HesitationDebugPanel />
       </div>

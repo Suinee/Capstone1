@@ -186,7 +186,7 @@ function PublicServiceApply() {
               )}
 
               {issueType === "select" && (
-                <div className="ps-select-fields">
+                <div className="ps-select-fields" data-hesitation-target="resident-fields">
                   <p className="ps-field-note">
                     발급 문서에 표시할 정보를 선택하세요.
                   </p>
