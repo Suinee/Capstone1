@@ -30,8 +30,27 @@ function Step2({
   onNext,
   onCancel,
 }) {
+<<<<<<< Updated upstream
   const canGoNext =
     reason && phone.part2.length === 4 && phone.part3.length === 4;
+=======
+  const validName = applicantName.trim().length >= 2;
+
+  const phoneValid =
+    /^01[016789]$/.test(phone.part1) &&
+    /^\d{4}$/.test(phone.part2) &&
+    /^\d{4}$/.test(phone.part3);
+
+  const validReason =
+    reason && (reason !== "etc" || etcReason.trim().length > 0);
+
+  const canGoNext = validName && phoneValid && validReason;
+
+  const updatePhone = (part, maxLength) => (event) => {
+    const digits = event.target.value.replace(/\D/g, "").slice(0, maxLength);
+    onPhoneChange({ ...phone, [part]: digits });
+  };
+>>>>>>> Stashed changes
 
   return (
     <div className="ps-page">

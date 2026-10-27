@@ -1,0 +1,204 @@
+/* Home.css 의 색상/폰트 규격을 그대로 사용합니다. */
+
+.tp-page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #222b3c;
+}
+
+.tp-apply-main {
+  padding: 40px 0 100px;
+}
+
+.tp-apply-container {
+  width: min(760px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.tp-apply-title {
+  margin: 0 0 16px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #10182c;
+}
+
+.tp-before-box {
+  padding: 20px 22px;
+  margin-bottom: 24px;
+
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+}
+
+.tp-before-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0 0 14px;
+  font-weight: 800;
+  font-size: 15px;
+  color: #10182c;
+}
+
+.tp-before-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0;
+  font-size: 13px;
+  color: #44495a;
+}
+
+.tp-before-box hr {
+  border: none;
+  border-top: 1px dashed #dce1ea;
+  margin: 14px 0;
+}
+
+.tp-before-box ul {
+  margin: 0;
+  padding-left: 18px;
+
+  font-size: 13px;
+  line-height: 1.8;
+  color: #44495a;
+}
+
+.tp-before-box strong {
+  color: #2452b8;
+}
+
+.tp-form-box {
+  border: 1px solid #dce1ea;
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 20px;
+}
+
+.tp-form-box-title {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #10182c;
+}
+
+.tp-field-group {
+  padding: 16px 0;
+  border-top: 1px solid #eef0f5;
+}
+
+.tp-form-box .tp-field-group:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.tp-field-label {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222b3c;
+}
+
+.required {
+  color: #ff6d76;
+  font-weight: 600;
+}
+
+.tp-readonly-input {
+  height: 42px;
+  padding: 0 14px;
+
+  border: none;
+  border-radius: 8px;
+  background: #eef0f5;
+
+  font-size: 14px;
+  color: #697182;
+}
+
+.tp-field-group > .tp-readonly-input {
+  width: 100%;
+}
+
+.tp-resident-no-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tp-resident-no-row input {
+  width: 160px;
+  text-align: center;
+}
+
+.tp-radio-row,
+.tp-receive-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.tp-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  color: #222b3c;
+  cursor: pointer;
+}
+
+.tp-radio input {
+  width: 16px;
+  height: 16px;
+  accent-color: #4772ff;
+}
+
+.tp-apply-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.tp-outline-button,
+.tp-primary-button {
+  flex: 1;
+  height: 48px;
+
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tp-outline-button {
+  border: 1px solid #c7cee0;
+  background: white;
+  color: #44495a;
+}
+
+.tp-outline-button:hover {
+  background: #f6f8fc;
+}
+
+.tp-primary-button {
+  border: none;
+  background: #4772ff;
+  color: white;
+}
+
+.tp-primary-button:hover {
+  background: #2452b8;
+}
+
+@media (max-width: 600px) {
+  .tp-radio-row,
+  .tp-receive-row {
+    gap: 14px;
+  }
+}

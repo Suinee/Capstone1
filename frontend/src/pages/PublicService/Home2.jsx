@@ -23,14 +23,14 @@ const services = [
     icon: "👪",
     title: "가족관계증명",
     path: "/public-service/family-relationship",
-    enabled: false,
+    enabled: true,
   },
   {
     key: "tax-payment",
     icon: "💰",
     title: "납세증명",
     path: "/public-service/tax-payment",
-    enabled: false,
+    enabled: true,
   },
 ];
 
