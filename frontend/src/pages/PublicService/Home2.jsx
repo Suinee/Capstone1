@@ -109,7 +109,7 @@ function Home2() {
           <h2>ADPATI</h2>
           <strong>Adaptive Interface Project</strong>
           <p>사용자 행동 기반 실시간 적응형 인터페이스</p>
-          <span>김소윤 · 류아연 · 정수인</span>
+          <span>김소율 · 류아연 · 정수인</span>
         </div>
       </footer>
     </div>
