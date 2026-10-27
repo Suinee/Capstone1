@@ -16,6 +16,7 @@ import useAdaptiveHelp from "./useAdaptiveHelp.js";
 import HesitationDebugPanel from "./components/HesitationDebugPanel.jsx";
 import { subscribeKioskHesitation } from "./kioskHesitationEvents.js";
 import KioskHelpUI from "../../pages/Kiosk/KioskHelpUI.jsx";
+import useHesitationLogUpload from "./useHesitationLogUpload.js";
 
 export default function HesitationProvider({
   children,
@@ -40,6 +41,8 @@ export default function HesitationProvider({
     engine.getSnapshot,
     engine.getSnapshot,
   );
+
+  const uploader = useHesitationLogUpload(engine.getLogs);
 
   const { help, closeHelp, openHelp } = useAdaptiveHelp(engine, automaticHelp);
 
@@ -169,9 +172,15 @@ export default function HesitationProvider({
           break;
         }
         case "SESSION_END": {
-          engine.completeAction();
-          engine.setPaused("sessionEnded", true);
-          break;
+            engine.completeAction();
+            engine.setPaused("sessionEnded", true);
+
+            // 종료 처리로 생성된 마지막 로그까지 보관하고 전송합니다.
+            uploader.flush({ keepalive: true }).catch((error) => {
+                console.warn("[망설임 로그 종료 전송]", error);
+            });
+
+            break;
         }
         default:
           break;
@@ -179,7 +188,7 @@ export default function HesitationProvider({
     }
 
     return subscribeKioskHesitation(onKioskEvent);
-  }, [engine]);
+  }, [engine, uploader]);
 
   // 화면에서 useEffect 의존성으로 사용해도 바뀌지 않는 함수
   const actions = useMemo(
