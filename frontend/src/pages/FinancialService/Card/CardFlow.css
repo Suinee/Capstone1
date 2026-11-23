@@ -1,0 +1,77 @@
+.fin-card-visual {
+  position: relative;
+  padding: 55px 50px;
+  margin-bottom: 55px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  border-radius: 45px;
+  background: linear-gradient(135deg, var(--fin-primary), var(--fin-primary-dark));
+  color: #ffffff;
+}
+
+.fin-card-visual.locked {
+  background: linear-gradient(135deg, #6b7384, #454c5c);
+}
+
+.fin-card-visual strong {
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.fin-card-visual span {
+  font-size: 33px;
+  opacity: 0.85;
+}
+
+.fin-card-visual .fin-badge.danger {
+  position: absolute;
+  top: 45px;
+  right: 50px;
+}
+
+.fin-card-linked {
+  margin-top: 15px;
+}
+
+.fin-card-mini-card {
+  padding: 40px;
+  margin: 45px 0 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  border: 2px solid var(--fin-border);
+  border-radius: 35px;
+}
+
+.fin-card-mini-card strong {
+  font-size: 35px;
+  color: var(--fin-navy);
+}
+
+.fin-card-mini-card span {
+  font-size: 30px;
+  color: var(--fin-sub-text);
+}
+
+.fin-progress-track {
+  height: 20px;
+  margin: 35px 0 25px;
+  border-radius: 20px;
+  background: var(--fin-muted-bg);
+  overflow: hidden;
+}
+
+.fin-progress-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: var(--fin-primary);
+}
+
+.fin-card-menu-list {
+  margin-top: 45px;
+}

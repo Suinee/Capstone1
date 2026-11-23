@@ -13,6 +13,11 @@ import MovingInReportFlow from "./pages/PublicService/MovingInReport/MovingInRep
 import FamilyRelationshipApply from "./pages/PublicService/FamilyRelationship/FamilyRelationshipApply";
 import TaxPaymentDetail from "./pages/PublicService/TaxPayment/TaxPaymentDetail";
 import TaxPaymentApply from "./pages/PublicService/TaxPayment/TaxPaymentApply";
+import FinanceHome from "./pages/FinancialService/FinanceHome";
+import AccountsFlow from "./pages/FinancialService/Accounts/AccountsFlow";
+import TransferFlow from "./pages/FinancialService/Transfer/TransferFlow";
+import CardFlow from "./pages/FinancialService/Card/CardFlow";
+import LoanFlow from "./pages/FinancialService/Loan/LoanFlow";
 
 function App() {
   return (
@@ -30,6 +35,12 @@ function App() {
         />
 
         <Route path="/admin/menu" element={<AdminMenu />} />
+
+        <Route path="/financial-service" element={<FinanceHome />} />
+        <Route path="/financial-service/accounts" element={<AccountsFlow />} />
+        <Route path="/financial-service/transfer" element={<TransferFlow />} />
+        <Route path="/financial-service/card" element={<CardFlow />} />
+        <Route path="/financial-service/loan" element={<LoanFlow />} />
 
         <Route element={<PublicHesitationLayout />}>
           <Route path="/public-service" element={<Home2 />} />

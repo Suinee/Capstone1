@@ -1,0 +1,58 @@
+.fin-home-menu-section {
+  margin-top: 70px;
+}
+
+.fin-home-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.fin-home-menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 25px;
+
+  padding: 45px 40px;
+  border: 2px solid var(--fin-border);
+  border-radius: 40px;
+  background: #ffffff;
+
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.fin-home-menu-card:hover {
+  border-color: var(--fin-primary);
+  background: var(--fin-primary-light);
+}
+
+.fin-home-menu-icon {
+  width: 95px;
+  height: 95px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 30px;
+  background: var(--fin-muted-bg);
+}
+
+.fin-home-menu-icon img {
+  width: 50px;
+  height: 50px;
+}
+
+.fin-home-menu-card strong {
+  font-size: 35px;
+  font-weight: 800;
+  color: var(--fin-navy);
+}
+
+.fin-home-menu-card span {
+  font-size: 30px;
+  color: var(--fin-sub-text);
+}

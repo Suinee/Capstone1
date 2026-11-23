@@ -1,0 +1,552 @@
+/* 금융서비스 공통 레이아웃: 모든 화면이 같은 앱 프레임 규격(1080x1920)을 사용합니다. */
+
+:root {
+  --fin-primary: #2555d6;
+  --fin-primary-dark: #1c3fa8;
+  --fin-primary-light: #eaf1ff;
+  --fin-danger: #a53842;
+  --fin-muted-bg: #e2e9f5;
+  --fin-navy: #10182c;
+  --fin-text: #222b3c;
+  --fin-sub-text: #697182;
+  --fin-border: #dce1ea;
+}
+
+.fin-page {
+  min-height: 100vh;
+  background: #e9edf5;
+
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+  overflow: auto;
+}
+
+.fin-frame {
+  width: 1080px;
+  height: 1920px;
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+  border-radius: 70px;
+  box-shadow: 0 50px 120px rgba(16, 24, 44, 0.16);
+  overflow: hidden;
+}
+
+/* =========================
+   헤더
+========================= */
+
+.fin-header {
+  flex-shrink: 0;
+  height: 160px;
+  padding: 0 50px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 2px solid #eef0f5;
+}
+
+.fin-header-home {
+  justify-content: flex-start;
+  gap: 70px;
+}
+
+.fin-logo {
+  color: var(--fin-primary-dark);
+  font-size: 48px;
+  font-weight: 900;
+}
+
+.fin-home-tabs {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.fin-home-tab {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 35px;
+  font-weight: 700;
+  color: var(--fin-sub-text);
+  cursor: pointer;
+}
+
+.fin-home-tab.active {
+  color: var(--fin-primary);
+}
+
+.fin-home-tab.muted {
+  color: #b7bdca;
+  font-weight: 600;
+}
+
+.fin-header-sub {
+  position: relative;
+  justify-content: space-between;
+}
+
+.fin-back-button {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fin-back-button img {
+  width: 45px;
+  height: 45px;
+}
+
+/* 뒤로가기 버튼/ADAPTI 배지 너비와 무관하게 항상 헤더 정중앙에 오도록 절대 위치로 고정합니다. */
+.fin-header-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--fin-navy);
+  pointer-events: none;
+}
+
+.fin-header-badge {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  font-size: 28px;
+  font-weight: 700;
+  color: #b7bdca;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   본문 공통
+========================= */
+
+.fin-main,
+.fin-acc-main,
+.fin-card-main,
+.fin-loan-main,
+.fin-home-main {
+  flex: 1;
+  padding: 50px 50px 70px;
+  overflow-y: auto;
+}
+
+.fin-home-title {
+  margin: 0 0 15px;
+  font-size: 55px;
+  font-weight: 900;
+  color: var(--fin-navy);
+}
+
+.fin-home-subtitle {
+  margin: 0 0 50px;
+  font-size: 33px;
+  color: var(--fin-sub-text);
+}
+
+.fin-section-title {
+  margin: 60px 0 30px;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--fin-navy);
+}
+
+.fin-section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 60px 0 30px;
+}
+
+.fin-section-row h2 {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--fin-navy);
+}
+
+.fin-muted-tag {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--fin-sub-text);
+}
+
+/* =========================
+   잔액 카드
+========================= */
+
+.fin-balance-card {
+  padding: 55px 50px;
+  border-radius: 45px;
+  background: linear-gradient(135deg, var(--fin-navy), #1d2b4d);
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fin-balance-card.small {
+  background: var(--fin-primary-light);
+  color: var(--fin-navy);
+}
+
+.fin-balance-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 33px;
+  opacity: 0.85;
+}
+
+.fin-balance-card.small .fin-balance-top {
+  opacity: 1;
+  color: #3a548f;
+}
+
+.fin-balance-amount {
+  margin: 15px 0 5px;
+  font-size: 70px;
+  font-weight: 900;
+}
+
+.fin-balance-sub {
+  font-size: 30px;
+  opacity: 0.8;
+}
+
+.fin-badge {
+  padding: 10px 25px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.fin-balance-card.small .fin-badge {
+  background: #ffffff;
+  color: var(--fin-primary);
+}
+
+.fin-badge.danger {
+  background: var(--fin-danger);
+  color: #ffffff;
+}
+
+.fin-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  font-size: 33px;
+}
+
+.fin-info-row.light {
+  border-top: 2px solid rgba(255, 255, 255, 0.14);
+  margin-top: 20px;
+}
+
+.fin-info-row span {
+  opacity: 0.85;
+}
+
+.fin-info-row:not(.light) {
+  color: var(--fin-text);
+}
+
+.fin-info-row:not(.light) span {
+  color: var(--fin-sub-text);
+  opacity: 1;
+}
+
+.fin-info-row strong.danger-text {
+  color: var(--fin-danger);
+}
+
+/* =========================
+   계좌/대출 목록
+========================= */
+
+.fin-account-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.fin-account-list button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  padding: 40px;
+  border: 2px solid var(--fin-border);
+  border-radius: 35px;
+  background: #ffffff;
+
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.fin-account-list button:hover {
+  border-color: var(--fin-primary);
+  background: var(--fin-primary-light);
+}
+
+.fin-account-icon {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 25px;
+  background: var(--fin-muted-bg);
+}
+
+.fin-account-icon img {
+  width: 45px;
+  height: 45px;
+}
+
+.fin-account-info {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fin-account-info strong {
+  font-size: 35px;
+  color: var(--fin-navy);
+}
+
+.fin-account-info span {
+  font-size: 30px;
+  color: var(--fin-sub-text);
+}
+
+.fin-account-balance {
+  flex-shrink: 0;
+  font-size: 35px;
+  font-weight: 800;
+  color: var(--fin-navy);
+}
+
+.fin-chevron {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+}
+
+/* =========================
+   거래내역
+========================= */
+
+.fin-transaction-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fin-transaction-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  padding: 35px 0;
+  border-bottom: 2px solid #f2f3f7;
+}
+
+.fin-transaction-list li div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fin-transaction-list li strong {
+  font-size: 35px;
+  color: var(--fin-text);
+}
+
+.fin-transaction-list li span {
+  font-size: 30px;
+  color: var(--fin-sub-text);
+}
+
+.fin-transaction-list li strong.pos {
+  color: var(--fin-primary);
+}
+
+.fin-transaction-list li strong.neg {
+  color: var(--fin-text);
+}
+
+/* =========================
+   안내 박스
+========================= */
+
+.fin-note-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 25px;
+
+  margin-top: 45px;
+  padding: 35px 40px;
+  border-radius: 30px;
+  background: #f6f8fc;
+}
+
+.fin-note-box img {
+  width: 40px;
+  height: 40px;
+  margin-top: 5px;
+}
+
+.fin-note-box p {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.6;
+  color: var(--fin-sub-text);
+}
+
+.fin-note-box p strong {
+  color: var(--fin-text);
+}
+
+/* =========================
+   하단 탭바
+========================= */
+
+.fin-bottom-nav {
+  flex-shrink: 0;
+  height: 170px;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  border-top: 2px solid #eef0f5;
+  background: #ffffff;
+}
+
+.fin-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fin-nav-item img {
+  width: 50px;
+  height: 50px;
+  opacity: 0.45;
+}
+
+.fin-nav-item span {
+  font-size: 28px;
+  font-weight: 600;
+  color: #9aa1b0;
+}
+
+.fin-nav-item.active img {
+  opacity: 1;
+}
+
+.fin-nav-item.active span {
+  color: var(--fin-primary);
+  font-weight: 800;
+}
+
+/* 하단 액션 버튼: 탭 내비게이션과 동일한 자리(프레임 맨 아래)에 표시됩니다. */
+.fin-bottom-bar {
+  flex-shrink: 0;
+  padding: 27px 50px;
+
+  display: flex;
+
+  border-top: 2px solid #eef0f5;
+  background: #ffffff;
+}
+
+.fin-bottom-action {
+  width: 100%;
+  height: 116px;
+
+  border-radius: 31px;
+  font-size: 38px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.fin-bottom-action.primary {
+  border: none;
+  background: var(--fin-primary);
+  color: #ffffff;
+}
+
+.fin-bottom-action.primary:hover {
+  background: var(--fin-primary-dark);
+}
+
+.fin-bottom-action.primary:disabled {
+  background: var(--fin-muted-bg);
+  color: #9aa7c7;
+  cursor: not-allowed;
+}
+
+.fin-bottom-action.outline {
+  border: 2px solid var(--fin-border);
+  background: #ffffff;
+  color: var(--fin-text);
+}
+
+.fin-bottom-action.outline:hover {
+  background: #f6f8fc;
+}
+
+.fin-bottom-action.danger {
+  border: none;
+  background: var(--fin-danger);
+  color: #ffffff;
+}
+
+.fin-bottom-action.danger:hover {
+  background: #8c2e37;
+}
