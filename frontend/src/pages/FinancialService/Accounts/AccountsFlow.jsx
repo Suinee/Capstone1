@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   FinanceSubHeader,
   FinanceBottomBar,
   FinanceFrame,
 } from "../FinanceShell";
 import {
-  ACCOUNTS,
-  TOTAL_BALANCE,
   formatAmount,
   formatSigned,
   financeIcon,
@@ -62,12 +60,13 @@ function AccountDetail({ account, onBack, onAction, actionLabel }) {
 function AccountsFlow() {
   const [frame, setFrame] = useState(0);
   const navigate = useNavigate();
+  const { accounts, totalBalance } = useOutletContext();
 
   if (frame === 1) {
     return (
       <FinanceFrame guide="checking">
         <AccountDetail
-          account={ACCOUNTS.checking}
+          account={accounts.checking}
           onBack={() => setFrame(0)}
           onAction={() => navigate("/financial-service/transfer")}
           actionLabel="이 계좌에서 이체"
@@ -80,7 +79,7 @@ function AccountsFlow() {
     return (
       <FinanceFrame guide="savings">
         <AccountDetail
-          account={ACCOUNTS.savings}
+          account={accounts.savings}
           onBack={() => setFrame(0)}
           onAction={() => setFrame(0)}
           actionLabel="보유계좌로 돌아가기"
@@ -105,7 +104,7 @@ function AccountsFlow() {
           </div>
 
           <strong className="fin-balance-amount">
-            {formatAmount(TOTAL_BALANCE)}
+            {formatAmount(totalBalance)}
           </strong>
         </section>
 
@@ -119,12 +118,12 @@ function AccountsFlow() {
               </span>
 
               <span className="fin-account-info">
-                <strong>{ACCOUNTS.checking.name}</strong>
-                <span>{ACCOUNTS.checking.bankLabel}</span>
+                <strong>{accounts.checking.name}</strong>
+                <span>{accounts.checking.bankLabel}</span>
               </span>
 
               <strong className="fin-account-balance">
-                {formatAmount(ACCOUNTS.checking.balance)}
+                {formatAmount(accounts.checking.balance)}
               </strong>
             </button>
           </li>
@@ -136,12 +135,12 @@ function AccountsFlow() {
               </span>
 
               <span className="fin-account-info">
-                <strong>{ACCOUNTS.savings.name}</strong>
-                <span>{ACCOUNTS.savings.bankLabel}</span>
+                <strong>{accounts.savings.name}</strong>
+                <span>{accounts.savings.bankLabel}</span>
               </span>
 
               <strong className="fin-account-balance">
-                {formatAmount(ACCOUNTS.savings.balance)}
+                {formatAmount(accounts.savings.balance)}
               </strong>
             </button>
           </li>

@@ -31,7 +31,58 @@ export const ACCOUNTS = {
   },
 };
 
-export const TOTAL_BALANCE = ACCOUNTS.checking.balance + ACCOUNTS.savings.balance;
+const ACCOUNT_KEY = "adapti.finance.accounts.v2";
+const LEGACY_BALANCE_KEY = "adapti.finance.balances.v1";
+
+function loadAccounts() {
+  const saved = JSON.parse(sessionStorage.getItem(ACCOUNT_KEY));
+  // 이전 버전에서 이체한 잔액도 첫 거래내역 저장 시 이어받는다.
+  const legacy = saved ? null : JSON.parse(sessionStorage.getItem(LEGACY_BALANCE_KEY));
+  return Object.fromEntries(Object.values(ACCOUNTS).map(account => {
+    const entry = saved?.[account.id];
+    const balance = entry?.balance ?? legacy?.[account.id];
+    return [account.id, {
+      ...account,
+      balance: Number.isSafeInteger(balance) && balance >= 0 ? balance : account.balance,
+      transactions: entry?.transactions ?? account.transactions,
+    }];
+  }));
+}
+
+export function readAccounts() {
+  try {
+    return loadAccounts();
+  } catch {
+    return ACCOUNTS;
+  }
+}
+
+export function transferError(amount, balance) {
+  if (amount > balance) return "잔액이 부족합니다";
+  if (!Number.isSafeInteger(amount) || amount <= 0) return "1원 이상의 정수를 입력해 주세요.";
+  return "";
+}
+
+export function debitAccount(accountId, amount, recipientName, completedAt) {
+  try {
+    const accounts = loadAccounts();
+    const account = accounts[accountId];
+    const error = transferError(amount, account.balance);
+    if (error) return { error };
+
+    const date = completedAt.toLocaleDateString("ko-KR", { month: "long", day: "numeric" });
+    const transaction = { title: recipientName + " 이체", date: date + " · 출금", amount: -amount };
+    accounts[accountId] = {
+      ...account,
+      balance: account.balance - amount,
+      transactions: [transaction, ...account.transactions],
+    };
+    sessionStorage.setItem(ACCOUNT_KEY, JSON.stringify(accounts));
+    return { accounts };
+  } catch {
+    return { error: "이체 결과를 저장할 수 없습니다. 다시 시도해 주세요." };
+  }
+}
 
 export const CARD = {
   name: "ADAPTI 체크카드",

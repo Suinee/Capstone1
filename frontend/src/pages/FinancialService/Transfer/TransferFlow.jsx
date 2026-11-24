@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   FinanceSubHeader,
   FinanceBottomBar,
   FinanceFrame,
 } from "../FinanceShell";
 import {
-  ACCOUNTS,
+  transferError,
   RECENT_RECIPIENT,
   DEMO_BANK,
   DEMO_MANUAL_ACCOUNT,
@@ -53,10 +53,18 @@ function TransferFlow() {
   const [accountNumber, setAccountNumber] = useState("");
   const [recipient, setRecipient] = useState(null); // { name, bank, account }
   const [recipientSource, setRecipientSource] = useState(null); // "recent" | "manual"
-  const [amount, setAmount] = useState(0);
+  const { accounts, transfer } = useOutletContext();
+  const [sourceId, setSourceId] = useState("checking");
+  const [amountText, setAmountText] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const submitted = useRef(false);
   const [completedAt, setCompletedAt] = useState("");
 
-  const sourceAccount = ACCOUNTS.checking;
+  const sourceAccount = accounts[sourceId];
+  const amount = /^(?:\d+|\d{1,3}(?:,\d{3})+)$/.test(amountText)
+    ? Number(amountText.replaceAll(",", ""))
+    : NaN;
+  const amountError = transferError(amount, sourceAccount.balance);
 
   const goHome = () => navigate("/financial-service");
 
@@ -73,8 +81,17 @@ function TransferFlow() {
   };
 
   const submitTransfer = () => {
+    if (submitted.current) return;
+    const transferTime = new Date();
+    const error = transfer(sourceId, amount, recipient.name, transferTime);
+    if (error) {
+      setSubmitError(error);
+      setStep("amount");
+      return;
+    }
+    submitted.current = true;
     setCompletedAt(
-      new Date().toLocaleString("ko-KR", {
+      transferTime.toLocaleString("ko-KR", {
         month: "long",
         day: "numeric",
         hour: "2-digit",
@@ -225,9 +242,9 @@ function TransferFlow() {
 
   if (step === "amount") {
     return (
-      <FinanceFrame guide={amount > 0 ? "amount:next" : "amount:choose"}>
+      <FinanceFrame guide={amountError ? "amount:choose" : "amount:next"}>
         <FinanceSubHeader
-          title="보낼 금액 선택"
+          title="보낼 금액 입력"
           onBack={() => setStep(recipientSource === "recent" ? "select" : "confirm")}
         />
 
@@ -237,17 +254,37 @@ function TransferFlow() {
           <h1 className="fin-home-title">얼마를 보낼까요?</h1>
           <p className="fin-home-subtitle">보낼 금액을 입력해 주세요.</p>
 
-          <p className="fin-amount-label">보낼 금액</p>
-          <p className="fin-amount-display">{formatAmount(amount)}</p>
+          <label className="fin-amount-label" htmlFor="transfer-amount">보낼 금액 (원)</label>
+          <input
+            id="transfer-amount"
+            className="fin-text-field"
+            data-hesitation-id="finance-amount"
+            type="text"
+            inputMode="numeric"
+            placeholder="0"
+            value={amountText}
+            onChange={event => {
+              setAmountText(event.target.value);
+              setSubmitError("");
+            }}
+            aria-invalid={Boolean(amountText && amountError)}
+            aria-describedby="transfer-amount-error"
+          />
+          <p id="transfer-amount-error" className="fin-amount-error" aria-live="polite">
+            {submitError || (amountText && amountError)}
+          </p>
 
           <div className="fin-amount-presets">
             {AMOUNT_PRESETS.map((preset) => (
               <button
                 type="button"
                 key={preset}
-                data-hesitation-id="finance-amount"
+                data-hesitation-id="finance-amount-preset"
                 className="fin-amount-preset"
-                onClick={() => setAmount(preset)}
+                onClick={() => {
+                  setAmountText(String(preset));
+                  setSubmitError("");
+                }}
               >
                 {formatAmount(preset)} 입력
               </button>
@@ -255,13 +292,25 @@ function TransferFlow() {
           </div>
 
           <div className="fin-field-group">
-            <p className="fin-field-label">송금 계좌</p>
+            <label className="fin-field-label" htmlFor="transfer-source">출금 계좌</label>
             <div className="fin-source-account-row">
               <span className="fin-account-icon">
                 <img src={financeIcon("bank-blue")} alt="" />
               </span>
               <span className="fin-account-info">
-                <strong>{sourceAccount.name} - 2041</strong>
+                <select
+                  id="transfer-source"
+                  className="fin-select-field"
+                  value={sourceId}
+                  onChange={event => {
+                    setSourceId(event.target.value);
+                    setSubmitError("");
+                  }}
+                >
+                  {Object.values(accounts).map(account => (
+                    <option key={account.id} value={account.id}>{account.name} · {account.maskedNumber}</option>
+                  ))}
+                </select>
                 <span>잔액 {formatAmount(sourceAccount.balance)}</span>
               </span>
             </div>
@@ -270,8 +319,8 @@ function TransferFlow() {
 
         <FinanceBottomBar
           action={{
-            label: amount > 0 ? "이체 내용 확인" : "금액 입력",
-            disabled: amount <= 0,
+            label: "이체 내용 확인",
+            disabled: Boolean(amountError),
             onClick: () => setStep("review"),
           }}
         />
@@ -305,7 +354,7 @@ function TransferFlow() {
             </div>
             <div className="fin-info-row">
               <span>보내는 계좌</span>
-              <strong>{sourceAccount.name} - 2041</strong>
+              <strong>{sourceAccount.name} · {sourceAccount.maskedNumber}</strong>
             </div>
             <div className="fin-info-row">
               <span>보낼 금액</span>
@@ -421,7 +470,7 @@ function TransferFlow() {
         <button
           type="button"
           className="fin-text-link"
-          onClick={() => window.alert("체험용 화면에서는 이체내역이 없어요.")}
+          onClick={() => navigate("/financial-service/accounts")}
         >
           <img src={financeIcon("info-blue")} alt="" />
           모의 이체내역

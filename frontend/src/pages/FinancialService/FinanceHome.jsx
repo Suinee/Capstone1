@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   FinanceHomeHeader,
   FinanceBottomNav,
   FinanceFrame,
 } from "./FinanceShell";
-import { ACCOUNTS, TOTAL_BALANCE, formatAmount, financeIcon } from "./financeData";
+import { formatAmount, financeIcon } from "./financeData";
 import "./FinanceHome.css";
 
 const MENUS = [
@@ -40,6 +40,7 @@ const MENUS = [
 
 function FinanceHome() {
   const navigate = useNavigate();
+  const { accounts, totalBalance } = useOutletContext();
 
   return (
     <FinanceFrame guide="home">
@@ -56,11 +57,11 @@ function FinanceHome() {
           </div>
 
           <strong className="fin-balance-amount">
-            {formatAmount(TOTAL_BALANCE)}
+            {formatAmount(totalBalance)}
           </strong>
 
           <span className="fin-balance-sub">
-            {ACCOUNTS.checking.name} · {ACCOUNTS.savings.name}
+            {accounts.checking.name} · {accounts.savings.name}
           </span>
         </section>
 
