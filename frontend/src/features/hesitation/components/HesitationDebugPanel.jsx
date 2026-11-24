@@ -30,6 +30,7 @@ export default function HesitationDebugPanel() {
 
   if (!import.meta.env.DEV) return null;
 
+  const showAtTop = task.context?.domain === "public-service" || screenId?.startsWith("KIOSK_");
   return (
     <aside
       data-hesitation-ignore
@@ -37,8 +38,8 @@ export default function HesitationDebugPanel() {
       style={{
         position: "fixed",
         right: 12,
-        bottom: task.context?.domain === "public-service" ? "auto" : 12,
-        top: task.context?.domain === "public-service" ? 12 : "auto",
+        bottom: showAtTop ? "auto" : 12,
+        top: showAtTop ? 12 : "auto",
         zIndex: 9999,
         width: 280,
         maxHeight: "55vh",
@@ -52,7 +53,7 @@ export default function HesitationDebugPanel() {
         lineHeight: 1.7,
       }}
     >
-      <details open={task.context?.domain !== "public-service"}>
+      <details open={!showAtTop}>
       <summary>망설임 감지 확인 (개발용)</summary>
 
       <div style={{ overflowWrap: "anywhere" }}>세션: {sessionId}</div>

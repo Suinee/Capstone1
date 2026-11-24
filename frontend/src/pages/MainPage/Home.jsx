@@ -238,6 +238,10 @@ function App() {
                         if (service.title === "공공서비스") {
                           navigate("/public-service");
                         }
+
+                        if (service.title === "금융서비스") {
+                          navigate("/financial-service");
+                        }
                       }}
                     >
                       {service.button}

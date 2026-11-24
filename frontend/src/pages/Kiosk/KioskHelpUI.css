@@ -204,25 +204,17 @@
 [data-kiosk-root] .cart-item-edit[data-kiosk-help-level="2"] :is(strong, .cart-item-quantity) { font-size: 23px; }
 [data-kiosk-root] .cart-item-edit[data-kiosk-help-level="2"] .cart-item-info > span { font-size: 17px; }
 
-/* 고정 높이 카드에서 이미지는 유지하고 내부 여백을 조정합니다.
-   긴 상품명은 두 줄 영역 안에서 스크롤할 수 있어 가격과 겹치지 않습니다. */
+/* 확대된 상품명은 줄바꿈하고, 필요한 만큼 카드 높이를 늘린다. */
 [data-kiosk-root] .menu-card[data-kiosk-help-level="2"] { padding-block: 16px; }
-[data-kiosk-root] .menu-card[data-kiosk-help-level="2"] .menu-card-name {
-  max-height: 2.5em;
-  overflow-y: auto;
-  flex-shrink: 1;
+[data-kiosk-root] .order-option[data-kiosk-help-level="2"] {
+  height: auto;
+  min-height: 330px;
+  padding: 12px 8px;
 }
-[data-kiosk-root] .order-option[data-kiosk-help-level="2"] { padding: 12px 8px; }
 [data-kiosk-root] .order-option[data-kiosk-help-level="2"] .image-box { margin-bottom: 8px; }
 [data-kiosk-root] .order-option[data-kiosk-help-level="2"] :is(.option-name, .option-price) {
   font-size: 31px;
-  line-height: 1.2;
-}
-[data-kiosk-root] .order-option[data-kiosk-help-level="2"] .option-name {
-  min-height: 0;
-  max-height: 2.4em;
-  overflow-y: auto;
-  flex-shrink: 1;
+  line-height: normal;
 }
 [data-kiosk-root] button[data-kiosk-help-level="2"] :is(.option-price, .menu-card-price) { flex-shrink: 0; }
 
@@ -237,4 +229,5 @@
 }
 .kiosk-help-panel--level-1 h2 { font-size: 20px; }
 .kiosk-help-panel--level-1 p { margin: 10px 0; }
-.kiosk-help-panel--level-2 { border-width: 3px; }
+.kiosk-help-panel--level-2 { border-width: 3px; overflow-wrap: anywhere; }
+.kiosk-help-panel--level-2 .kiosk-help-panel-actions { flex-wrap: wrap; }

@@ -2,10 +2,11 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import useHesitation from "../../features/hesitation/useHesitation";
 import { getKioskHelpContent } from "../../features/hesitation/helpContent";
 import useKioskHelpHighlight from "../../features/hesitation/useKioskHelpHighlight";
+import useLevelTwoHelpPosition from "../../features/hesitation/useLevelTwoHelpPosition";
 import AIHelpPanel from "../../features/hesitation/components/AIHelpPanel";
 import "./KioskHelpUI.css";
 
-export default function KioskHelpUI({ rootRef }) {
+export default function KioskHelpUI({ rootRef, getContent = getKioskHelpContent }) {
   const {
     screenId,
     screenVisitId,
@@ -45,7 +46,7 @@ export default function KioskHelpUI({ rootRef }) {
     return () => window.clearTimeout(timer);
   }, [dialogMode, setDialogMode]);
 
-  const content = getKioskHelpContent(screenId, help.helpKey, task);
+  const content = getContent(screenId, help.helpKey, task);
   const level = Math.max(1, Math.min(3, help.level));
 
   // 이전 화면의 도움 상태가 잠깐 남아 있어도 표시하지 않습니다.
@@ -97,6 +98,8 @@ export default function KioskHelpUI({ rootRef }) {
     enabled: showHelp,
     level,
   });
+  useLevelTwoHelpPosition(rootRef, panelRef, showHelp && level === 2,
+    '[data-kiosk-help-level="2"]:not([data-kiosk-help-kind="group"] *)');
 
   const handleScreenHelp = () => {
     setDialogMode(null);

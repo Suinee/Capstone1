@@ -3,6 +3,7 @@ import useHesitation from '../hesitation/useHesitation.js';
 import { getPublicHelpContent } from './publicHelpContent.js';
 import { findPublicTarget } from './resolvePublicHelp.js';
 import usePublicHelpHighlight from './usePublicHelpHighlight.js';
+import useLevelTwoHelpPosition from '../hesitation/useLevelTwoHelpPosition.js';
 import './PublicHelpUI.css';
 
 export default function PublicHelpUI({ rootRef }) {
@@ -14,6 +15,7 @@ export default function PublicHelpUI({ rootRef }) {
   const content = getPublicHelpContent(help.helpKey);
   const level = Math.max(1, Math.min(3, help.level));
   usePublicHelpHighlight({ rootRef, targetId: help.highlightTargetId, enabled: show, level });
+  useLevelTwoHelpPosition(rootRef, panelRef, show && level === 2, '[data-public-help-level="2"]');
 
   useEffect(() => {
     if (show && ['manualRequest', 'manualExpansion'].includes(help.reason)) titleRef.current?.focus({ preventScroll: true });

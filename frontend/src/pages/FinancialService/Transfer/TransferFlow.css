@@ -1,0 +1,243 @@
+.fin-step-indicator {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 45px;
+}
+
+.fin-step-pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 14px 32px 14px 14px;
+  border-radius: 50px;
+  background: #f6f8fc;
+
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--fin-sub-text);
+}
+
+.fin-step-pill.current {
+  background: var(--fin-primary-light);
+  color: var(--fin-navy);
+}
+
+.fin-step-pill.done {
+  color: var(--fin-navy);
+}
+
+.fin-step-dot {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: var(--fin-muted-bg);
+  color: var(--fin-primary);
+
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.fin-step-pill.current .fin-step-dot,
+.fin-step-pill.done .fin-step-dot {
+  background: var(--fin-primary);
+  color: #ffffff;
+}
+
+.fin-field-group {
+  margin: 45px 0;
+}
+
+.fin-field-label {
+  margin: 0 0 20px;
+  font-size: 33px;
+  font-weight: 700;
+  color: var(--fin-text);
+}
+
+.fin-select-field,
+.fin-text-field {
+  width: 100%;
+  height: 125px;
+  padding: 0 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 2px solid var(--fin-border);
+  border-radius: 30px;
+  background: #ffffff;
+
+  font-size: 35px;
+  color: var(--fin-text);
+  cursor: pointer;
+}
+
+.fin-select-field span.placeholder {
+  color: #b7bdca;
+}
+
+.fin-select-field img {
+  width: 35px;
+  height: 35px;
+}
+
+.fin-text-field {
+  cursor: text;
+}
+
+.fin-demo-fill-button {
+  margin-top: 25px;
+  padding: 25px 35px;
+
+  border: none;
+  border-radius: 25px;
+  background: var(--fin-primary-light);
+  color: var(--fin-primary);
+
+  font-size: 30px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fin-check-note {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  margin: 40px 0 0;
+  font-size: 33px;
+  font-weight: 700;
+  color: #1c8a4b;
+}
+
+.fin-check-note img {
+  width: 35px;
+  height: 35px;
+}
+
+.fin-amount-label {
+  margin: 20px 0 15px;
+  font-size: 33px;
+  color: var(--fin-sub-text);
+}
+
+.fin-amount-display {
+  margin: 0 0 40px;
+  font-size: 75px;
+  font-weight: 900;
+  color: var(--fin-primary);
+}
+
+.fin-amount-presets {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+.fin-amount-preset {
+  padding: 30px 40px;
+
+  border: 2px solid var(--fin-primary);
+  border-radius: 30px;
+  background: var(--fin-primary-light);
+  color: var(--fin-primary);
+
+  font-size: 33px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fin-source-account-row {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  padding: 35px;
+  border: 2px solid var(--fin-border);
+  border-radius: 30px;
+}
+
+.fin-text-link {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  margin-top: 50px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+  color: var(--fin-sub-text);
+
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.fin-text-link img {
+  width: 35px;
+  height: 35px;
+}
+
+.fin-review-card {
+  padding: 45px;
+  margin: 45px 0;
+
+  border: 2px solid var(--fin-border);
+  border-radius: 35px;
+}
+
+.fin-review-amount {
+  font-size: 45px;
+  color: var(--fin-primary);
+}
+
+.fin-done-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 90px;
+}
+
+.fin-done-icon {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: var(--fin-primary-light);
+}
+
+.fin-done-icon img {
+  width: 65px;
+  height: 65px;
+}
+
+.fin-done-badge {
+  margin: 25px 0 60px;
+  background: var(--fin-primary-light);
+  color: var(--fin-primary);
+  font-size: 33px;
+  padding: 20px 35px;
+}
+
+.fin-done-main .fin-info-row {
+  width: 100%;
+}
+
+.fin-done-main .fin-note-box {
+  width: 100%;
+  text-align: left;
+}

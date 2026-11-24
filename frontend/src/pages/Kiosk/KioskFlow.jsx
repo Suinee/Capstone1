@@ -174,7 +174,19 @@ function KioskFlow() {
       totalPrice: menu.price,
     };
 
-    setCart((prev) => [...prev, newItem]);
+    setCart((prev) => {
+      const existing = prev.find(
+        (item) => item.selectedMenu.menuId === menu.menuId,
+      );
+      if (!existing) return [...prev, newItem];
+
+      const quantity = existing.quantity + 1;
+      return prev.map((item) =>
+        item.cartId === existing.cartId
+          ? { ...item, quantity, totalPrice: quantity * item.selectedMenu.price }
+          : item,
+      );
+    });
     // 사이드/음료 단독 주문: 화면 이동 없이 선택과 장바구니 추가 완료
     emitKioskHesitation("CART_ADDED", {
       screenId: KIOSK_SCREEN_IDS.MENU,

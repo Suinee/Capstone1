@@ -15,7 +15,7 @@ export default function useKioskHelpHighlight({ rootRef, targetId, enabled, leve
       restore = () => {};
       const target = find();
       if (!target || target.matches(":disabled") || !target.getClientRects().length) return;
-      const group = !target.matches("button");
+      const group = !target.matches("button, input");
       const buttons = group ? [...target.querySelectorAll("button:not(:disabled)")] : [target];
       if (!buttons.length) return;
       const marked = group ? [target, ...buttons] : buttons;
@@ -28,7 +28,7 @@ export default function useKioskHelpHighlight({ rootRef, targetId, enabled, leve
       for (const element of marked) {
         element.setAttribute("data-kiosk-help-level", String(Math.min(level, 2)));
         element.setAttribute("data-kiosk-help-kind", element === target && group ? "group" : "button");
-        if (element.matches("button")) {
+        if (element.matches("button, input")) {
           const ids = new Set((element.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean));
           ids.add("kiosk-context-help-text");
           element.setAttribute("aria-describedby", [...ids].join(" "));
