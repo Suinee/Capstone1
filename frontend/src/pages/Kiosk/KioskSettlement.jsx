@@ -18,7 +18,7 @@ function KioskSettlement({
   onComplete,
   onHesitationStateChange,
 }) {
-  const { openHelpRequest } = useHesitation();
+  const { openHelpRequest, finishAttempt, flushLogs } = useHesitation();
 
   const [phase, setPhase] = useState("select");
   const [queueNumber, setQueueNumber] = useState(null);
@@ -64,10 +64,12 @@ function KioskSettlement({
       setQueueNumber(Math.floor(Math.random() * 900) + 100); // 100~999
       setSecondsLeft(10);
       setPhase("complete");
+      finishAttempt("completed");
+      flushLogs().catch(error => console.warn("[주문 과제 결과 저장]", error));
     }, 5000);
 
     return () => window.clearTimeout(timerId);
-  }, [phase]);
+  }, [phase, finishAttempt, flushLogs]);
 
   // 완료 화면을 10초간 보여준 뒤 메인페이지로 이동
   useEffect(() => {

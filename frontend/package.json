@@ -12,6 +12,7 @@
     "test:public-service": "node --test tests/publicServiceApi.test.mjs",
     "test:public-hesitation": "node --test tests/publicHesitation.test.mjs",
     "test:public-help": "node --test tests/publicHelp.test.mjs",
+    "test:experiment": "node --test tests/experiment.test.mjs",
     "test:hesitation-audit": "node --test tests/hesitationAudit.test.mjs"
   },
   "dependencies": {

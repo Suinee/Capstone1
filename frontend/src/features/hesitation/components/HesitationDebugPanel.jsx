@@ -1,4 +1,5 @@
 import useHesitation from "../useHesitation.js";
+import { EXPERIMENT_MODES } from "../../experiment/experimentSession.js";
 
 const RULE_LABELS = {
   timeDelay: "시간 지연",
@@ -14,6 +15,7 @@ const RULE_LABELS = {
 export default function HesitationDebugPanel() {
   const {
     sessionId,
+    experiment,
     screenId,
     screenVisitId,
     measuring,
@@ -57,6 +59,11 @@ export default function HesitationDebugPanel() {
       <summary>망설임 감지 확인 (개발용)</summary>
 
       <div style={{ overflowWrap: "anywhere" }}>세션: {sessionId}</div>
+      {experiment && <>
+        <div>실험 조건: {EXPERIMENT_MODES[experiment.mode].label}</div>
+        <div>자동 도움: {experiment.automaticHelp ? "켜짐" : "꺼짐"} · 수동 도움: 켜짐</div>
+        <div style={{ overflowWrap: "anywhere" }}>실험 ID: {experiment.runId}</div>
+      </>}
       {task.context?.domain === "public-service" && (
         <div>공공서비스 · 단계별 도움 연결</div>
       )}

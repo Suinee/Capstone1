@@ -1,0 +1,20 @@
+.public-complete { min-height: 100dvh; display: grid; place-items: center; box-sizing: border-box; padding: 40px 20px; background: #f3f7f8; color: #18343c; }
+.public-complete__card { width: min(100%, 640px); box-sizing: border-box; padding: 44px 32px; border: 1px solid #dce8eb; border-radius: 24px; background: #fff; text-align: center; box-shadow: 0 12px 40px #153c4610; }
+.public-complete__icon { width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 50%; background: #e3f4ed; color: #147657; font-size: 40px; line-height: 64px; }
+.public-complete__brand { color: #167682; font-weight: 800; letter-spacing: 2px; }
+.public-complete h1 { font-size: clamp(23px, 4vw, 30px); line-height: 1.5; margin: 12px 0; }
+.public-complete p { line-height: 1.7; }
+.public-complete .ps-demo-print-card { margin: 28px 0; padding: 24px; border: 1px solid #dce8eb; text-align: left; }
+.public-complete .ps-demo-print-card h2 { font-size: 22px; line-height: 1.5; }
+.public-complete__note { color: #526670; font-size: 14px; }
+.public-complete__actions { display: flex; gap: 12px; margin-top: 24px; }
+.public-complete button { width: 100%; border: 0; border-radius: 12px; padding: 16px; background: #125967; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+.public-complete button.public-complete__print { background: white; border: 1px solid #125967; color: #125967; }
+.public-complete button:focus-visible { outline: 3px solid #e49b30; outline-offset: 4px; }
+@media (max-width: 480px) { .public-complete { padding: 20px 12px; } .public-complete__card { padding: 28px 20px; } .public-complete__actions { flex-direction: column; } .public-complete .ps-demo-print-card { padding: 16px; } .public-complete .ps-demo-print-card dl { grid-template-columns: 1fr; gap: 8px; } }
+@media print {
+  .public-complete, .public-complete__card { display: block; min-height: 0; width: 100%; padding: 0; margin: 0; border: 0; box-shadow: none; background: white; }
+  .public-complete__card > :not(.ps-demo-print-card) { display: none; }
+  .public-complete .ps-demo-print-card { position: static; width: 100%; box-sizing: border-box; margin: 0; padding: 20px; border: 0; }
+  .public-complete .ps-demo-print-card dl { grid-template-columns: 115px 1fr; gap: 12px; }
+}

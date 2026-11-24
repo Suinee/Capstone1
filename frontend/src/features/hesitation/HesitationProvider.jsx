@@ -18,6 +18,7 @@ import HesitationDebugPanel from "./components/HesitationDebugPanel.jsx";
 import { subscribeKioskHesitation } from "./kioskHesitationEvents.js";
 import KioskHelpUI from "../../pages/Kiosk/KioskHelpUI.jsx";
 import useHesitationLogUpload from "./useHesitationLogUpload.js";
+import useExperiment from "../experiment/useExperiment.js";
 
 export default function HesitationProvider({
   children,
@@ -29,6 +30,7 @@ export default function HesitationProvider({
   HelpComponent = KioskHelpUI,
 }) {
   const rootRef = useRef(null);
+  const experimentContext = useExperiment();
 
   // Provider가 유지되는 동안 같은 엔진과 세션을 사용
   // config와 evaluate는 세션 시작 시 적용
@@ -36,6 +38,7 @@ export default function HesitationProvider({
     createScoreEngine({
       config,
       evaluate,
+      experiment: experimentContext?.experiment ?? null,
     }),
   );
 
@@ -47,12 +50,27 @@ export default function HesitationProvider({
   );
 
   const uploader = useHesitationLogUpload(engine.getLogs);
+  const departureTimer = useRef(null);
+  useEffect(() => {
+    clearTimeout(departureTimer.current);
+    const leave = () => {
+      engine.finishAttempt("interrupted");
+      uploader.flush({ keepalive: true }).catch(error => console.warn("[과제 결과 전송]", error));
+    };
+    window.addEventListener("pagehide", leave);
+    return () => {
+      window.removeEventListener("pagehide", leave);
+      // StrictMode의 가상 unmount는 바로 이어지는 setup에서 취소한다.
+      departureTimer.current = setTimeout(leave, 0);
+    };
+  }, [engine, uploader]);
 
   const resolveTarget = useCallback(
     (input) => resolveHelp({ ...input, root: rootRef.current }), [resolveHelp],
   );
   const { help, closeHelp, openHelp, expandHelp, resolveCurrentHelp } = useAdaptiveHelp(
-    engine, automaticHelp, true, { resolveHelp: resolveTarget, clearOnPause: domain === "public-service" },
+    engine, snapshot.experiment?.automaticHelp ?? automaticHelp, true,
+    { resolveHelp: resolveTarget, clearOnPause: domain === "public-service" },
   );
 
   // 기존 화면 버튼과 공통 도움 UI가 함께 사용하는 선택 창 상태
@@ -210,6 +228,7 @@ export default function HesitationProvider({
       recordSelection: engine.recordSelection,
       recordError: engine.recordError,
       completeAction: engine.completeAction,
+      finishAttempt: engine.finishAttempt,
       getLogs: engine.getLogs,
       getSnapshot: engine.getSnapshot,
       recordLifecycleEvent: engine.recordLifecycleEvent,

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
 import useDemoSubmission from "../useDemoSubmission";
+import PublicServiceComplete from "../PublicServiceComplete.jsx";
 import { DEMO_APPLICANT } from "./applicantProfile";
 import "../PublicServiceDemo.css";
 import "./TaxPaymentApply.css";
@@ -15,7 +16,7 @@ const receiveOptions = [
 
 function TaxPaymentApply() {
   usePublicScreen("public:tax:apply");
-  const { submit, submitting, submitError } = useDemoSubmission("tax-payment");
+  const { submit, submitting, submitError, receipt } = useDemoSubmission("tax-payment");
   const navigate = useNavigate();
 
   const [residentNoVisible, setResidentNoVisible] = useState("공개");
@@ -24,9 +25,10 @@ function TaxPaymentApply() {
   const [receiveType, setReceiveType] = useState(receiveOptions[0]);
 
   const handleSubmit = async () => {
-    if (!(await submit("납세증명서 발급"))) return;
-    navigate("/public-service/resident-registration/history");
+    await submit("납세증명서 발급");
   };
+
+  if (receipt) return <PublicServiceComplete receipt={receipt} />;
 
   return (
     <div className="tp-page">

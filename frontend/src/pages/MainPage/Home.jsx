@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
+import TaskResults from "../../features/experiment/TaskResults.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -82,6 +83,7 @@ function App() {
 
           <nav className="nav-menu">
             <a href="#service">서비스 체험</a>
+            <Link to="/experiment">실험 설정</Link>
             <a href="#works">작동 방식</a>
             <a href="#result">실험 결과</a>
           </nav>
@@ -232,11 +234,11 @@ function App() {
                       type="button"
                       onClick={() => {
                         if (service.title === "키오스크") {
-                          navigate("/kiosk");
+                          navigate("/experiment?service=kiosk");
                         }
 
                         if (service.title === "공공서비스") {
-                          navigate("/public-service");
+                          navigate("/experiment?service=public-service");
                         }
 
                         if (service.title === "금융서비스") {
@@ -282,70 +284,7 @@ function App() {
           </div>
         </section>
 
-        {/* RESULT */}
-        <section className="result-section" id="result">
-          <div className="container">
-            <div className="section-heading">
-              <h2>RESULT</h2>
-              <p>
-                사용자 실험 결과
-                <br />
-                적응형 인터페이스 실험 전·후 사용성을 비교했습니다.
-              </p>
-            </div>
-
-            <div className="stats-grid">
-              <div className="stat-card">
-                <strong>32% ↓</strong>
-                <span>평균 완료 시간</span>
-              </div>
-
-              <div className="stat-card">
-                <strong>41% ↓</strong>
-                <span>오류 횟수</span>
-              </div>
-
-              <div className="stat-card">
-                <strong>18% ↑</strong>
-                <span>완료율</span>
-              </div>
-            </div>
-
-            <div className="chart-grid">
-              <div className="chart-box">
-                <svg viewBox="0 0 400 160">
-                  <polyline
-                    className="blue-line"
-                    points="30,105 120,135 225,115 360,95"
-                  />
-
-                  <polyline
-                    className="red-line"
-                    points="30,140 115,100 230,80 360,25"
-                  />
-                </svg>
-
-                <strong>완료 시간 그래프</strong>
-              </div>
-
-              <div className="chart-box">
-                <svg viewBox="0 0 400 160">
-                  <polyline
-                    className="blue-line"
-                    points="25,105 120,130 220,115 360,100"
-                  />
-
-                  <polyline
-                    className="red-line"
-                    points="25,140 120,105 225,80 360,25"
-                  />
-                </svg>
-
-                <strong>오류 횟수 그래프</strong>
-              </div>
-            </div>
-          </div>
-        </section>
+        <TaskResults />
       </main>
 
       {/* FOOTER */}
