@@ -2,10 +2,10 @@ import usePublicScreen from "../../../features/publicHesitation/usePublicScreen.
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
+import ApplicationReceipt from "../ApplicationReceipt.jsx";
 import { dateToInput, getDemoApplications } from "../demoApplicationStore";
 import "../PublicServiceDemo.css";
 import "./PublicServiceHistory.css";
-import "../PublicServiceDemo.css";
 
 const today = new Date();
 const before = new Date();
@@ -175,21 +175,7 @@ function PublicServiceHistory() {
             aria-modal="true"
             aria-label="체험 문서 미리보기"
           >
-            <div className="ps-demo-print-card">
-              <h2>ADAPTI 체험용 신청 확인서</h2>
-              <p className="ps-demo-watermark">체험용 · 법적 효력 없음</p>
-              <dl>
-                <dt>모의 접수번호</dt>
-                <dd>{previewItem.receiptNo}</dd>
-                <dt>신청일시</dt>
-                <dd>{previewItem.receivedAt}</dd>
-                <dt>서비스</dt>
-                <dd>{previewItem.name}</dd>
-                <dt>처리상태</dt>
-                <dd>{previewItem.status}</dd>
-              </dl>
-              <p>실제 주민등록등본 또는 전입신고 접수증이 아닙니다.</p>
-            </div>
+            <ApplicationReceipt receipt={previewItem} />
             <div className="ps-demo-modal-actions">
               <button type="button" onClick={() => setPreviewItem(null)}>
                 닫기

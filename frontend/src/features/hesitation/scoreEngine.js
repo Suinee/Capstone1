@@ -6,14 +6,33 @@ import {
   RULE_IDS,
 } from "./config.js";
 import { evaluateRules } from "./rules.js";
+import { normalizeExperiment } from "../experiment/experimentSession.js";
+import { createTaskAttemptTracker } from "../experiment/taskAttempt.js";
 
 export function createScoreEngine({
   config: overrides = {},
   evaluate = evaluateRules,
+  experiment: experimentInput = null,
 } = {}) {
   const config = createConfig(overrides);
+  const experiment = normalizeExperiment(experimentInput);
+  if (experimentInput !== null && !experiment) throw new Error("Invalid experiment settings");
 
   const listeners = new Set();
+  const attempts = createTaskAttemptTracker();
+
+  function saveAttempt(attempt) {
+    if (attempt && experiment) writeLog("behavior", { event: { type: "task_attempt_snapshot", attempt } });
+  }
+  function finishAttempt(status = "completed") {
+    advanceClock();
+    saveAttempt(attempts.finish(status, activeTime));
+  }
+  function ensureAttempt() {
+    if (!experiment || !isMeasuring()) return;
+    const key = experiment.service === "kiosk" ? "kiosk-order" : task.context.serviceCode;
+    if (attempts.start(key, activeTime)) saveAttempt(attempts.snapshot(activeTime, true));
+  }
 
   const sessionId = crypto.randomUUID();
   const logs = [];
@@ -87,15 +106,18 @@ export function createScoreEngine({
       activeTime,
       recordedAt: Date.now(),
       ruleVersion: config.ruleVersion,
+      ...(experiment ? { experiment } : {}),
     };
 
     logs.push(entry);
+    attempts.consume(entry);
     return entry;
   }
 
   function refreshSnapshot() {
     snapshot = {
       sessionId,
+      experiment,
       screenId,
       screenVisitId,
       score,
@@ -151,6 +173,8 @@ export function createScoreEngine({
     const now = advanceClock();
 
     if (!isMeasuring()) return;
+    ensureAttempt();
+    saveAttempt(attempts.snapshot(activeTime));
 
     const retentionMs = Math.max(
       config.windowMs,
@@ -293,6 +317,7 @@ export function createScoreEngine({
     advanceClock();
 
     if (!isMeasuring()) return null;
+    ensureAttempt();
 
     // 이전 화면의 늦게 실행된 타이머가 현재 화면에 기록 X
     if (
@@ -381,6 +406,12 @@ export function createScoreEngine({
       context: { ...(options.context ?? {}) },
     };
 
+    if (experiment?.service === "public-service" && attempts.current &&
+        (attempts.current.taskCode !== task.context.serviceCode || options.ready === false)) {
+      finishAttempt("interrupted");
+      attempts.reset();
+    }
+
     // 새 화면은 로딩 완료 여부를 확인하기 전까지 측정을 멈춤
     if (options.ready === true) {
       pauseReasons.delete("notReady");
@@ -467,6 +498,7 @@ export function createScoreEngine({
 
   return {
     config,
+    finishAttempt,
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -480,6 +512,7 @@ export function createScoreEngine({
     recordLifecycleEvent(event) {
       advanceClock();
       if (!screenVisitId) return null;
+      if (event.type === "submission_succeeded") finishAttempt("completed");
       return writeLog("behavior", { event: {
         ...event,
         id: `${sessionId}:event:${++sequence}`,

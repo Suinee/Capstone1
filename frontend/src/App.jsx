@@ -1,6 +1,9 @@
 import PublicHesitationLayout from "./features/publicHesitation/PublicHesitationLayout.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HesitationProvider from "./features/hesitation/HesitationProvider";
+import ExperimentProvider from "./features/experiment/ExperimentProvider.jsx";
+import ExperimentBoundary from "./features/experiment/ExperimentBoundary.jsx";
+import ExperimentSetup from "./features/experiment/ExperimentSetup.jsx";
 
 import Home from "./pages/MainPage/Home";
 import KioskFlow from "./pages/Kiosk/KioskFlow";
@@ -17,21 +20,29 @@ import TaxPaymentApply from "./pages/PublicService/TaxPayment/TaxPaymentApply";
 function App() {
   return (
     <BrowserRouter>
+      <ExperimentProvider>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/experiment" element={<ExperimentSetup />} />
 
         <Route
           path="/kiosk"
           element={
-            <HesitationProvider>
-              <KioskFlow />
-            </HesitationProvider>
+            <ExperimentBoundary service="kiosk">
+              <HesitationProvider>
+                <KioskFlow />
+              </HesitationProvider>
+            </ExperimentBoundary>
           }
         />
 
         <Route path="/admin/menu" element={<AdminMenu />} />
 
-        <Route element={<PublicHesitationLayout />}>
+        <Route element={
+          <ExperimentBoundary service="public-service">
+            <PublicHesitationLayout />
+          </ExperimentBoundary>
+        }>
           <Route path="/public-service" element={<Home2 />} />
 
           <Route
@@ -67,6 +78,7 @@ function App() {
           />
         </Route>
       </Routes>
+      </ExperimentProvider>
     </BrowserRouter>
   );
 }

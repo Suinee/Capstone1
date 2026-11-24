@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "../PublicServiceTopBar";
 import useDemoSubmission from "../useDemoSubmission";
+import PublicServiceComplete from "../PublicServiceComplete.jsx";
 import "../PublicServiceDemo.css";
 import "./FamilyRelationshipApply.css";
 
@@ -94,7 +95,7 @@ const reasonOptions = [
 ];
 
 function FamilyRelationshipApply() {
-  const { submit, submitting, submitError } = useDemoSubmission("family-relationship");
+  const { submit, submitting, submitError, receipt } = useDemoSubmission("family-relationship");
   const navigate = useNavigate();
 
   const [target, setTarget] = useState("본인");
@@ -103,9 +104,7 @@ function FamilyRelationshipApply() {
   const [disclosure, setDisclosure] = useState("신청대상자 본인만 공개");
   const [receiveKey, setReceiveKey] = useState("화면열람");
   const [reason, setReason] = useState("국내 기관 제출");
-  const [receipt, setReceipt] = useState(null);
-  const [attempt, setAttempt] = useState(0);
-  usePublicScreen("public:family:apply", attempt);
+  usePublicScreen("public:family:apply");
 
   const selectedCert = certTypes.find((cert) => cert.key === certKey);
 
@@ -123,15 +122,14 @@ function FamilyRelationshipApply() {
   const handleGuideClick = (message) => window.alert(message);
 
   const handleSubmit = async () => {
-    setReceipt(null);
     const proofLabel = proofTypeOptions.find(
       (option) => option.key === proofType,
     ).label;
 
-    const record = await submit(`${selectedCert.label} (${proofLabel})`);
-    if (!record) return;
-    setReceipt(record);
+    await submit(`${selectedCert.label} (${proofLabel})`);
   };
+
+  if (receipt) return <PublicServiceComplete receipt={receipt} />;
 
   return (
     <div className="fr-page">
@@ -158,13 +156,6 @@ function FamilyRelationshipApply() {
             ADAPTI 체험 화면입니다. 실제 정부24 민원 접수나 증명서 발급은
             이루어지지 않습니다.
           </p>
-
-          {receipt && (
-            <p className="fr-receipt-banner" role="status">
-              ✅ 모의 신청이 접수되었습니다. 접수번호 {receipt.receiptNo} (
-              {receipt.receivedAt})
-            </p>
-          )}
 
           {/* 1. 발급 대상자 */}
           <section className="fr-section">
@@ -410,9 +401,9 @@ function FamilyRelationshipApply() {
               type="button"
               className="fr-primary-button"
               disabled={submitting}
-              onClick={receipt ? () => { setReceipt(null); setAttempt((value) => value + 1); } : handleSubmit}
+              onClick={handleSubmit}
             >
-              {receipt ? "새 신청 시작" : "신청하기"} <span aria-hidden="true">↗</span>
+              신청하기 <span aria-hidden="true">↗</span>
             </button>
 
             <button data-hesitation-id="family-history"

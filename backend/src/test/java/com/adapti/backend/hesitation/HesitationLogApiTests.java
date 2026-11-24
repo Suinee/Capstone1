@@ -62,6 +62,75 @@ class HesitationLogApiTests {
         assertEquals(0, json(post("[" + entry + "]")).get("inserted").intValue());
         assertEquals(mapper.readTree(entry), json(get(session, "")).get("logs").get(0));
     }
+    @Test void preservesExperimentConditionsAcrossStorageAndRetries() throws Exception {
+        for (String mode : new String[]{"baseline", "adaptive"}) {
+            String session = UUID.randomUUID().toString();
+            String experiment = """
+                {"runId":"%s","mode":"%s","service":"kiosk",
+                 "automaticHelp":%s,"manualHelp":true,
+                 "policyVersion":"automatic-help-ab-1.0","startedAt":1793000000000}
+                """.formatted(UUID.randomUUID(), mode, mode.equals("adaptive"));
+            String entry = log(session, 1).replace("\"paused\":true", "\"paused\":true,\"experiment\":" + experiment);
+            assertEquals(200, post("[" + entry + "]").statusCode());
+            assertEquals(1, json(post("[" + entry + "]")).get("duplicates").intValue());
+            assertEquals(mapper.readTree(experiment), json(get(session, "")).get("logs").get(0).get("experiment"));
+        }
+    }
+    @Test void taskResultsUseLatestSequenceAndSeparatePractice() throws Exception {
+        String session = UUID.randomUUID().toString();
+        String attempt = UUID.randomUUID().toString();
+        String start = log(session, 1).replace("measurement_state", "behavior")
+            .replace("\"paused\":true", """
+              "paused":true,"experiment":{"mode":"baseline","dataset":"practice"},
+              "event":{"type":"task_attempt_snapshot","attempt":{"attemptId":"%s",
+              "taskCode":"test-task","status":"in_progress","durationMs":0,"clicks":0,"errors":0,
+              "automaticHelpCount":0,"manualHelpCount":0}}
+              """.formatted(attempt));
+        String end = start.replace(":log:1", ":log:2").replace("in_progress", "completed").replace("\"durationMs\":0", "\"durationMs\":2000");
+        assertEquals(200, post("[" + end + "," + start + "," + end + "]").statusCode());
+        var response = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/api/results/summary?dataset=practice")).GET().build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        JsonNode row = null;
+        for (JsonNode item : json(response)) if (item.get("taskCode").asText().equals("test-task")) row = item;
+        assertNotNull(row); assertEquals(1, row.get("started").intValue());
+        assertEquals(1, row.get("completed").intValue()); assertEquals(2000, row.get("durationMs").doubleValue());
+        var study = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/api/results/summary?dataset=study")).GET().build(), HttpResponse.BodyHandlers.ofString());
+        for (JsonNode item : json(study)) assertNotEquals("test-task", item.get("taskCode").asText());
+    }
+    @Test void trendsReturnRecentCompletedAttemptsPerModeInChronologicalOrder() throws Exception {
+        String session = UUID.randomUUID().toString();
+        var entries = new java.util.ArrayList<String>();
+        for (int i = 0; i < 38; i++) {
+            String entry = log(session, i + 1).replace("measurement_state", "behavior")
+                .replace("\"paused\":true", """
+                  "paused":true,"experiment":{"mode":"%s","dataset":"%s"},
+                  "event":{"type":"task_attempt_snapshot","attempt":{"attemptId":"%s",
+                  "taskCode":"kiosk-order","status":"%s","durationMs":%d,"errors":%d,"endedAt":%d}}
+                  """.formatted(i == 35 ? "adaptive" : "baseline", i == 37 ? "study" : "practice",
+                      UUID.randomUUID(), i == 36 ? "interrupted" : "completed", i * 1000, i, i + 100));
+            entries.add(entry);
+        }
+        java.util.Collections.reverse(entries);
+        assertEquals(200, post("[" + String.join(",", entries) + "," + entries.get(0) + "]").statusCode());
+        var response = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + port +
+            "/api/results/trends?dataset=practice&taskCode=kiosk-order")).GET().build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        assertEquals(31, json(response).size());
+        int baseline = 0;
+        for (JsonNode row : json(response)) {
+            if (row.get("mode").asText().equals("baseline")) {
+                assertEquals((baseline + 5) * 1000, row.get("durationMs").intValue());
+                baseline++;
+            } else assertEquals(35000, row.get("durationMs").intValue());
+        }
+        assertEquals(30, baseline);
+        var empty = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + port +
+            "/api/results/trends?dataset=practice&taskCode=tax-payment")).GET().build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(0, json(empty).size());
+        var invalid = client.send(HttpRequest.newBuilder(URI.create("http://localhost:" + port +
+            "/api/results/trends?dataset=invalid&taskCode=kiosk-order")).GET().build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(400, invalid.statusCode());
+    }
     @Test void conflictRollsBackWholeBatch() throws Exception {
         String session = UUID.randomUUID().toString();
         String entry = log(session, 1);

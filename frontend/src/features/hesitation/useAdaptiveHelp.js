@@ -2,6 +2,7 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { resolveKioskHelp } from "./resolveKioskHelp.js";
 
 import { helpReducer, initialState } from "./adaptiveHelpState.js";
+import { subscribeHelp } from "./subscribeHelp.js";
 
 export default function useAdaptiveHelp(engine, automatic = true, enabled = true, { resolveHelp = resolveKioskHelp, clearOnPause = false } = {}) {
   const [help, dispatch] = useReducer(helpReducer, initialState);
@@ -9,28 +10,7 @@ export default function useAdaptiveHelp(engine, automatic = true, enabled = true
 
   useEffect(() => {
     if (!enabled) return;
-    const syncScreen = (snapshot) => dispatch({ type: "SCREEN", screenVisitId: snapshot.screenVisitId });
-    const unsubscribe = engine.subscribe((message) => {
-      const snapshot = message.snapshot;
-      if (message.type === "screen") syncScreen(snapshot);
-      if (clearOnPause && message.type === "measurement" && !snapshot.measuring) {
-        dispatch({ type: "RESOLVE", screenVisitId: snapshot.screenVisitId });
-      }
-      if (message.type === "resolved") dispatch({ type: "RESOLVE", screenVisitId: snapshot.screenVisitId });
-      // 0점짜리 중복 신호나 단순 마우스 이동으로 도움 대상을 바꾸지 않습니다.
-      if (message.type === "signal" && automatic && message.addedScore > 0) {
-        dispatch({
-          type: "SIGNAL", screenVisitId: snapshot.screenVisitId,
-          level: snapshot.level, at: message.at, addedScore: message.addedScore,
-          target: resolveHelp({
-            screenId: snapshot.screenId, signals: message.signals,
-            task: snapshot.task, metrics: snapshot.metrics,
-          }),
-        });
-      }
-    });
-    syncScreen(engine.getSnapshot());
-    return unsubscribe;
+    return subscribeHelp(engine, dispatch, { automatic, clearOnPause, resolveHelp });
   }, [engine, automatic, enabled, resolveHelp, clearOnPause]);
 
   useEffect(() => {

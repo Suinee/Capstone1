@@ -34,6 +34,12 @@ screenVisitId는 **둘 다 null**을 허용한다. 추가 필드는 중첩 구�
 
 입력값 원문이나 개인 식별정보를 추가하지 않는다. 기존 수집기는 입력 행동 유형만 기록한다.
 
+실험 모드에서 생성된 로그는 공통 추가 필드 `experiment`에 `runId`, `mode`
+(`baseline`/`adaptive`), `service`, `automaticHelp`, `manualHelp`, `policyVersion`,
+`startedAt`을 담는다. 이 객체 역시 원문 JSON으로 저장·조회하며 재전송에도 보존한다.
+기존 로그와의 호환을 위해 필수 필드는 아니며, 서버는 실험 객체의 세부 스키마를 검증하지 않는다.
+필드가 없는 과거 로그는 실험 조건이 지정되지 않은 기록이다.
+
 ## 저장
 
 `POST /api/hesitation/logs` / `Content-Type: application/json`

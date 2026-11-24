@@ -7,12 +7,12 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
-import Complete from "./Complete";
+import PublicServiceComplete from "../PublicServiceComplete.jsx";
 import { lookupPreviousAddress } from "./mockAddressData";
 import useDemoSubmission from "../useDemoSubmission";
 
 function MovingInReportFlow() {
-  const { submit, submitting, submitError } = useDemoSubmission("moving-in-report");
+  const { submit, submitting, submitError, receipt } = useDemoSubmission("moving-in-report");
   const navigate = useNavigate();
   const [frame, setFrame] = useState(0);
   usePublicScreen(`public:moving:${frame}`);
@@ -78,8 +78,7 @@ function MovingInReportFlow() {
 
   const handleSubmit = async () => {
     // 전입 주소·전화번호·세대원 정보는 저장하지 않습니다.
-    if (!(await submit("전입신고"))) return;
-    setFrame(5);
+    await submit("전입신고");
   };
 
   const handleToggleExtraService = (key) => {
@@ -87,6 +86,8 @@ function MovingInReportFlow() {
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
     );
   };
+
+  if (receipt) return <PublicServiceComplete receipt={receipt} />;
 
   if (frame === 0) {
     return <MovingInReportDetail onReport={() => setFrame(1)} />;
@@ -164,17 +165,6 @@ function MovingInReportFlow() {
         onPrev={() => setFrame(3)}
         onSubmit={handleSubmit}
         onCancel={goHome}
-      />
-    );
-  }
-
-  if (frame === 5) {
-    return (
-      <Complete
-        onGoHome={goHome}
-        onGoHistory={() =>
-          navigate("/public-service/resident-registration/history")
-        }
       />
     );
   }

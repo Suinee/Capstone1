@@ -1,0 +1,25 @@
+.task-results__filters { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 24px 0; }
+.task-results select, .task-results button { padding: 10px 12px; border: 1px solid #c9d5dc; border-radius: 8px; background: white; color: #18343c; font: inherit; }
+.task-results button { cursor: pointer; }
+.task-results button:disabled { opacity: .5; cursor: default; }
+.task-results__table { overflow-x: auto; }
+.task-results table { width: 100%; border-collapse: collapse; text-align: left; }
+.task-results caption { text-align: left; padding: 12px 0; font-weight: 700; }
+.task-results th, .task-results td { padding: 14px; border-bottom: 1px solid #dce5e9; }
+.task-results thead { background: #eef5f5; }
+.task-results__note { color: #526670; font-size: 14px; line-height: 1.8; margin-top: 16px; }
+.task-results__empty { padding: 32px; background: #f4f7f8; border-radius: 12px; }
+.task-results__chart { margin: 24px 0; }
+.task-results__chart > div { display: grid; grid-template-columns: 65px 1fr 95px; align-items: center; gap: 12px; margin: 12px 0; }
+.task-results__track { background: #eef2f5; border-radius: 6px; overflow: hidden; }
+.task-results__track > div { height: 22px; }
+.task-trends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 32px; }
+.task-trend { margin: 0; padding: 20px 12px; border: 1px solid #dce5e9; border-radius: 16px; background: #fff; }
+.task-trend figcaption { padding: 0 12px 16px; font-size: 18px; font-weight: 700; color: #18343c; }
+.task-trend svg { display: block; width: 100%; height: auto; }
+.task-trend__axis { font-size: 13px; fill: #526670; }
+.task-trend__legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; font-size: 14px; margin-top: 12px; }
+.task-trend__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.task-trend__legend i { display: inline-block; width: 24px; border-top-width: 3px; }
+.task-trend__records summary { cursor: pointer; padding: 12px 0; color: #125967; }
+@media (max-width: 760px) { .task-trends { grid-template-columns: 1fr; } }

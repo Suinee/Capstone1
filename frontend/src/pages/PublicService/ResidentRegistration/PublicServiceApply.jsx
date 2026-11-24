@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicServiceTopBar from "./PublicServiceTopBar";
 import useDemoSubmission from "../useDemoSubmission";
+import PublicServiceComplete from "../PublicServiceComplete.jsx";
 import "./PublicServiceApply.css";
 
 const serviceOptions = [
@@ -35,7 +36,7 @@ const receiveOptions = [
 
 function PublicServiceApply() {
   const reportValidation = usePublicScreen("public:resident:apply");
-  const { submit, submitting, submitError } = useDemoSubmission("resident-registration");
+  const { submit, submitting, submitError, receipt } = useDemoSubmission("resident-registration");
   const navigate = useNavigate();
 
   const [selectedService, setSelectedService] = useState(serviceOptions[0]);
@@ -65,9 +66,10 @@ function PublicServiceApply() {
       return;
     }
 
-    if (!(await submit(selectedService))) return; // 개인 주소 등 입력값은 저장하지 않음
-    navigate("/public-service/resident-registration/history");
+    await submit(selectedService); // 개인 주소 등 입력값은 저장하지 않음
   };
+
+  if (receipt) return <PublicServiceComplete receipt={receipt} />;
 
   return (
     <div className="ps-page">
